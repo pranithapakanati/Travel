@@ -166,6 +166,63 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // People reviews screen: play 30-second place videos from selected media images
+  const reviewsVideoTriggers = Array.from(document.querySelectorAll(".reviews-video-trigger"));
+  const reviewsVideoOverlay = document.querySelector("#reviewsVideoOverlay");
+  const reviewsVideoClose = document.querySelector("#reviewsVideoClose");
+  const reviewsPlaceVideo = document.querySelector("#reviewsPlaceVideo");
+  const reviewsPlaceVideoSource = document.querySelector("#reviewsPlaceVideoSource");
+
+  if (reviewsVideoTriggers.length && reviewsVideoOverlay && reviewsVideoClose && reviewsPlaceVideo && reviewsPlaceVideoSource) {
+    const openReviewsVideo = (videoSrc) => {
+      if (videoSrc) {
+        reviewsPlaceVideo.pause();
+        reviewsPlaceVideoSource.src = videoSrc;
+        reviewsPlaceVideo.load();
+      }
+      reviewsVideoOverlay.classList.add("active");
+      reviewsVideoOverlay.setAttribute("aria-hidden", "false");
+      reviewsPlaceVideo.currentTime = 0;
+      reviewsPlaceVideo.play().catch(() => {});
+    };
+
+    const closeReviewsVideo = () => {
+      reviewsPlaceVideo.pause();
+      reviewsPlaceVideo.currentTime = 0;
+      reviewsVideoOverlay.classList.remove("active");
+      reviewsVideoOverlay.setAttribute("aria-hidden", "true");
+    };
+
+    reviewsVideoTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openReviewsVideo(trigger.getAttribute("data-video-src"));
+      });
+
+      trigger.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          event.stopPropagation();
+          openReviewsVideo(trigger.getAttribute("data-video-src"));
+        }
+      });
+    });
+
+    reviewsPlaceVideo.addEventListener("timeupdate", () => {
+      if (reviewsPlaceVideo.currentTime >= 30) {
+        closeReviewsVideo();
+      }
+    });
+
+    reviewsVideoClose.addEventListener("click", closeReviewsVideo);
+    reviewsVideoOverlay.addEventListener("click", (event) => {
+      if (event.target === reviewsVideoOverlay) {
+        closeReviewsVideo();
+      }
+    });
+  }
+
   // Location dropdown toggle
   const locationWrapper = document.querySelector(".location-dropdown-wrapper");
   if (locationWrapper) {
@@ -976,6 +1033,87 @@ document.addEventListener("DOMContentLoaded", () => {
       card.addEventListener("click", () => {
         showStatus("Tour details page coming soon");
       });
+    });
+  }
+
+  // Blog details comment form: show success popup
+  const blogCommentForm = document.querySelector(".blog-details-comment-form");
+  const blogCommentPopup = document.querySelector("#blogCommentPopup");
+  const blogCommentPopupClose = document.querySelector("#blogCommentPopupClose");
+
+  const blogRatingItems = Array.from(document.querySelectorAll(".blog-details-rating-item"));
+  blogRatingItems.forEach((item) => {
+    const label = item.querySelector("span")?.textContent?.trim() || "Rating";
+    const starText = item.querySelector("strong");
+    if (!starText) {
+      return;
+    }
+
+    let selectedRating = 5;
+    starText.textContent = "";
+    starText.classList.add("blog-rating-stars");
+
+    for (let value = 1; value <= 5; value += 1) {
+      const starBtn = document.createElement("button");
+      starBtn.type = "button";
+      starBtn.className = "blog-rating-star";
+      starBtn.textContent = "★";
+      starBtn.setAttribute("aria-label", `${label} rating ${value} star${value > 1 ? "s" : ""}`);
+
+      const paintStars = () => {
+        const stars = Array.from(starText.querySelectorAll(".blog-rating-star"));
+        stars.forEach((starNode, idx) => {
+          starNode.classList.toggle("is-active", idx < selectedRating);
+        });
+      };
+
+      starBtn.addEventListener("click", () => {
+        selectedRating = value;
+        paintStars();
+      });
+
+      starText.appendChild(starBtn);
+      paintStars();
+    }
+  });
+
+  const hideBlogCommentPopup = () => {
+    if (!blogCommentPopup) {
+      return;
+    }
+    blogCommentPopup.classList.remove("active");
+    blogCommentPopup.setAttribute("aria-hidden", "true");
+  };
+
+  const showBlogCommentPopup = () => {
+    if (!blogCommentPopup) {
+      return;
+    }
+    blogCommentPopup.classList.add("active");
+    blogCommentPopup.setAttribute("aria-hidden", "false");
+  };
+
+  blogCommentPopupClose?.addEventListener("click", hideBlogCommentPopup);
+  blogCommentPopup?.addEventListener("click", (event) => {
+    if (event.target === blogCommentPopup) {
+      hideBlogCommentPopup();
+    }
+  });
+
+  if (blogCommentForm) {
+    blogCommentForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const inputs = blogCommentForm.querySelectorAll("input, textarea");
+      const hasEmptyField = Array.from(inputs).some((input) => !input.value.trim());
+
+      if (hasEmptyField) {
+        showStatus("Please fill all fields");
+        return;
+      }
+
+      showBlogCommentPopup();
+      blogCommentForm.reset();
     });
   }
 

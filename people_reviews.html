@@ -78,6 +78,7 @@
         </div>
 
         <div class="reviews-row reviews-row-top">
+          <span class="reviews-side-arrow reviews-side-arrow-left" aria-hidden="true">←</span>
           <article class="reviews-card">
             <div class="reviews-stars">★★★★<span>★</span></div>
             <p>Our trip with Benua Travel Agency was memorable. They arranged everything perfectly and took us to dream
@@ -102,26 +103,52 @@
               <div><strong>Don John</strong><small>@donjohn</small></div>
             </div>
           </article>
-          <span class="reviews-side-arrow reviews-side-arrow-right" aria-hidden="true">←</span>
+          <span class="reviews-side-arrow reviews-side-arrow-right" aria-hidden="true">→</span>
         </div>
 
         <div class="reviews-row reviews-row-media">
-          <span class="reviews-side-arrow reviews-side-arrow-left" aria-hidden="true">→</span>
+          <span class="reviews-side-arrow reviews-side-arrow-left" aria-hidden="true">←</span>
           <article class="reviews-media-card">
-            <img src="images/review.png" alt="Snow cabin trip" />
+            <img
+              src="images/review.png"
+              alt="Snow cabin trip"
+              class="reviews-video-trigger"
+              data-video-src="videos/video1.mp4"
+              role="button"
+              tabindex="0"
+              aria-label="Play Bali Temple video 1"
+            />
             <p>He Went to Bali Temple</p>
           </article>
           <article class="reviews-media-card">
-            <img src="images/review1.png" alt="Vlogger house" />
+            <img
+              src="images/review1.png"
+              alt="Vlogger house"
+              class="reviews-video-trigger"
+              data-video-src="videos/video2.mp4"
+              role="button"
+              tabindex="0"
+              aria-label="Play Bali Temple video 2"
+            />
             <p>She is a Vlogger of the month</p>
           </article>
           <article class="reviews-media-card">
-            <img src="images/review2.png" alt="Lake houses" />
+            <img
+              src="images/review2.png"
+              alt="Lake houses"
+              class="reviews-video-trigger"
+              data-video-src="videos/video3.mp4"
+              role="button"
+              tabindex="0"
+              aria-label="Play Bali Temple video 3"
+            />
             <p>Unique stay we offer in bali</p>
           </article>
+          <span class="reviews-side-arrow reviews-side-arrow-right" aria-hidden="true">→</span>
         </div>
 
         <div class="reviews-row reviews-row-bottom">
+          <span class="reviews-side-arrow reviews-side-arrow-left" aria-hidden="true">←</span>
           <article class="reviews-card">
             <div class="reviews-stars">★★★★<span>★</span></div>
             <p>Our trip with Benua Travel Agency was memorable. They arranged everything perfectly and took us to dream
@@ -146,13 +173,9 @@
               <div><strong>Don John</strong><small>@donjohn</small></div>
             </div>
           </article>
-          <span class="reviews-side-arrow reviews-side-arrow-right" aria-hidden="true">←</span>
+          <span class="reviews-side-arrow reviews-side-arrow-right" aria-hidden="true">→</span>
         </div>
 
-        <button class="reviews-continue" type="button" onclick="window.location.href='home.html'">
-          <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
-          Continue
-        </button>
       </div>
 
       <section class="bali-blogs reviews-bali-blogs">
@@ -272,6 +295,17 @@
       </footer>
     </section>
   </div>
+
+  <div class="reviews-video-overlay" id="reviewsVideoOverlay" aria-hidden="true">
+    <div class="reviews-video-dialog" role="dialog" aria-modal="true" aria-label="Bali Temple video">
+      <button class="reviews-video-close" id="reviewsVideoClose" type="button" aria-label="Close video">×</button>
+      <video id="reviewsPlaceVideo" controls playsinline preload="metadata">
+        <source id="reviewsPlaceVideoSource" src="videos/video1.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+
   <script src="script1.js"></script>
 </body>
 

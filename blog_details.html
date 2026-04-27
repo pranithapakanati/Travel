@@ -159,7 +159,7 @@
       <section class="blog-details-reply">
         <h3>Leave a Reply</h3>
         <p>Your email address will not be published. Required fields are marked *</p>
-        <form>
+        <form class="blog-details-comment-form">
           <div class="blog-details-rating-grid">
             <div class="blog-details-rating-item"><span>Location</span><strong>★★★★★</strong></div>
             <div class="blog-details-rating-item"><span>Amenities</span><strong>★★★★★</strong></div>
@@ -175,9 +175,16 @@
           </div>
           <label><input type="text" placeholder="Title" /></label>
           <label><textarea rows="6" placeholder="Comment"></textarea></label>
-          <button type="button">Post Comment <span>↗</span></button>
+          <button type="submit">Post Comment <span>↗</span></button>
         </form>
       </section>
+
+      <div class="submit-popup-overlay" id="blogCommentPopup" aria-hidden="true">
+        <div class="submit-popup-box" role="dialog" aria-modal="true" aria-labelledby="blogCommentPopupMessage">
+          <p class="submit-popup-message" id="blogCommentPopupMessage">Posted your comment successfully</p>
+          <button class="submit-popup-close" type="button" id="blogCommentPopupClose">Close</button>
+        </div>
+      </div>
 
       <section class="blog-details-related">
         <h3>You might also like...</h3>
