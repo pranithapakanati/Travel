@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tripon - Contact Us</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style1.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .contact-screen {
+      display: block !important;
+      padding: 42px 0 56px;
+    }
+
+    .home-screen,
+    .people-reviews-screen,
+    .packages-screen {
+      display: none !important;
+    }
+
+    .submit-popup-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(15, 23, 42, 0.48);
+      z-index: 10000;
+    }
+
+    .submit-popup-overlay.active {
+      display: flex;
+    }
+
+    .submit-popup-box {
+      width: 240px;
+      height: 240px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 16px 40px rgba(2, 6, 23, 0.26);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 18px;
+      gap: 14px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+    }
+
+    .submit-popup-message {
+      margin: 0;
+      font-weight: 600;
+      color: #102937;
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .submit-popup-close {
+      border: none;
+      border-radius: 999px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #ffffff;
+      background: #102937;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page contact-active" id="pageRoot">
+    <header class="topbar">
+      <div class="topbar-left">
+        <img src="images/vector.png" alt="Tripon logo" class="logo" />
+        <span class="topbar-divider" aria-hidden="true"></span>
+        <div class="location-dropdown-wrapper">
+          <button class="location-pill" type="button">Bali <i class="fa-solid fa-chevron-down location-chevron"
+              aria-hidden="true"></i></button>
+          <ul class="location-dropdown" role="listbox">
+            <li role="option"><a href="#" data-location="bali">Bali</a></li>
+            <li role="option"><a href="#" data-location="thailand">Thailand</a></li>
+            <li role="option"><a href="#" data-location="maldives">Maldives</a></li>
+            <li role="option"><a href="#" data-location="dubai">Dubai</a></li>
+            <li role="option"><a href="#" data-location="indonesia">Indonesia</a></li>
+            <li role="option"><a href="#" data-location="singapore">Singapore</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="right-actions">
+        <nav class="main-nav">
+          <a href="people_reviews.html">People Reviews</a>
+          <a href="packages.html">Packages</a>
+        </nav>
+        <button class="contact-btn is-active" type="button">Contact Us</button>
+      </div>
+    </header>
+
+    <section class="contact-screen" id="contactScreen" aria-label="Contact page">
+      <div class="contact-shell">
+        <h2>Contact Us</h2>
+        <p class="contact-subtitle">We Quickly available for a Call or WhatsApp at 99999-99999</p>
+
+        <form class="contact-form" novalidate>
+          <h3>Get A Call Back</h3>
+
+          <div class="contact-grid">
+            <label><span>FULL NAME</span><input type="text" placeholder="Enter your name" /></label>
+            <label><span>PHONE NUMBER</span><input type="tel" placeholder="Enter your phone number" /></label>
+            <label><span>EMAIL ID</span><input type="email" placeholder="Enter your email ID" /></label>
+            <label><span>WHERE ARE YOU FROM</span><input type="text" placeholder="Enter your location" /></label>
+          </div>
+
+          <label class="contact-message">
+            <span>MESSAGE</span>
+            <textarea rows="6" placeholder="Enter your message, let us know your quire in detailed"></textarea>
+          </label>
+
+          <button class="contact-submit" type="submit">Submit</button>
+
+          <section class="contact-social" aria-label="Social media links">
+            <h3>We are hyper active on social media <span>FOLLOW US</span></h3>
+            <div class="contact-social-grid">
+              <a class="social-card social-youtube" href="https://youtube.com" target="_blank"
+                rel="noopener noreferrer">
+                <div class="social-brand"><i class="fa-brands fa-youtube"></i><strong>YouTube</strong></div>
+                <small>@tripon</small>
+              </a>
+              <a class="social-card social-facebook" href="https://facebook.com" target="_blank"
+                rel="noopener noreferrer">
+                <div class="social-brand"><i class="fa-brands fa-facebook"></i><strong>facebook</strong></div>
+                <small>@triponoffical</small>
+              </a>
+              <a class="social-card social-instagram" href="https://instagram.com" target="_blank"
+                rel="noopener noreferrer">
+                <div class="social-brand"><i class="fa-brands fa-instagram"></i><strong>Instagram</strong></div>
+                <small>@tripon</small>
+              </a>
+              <a class="social-card social-tripadvisor" href="https://tripadvisor.com" target="_blank"
+                rel="noopener noreferrer">
+                <div class="social-brand"><i class="fa-solid fa-glasses"></i><strong>Tripadvisor</strong></div>
+                <small>@triponoffical</small>
+              </a>
+            </div>
+          </section>
+
+          <section class="contact-explore" aria-label="Explore packages in Bali">
+            <h3>Explore Packages in Bali</h3>
+            <div class="contact-explore-wrap">
+              <button class="contact-explore-arrow contact-explore-prev" type="button"
+                aria-label="Previous packages">←</button>
+              <div class="contact-explore-grid">
+                <article class="contact-explore-card">
+                  <div class="contact-explore-media">
+                    <img
+                      src="https://images.unsplash.com/photo-1528164344705-47542687000d?auto=format&fit=crop&w=900&q=80"
+                      alt="Desert tour by ATV" />
+                    <button class="contact-explore-fav" type="button"><i class="fa-regular fa-heart"></i></button>
+                  </div>
+                  <p class="contact-explore-location"><i class="fa-solid fa-location-dot"></i> Paris, France</p>
+                  <h4>Centipede Tour - Guided Arizona Desert Tour by ATV</h4>
+                  <p class="contact-explore-rating">★★★★★ <span>4.8 (269)</span></p>
+                  <div class="contact-explore-meta"><span><i class="fa-regular fa-clock"></i> 4 days</span><span>From
+                      $189,25</span></div>
+                </article>
+                <article class="contact-explore-card">
+                  <div class="contact-explore-media">
+                    <img
+                      src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
+                      alt="Molokini snorkeling" />
+                    <button class="contact-explore-fav" type="button"><i class="fa-regular fa-heart"></i></button>
+                  </div>
+                  <p class="contact-explore-location"><i class="fa-solid fa-location-dot"></i> New York, USA</p>
+                  <h4>Molokini and Turtle Town Snorkeling Adventure Aboard</h4>
+                  <p class="contact-explore-rating">★★★★★ <span>4.8 (269)</span></p>
+                  <div class="contact-explore-meta"><span><i class="fa-regular fa-clock"></i> 4 days</span><span>From
+                      $225,00</span></div>
+                </article>
+                <article class="contact-explore-card">
+                  <div class="contact-explore-media">
+                    <img
+                      src="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=900&q=80"
+                      alt="Westminster walking tour" />
+                    <button class="contact-explore-fav" type="button"><i class="fa-regular fa-heart"></i></button>
+                  </div>
+                  <p class="contact-explore-location"><i class="fa-solid fa-location-dot"></i> London, UK</p>
+                  <h4>Westminster Walking Tour &amp; Westminster Abbey Entry</h4>
+                  <p class="contact-explore-rating">★★★★★ <span>4.8 (269)</span></p>
+                  <div class="contact-explore-meta"><span><i class="fa-regular fa-clock"></i> 4 days</span><span>From
+                      $943,00</span></div>
+                </article>
+                <article class="contact-explore-card">
+                  <div class="contact-explore-media">
+                    <img
+                      src="https://images.unsplash.com/photo-1582967788606-a171c1080cb0?auto=format&fit=crop&w=900&q=80"
+                      alt="Circle island tour" />
+                    <button class="contact-explore-fav" type="button"><i class="fa-regular fa-heart"></i></button>
+                  </div>
+                  <p class="contact-explore-location"><i class="fa-solid fa-location-dot"></i> New York, USA</p>
+                  <h4>All Inclusive Ultimate Circle Island Day Tour with Lunch</h4>
+                  <p class="contact-explore-rating">★★★★★ <span>4.8 (269)</span></p>
+                  <div class="contact-explore-meta"><span><i class="fa-regular fa-clock"></i> 4 days</span><span>From
+                      $771,00</span></div>
+                </article>
+              </div>
+              <button class="contact-explore-arrow contact-explore-next" type="button"
+                aria-label="Next packages">→</button>
+            </div>
+          </section>
+        </form>
+      </div>
+
+      <section class="instagram-showcase">
+        <div class="instagram-head">
+          <h2>Instagram</h2>
+          <p>Follow Us On @tripon</p>
+        </div>
+        <div class="instagram-strip">
+          <img src="images/insta_pic1.png" alt="Ocean cliffs" />
+          <img src="images/insta_pic2.png" alt="Tropical beach" />
+          <img src="images/insta_pic3.png" alt="Balinese dancer" />
+          <img src="images/insta_pic4.png" alt="Sunset beach" />
+          <img src="images/insta_pic5.png" alt="Temple statue" />
+          <img src="images/insta_pic6.png" alt="Bali temple lake" />
+          <img src="images/insta_pic7.png" alt="Rice field walk" />
+        </div>
+      </section>
+
+      <footer class="tripon-footer">
+        <div class="tripon-footer-top">
+          <div class="tripon-brand">tripon</div>
+          <nav class="tripon-links">
+            <a href="#">About</a><a href="#">Locations</a><a href="#">Careers</a>
+            <a href="#">Blogs</a><a href="packages.html">Packages</a><a href="contact.html">Contact Us</a>
+          </nav>
+          <div class="tripon-social-block">
+            <p>FOLLOW OUR TRAVELER COMMUNITY <span>&#128293;</span></p>
+            <div class="tripon-socials">
+              <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+              <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+              <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+              <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="tripon-footer-bottom">
+          <p>Copyright @ 2026 TRIPON All rights reserved</p>
+        </div>
+      </footer>
+    </section>
+  </div>
+  <div class="submit-popup-overlay" id="submitPopup" aria-hidden="true">
+    <div class="submit-popup-box" role="dialog" aria-modal="true" aria-label="Submission status">
+      <p class="submit-popup-message">Successfully submitted</p>
+      <button type="button" class="submit-popup-close" id="submitPopupClose">OK</button>
+    </div>
+  </div>
+  <script src="script1.js"></script>
+</body>
+
+</html>

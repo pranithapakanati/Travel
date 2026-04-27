@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tripon - Packages</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style1.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    .packages-screen {
+      display: block !important;
+      padding: 34px 0 42px;
+    }
+
+    .home-screen,
+    .people-reviews-screen,
+    .contact-screen {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page packages-active" id="pageRoot">
+    <header class="topbar">
+      <div class="topbar-left">
+        <img src="images/vector.png" alt="Tripon logo" class="logo" />
+        <span class="topbar-divider" aria-hidden="true"></span>
+        <div class="location-dropdown-wrapper">
+          <button class="location-pill" type="button">Bali <i class="fa-solid fa-chevron-down location-chevron"
+              aria-hidden="true"></i></button>
+          <ul class="location-dropdown" role="listbox">
+            <li role="option"><a href="#" data-location="bali">Bali</a></li>
+            <li role="option"><a href="#" data-location="thailand">Thailand</a></li>
+            <li role="option"><a href="#" data-location="maldives">Maldives</a></li>
+            <li role="option"><a href="#" data-location="dubai">Dubai</a></li>
+            <li role="option"><a href="#" data-location="indonesia">Indonesia</a></li>
+            <li role="option"><a href="#" data-location="singapore">Singapore</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="right-actions">
+        <nav class="main-nav">
+          <a href="people_reviews.html">People Reviews</a>
+          <a href="packages.html" class="is-active">Packages</a>
+        </nav>
+        <button class="contact-btn" type="button" onclick="window.location.href='contact_us.html'">Contact Us</button>
+      </div>
+    </header>
+
+    <section class="packages-screen" id="packagesScreen" aria-label="Packages page">
+      <div class="package-screen-shell">
+        <h2 class="package-screen-title">Explore all things to do in Phuket</h2>
+
+        <div class="package-screen-filters">
+          <button class="chip chip-active" type="button">4 Nights 5 Days</button>
+          <button class="chip" type="button">5 Nights 6 Days</button>
+          <button class="chip" type="button">6 Nights 7 Days</button>
+          <button class="chip" type="button">7 Nights 8 Days</button>
+          <button class="chip chip-custom" type="button">Ask Custom Packages</button>
+        </div>
+
+        <div class="package-grid-new package-screen-grid">
+          <article class="package-card" data-type="couple" data-days="5">
+            <div class="package-thumb"><span class="offer">10% off</span><img src="images/packages_card1.png"
+                alt="Honey Moon Package" /></div>
+            <p class="location"><i class="fa-solid fa-location-dot"></i> Ubud, Indonesia</p>
+            <h4>Honey Moon Package in Bali</h4>
+            <p class="rating">★★★★★ <span>4.8 (136)</span></p>
+            <div class="meta"><span>◷ 4 Days</span><span>From ₹45,000</span></div>
+          </article>
+          <article class="package-card" data-type="couple" data-days="6">
+            <div class="package-thumb"><span class="offer">15% off</span><img src="images/packages_card2.png"
+                alt="Isolated Mountains" /></div>
+            <p class="location"><i class="fa-solid fa-location-dot"></i> Nusa Penida, Indonesia</p>
+            <h4>Isolated Mountains Retreat</h4>
+            <p class="rating">★★★★★ <span>4.8 (136)</span></p>
+            <div class="meta"><span>◷ 5 Days</span><span>From ₹50,000</span></div>
+          </article>
+          <article class="package-card" data-type="couple" data-days="7">
+            <div class="package-thumb"><span class="offer">12% off</span><img src="images/packages_card3.png"
+                alt="White Beach Land" /></div>
+            <p class="location"><i class="fa-solid fa-location-dot"></i> Gili Trawangan, Indonesia</p>
+            <h4>The White Beach Land</h4>
+            <p class="rating">★★★★★ <span>4.8 (136)</span></p>
+            <div class="meta"><span>◷ 6 Days</span><span>From ₹75,000</span></div>
+          </article>
+          <article class="package-card" data-type="family" data-days="8">
+            <div class="package-thumb"><span class="offer">8% off</span><img
+                src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
+                alt="Family Beach Resort" /></div>
+            <p class="location"><i class="fa-solid fa-location-dot"></i> Seminyak, Indonesia</p>
+            <h4>Family Beach Resort Stay</h4>
+            <p class="rating">★★★★★ <span>4.7 (98)</span></p>
+            <div class="meta"><span>◷ 5 Days</span><span>From ₹1,20,000</span></div>
+          </article>
+          <article class="package-card" data-type="family">
+            <div class="package-thumb"><span class="offer">10% off</span><img
+                src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=80"
+                alt="Cultural Village Tour" /></div>
+            <p class="location"><i class="fa-solid fa-location-dot"></i> Ubud, Indonesia</p>
+            <h4>Cultural Village Explorer</h4>
+            <p class="rating">★★★★☆ <span>4.6 (74)</span></p>
+            <div class="meta"><span>◷ 4 Days</span><span>From ₹95,000</span></div>
+          </article>
+          <article class="package-card" data-type="family">
+            <div class="package-thumb"><span class="offer">18% off</span><img
+                src="https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?auto=format&fit=crop&w=900&q=80"
+                alt="Waterpark and Temples" /></div>
+            <p class="location"><i class="fa-solid fa-location-dot"></i> Kuta, Indonesia</p>
+            <h4>Waterpark &amp; Temples Tour</h4>
+            <p class="rating">★★★★★ <span>4.9 (112)</span></p>
+            <div class="meta"><span>◷ 6 Days</span><span>From ₹1,10,000</span></div>
+          </article>
+          <article class="package-card" data-type="friends">
+            <div class="package-thumb"><span class="offer">20% off</span><img
+                src="https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=900&q=80"
+                alt="Adventure Surf Camp" /></div>
+            <p class="location"><i class="fa-solid fa-location-dot"></i> Canggu, Indonesia</p>
+            <h4>Adventure Surf Camp</h4>
+            <p class="rating">★★★★★ <span>4.8 (162)</span></p>
+            <div class="meta"><span>◷ 5 Days</span><span>From ₹55,000</span></div>
+          </article>
+          <article class="package-card" data-type="friends">
+            <div class="package-thumb"><span class="offer">5% off</span><img
+                src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80"
+                alt="Volcano Trekking" /></div>
+            <p class="location"><i class="fa-solid fa-location-dot"></i> Mount Batur, Indonesia</p>
+            <h4>Volcano Trekking Trip</h4>
+            <p class="rating">★★★★☆ <span>4.5 (88)</span></p>
+            <div class="meta"><span>◷ 3 Days</span><span>From ₹40,000</span></div>
+          </article>
+          <article class="package-card" data-type="friends">
+            <div class="package-thumb"><span class="offer">13% off</span><img
+                src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
+                alt="Island Hopping Tour" /></div>
+            <p class="location"><i class="fa-solid fa-location-dot"></i> Nusa Lembongan, Indonesia</p>
+            <h4>Island Hopping Tour</h4>
+            <p class="rating">★★★★★ <span>4.8 (140)</span></p>
+            <div class="meta"><span>◷ 4 Days</span><span>From ₹65,000</span></div>
+          </article>
+        </div>
+      </div>
+
+      <section class="adventure">
+        <h2>Know More About Locations</h2>
+        <p class="adventure-sub">See What you can do in Bali</p>
+        <div class="place-row">
+          <article class="place-item" data-location-link="location.html?place=ubud">
+            <div class="place-icon">🏯</div>
+            <div class="place-content">
+              <h3>Ubud</h3><span>20+ Activities, 18 Sight Seedings</span>
+            </div>
+          </article>
+          <article class="place-item" data-location-link="location.html?place=kuta">
+            <div class="place-icon">🛕</div>
+            <div class="place-content">
+              <h3>Kuta, Gali</h3><span>16+ Activities, 20 Sight Seedings</span>
+            </div>
+          </article>
+          <article class="place-item" data-location-link="location.html?place=lombok">
+            <div class="place-icon">🗼</div>
+            <div class="place-content">
+              <h3>Lombok</h3><span>15+ Activities, 10 Sight Seedings</span>
+            </div>
+          </article>
+        </div>
+        <div class="arrow-controls">
+          <button type="button" aria-label="Previous">←</button>
+          <button type="button" aria-label="Next">→</button>
+        </div>
+      </section>
+
+      <section class="bali-blogs">
+        <h2>Blogs All About Bali</h2>
+        <div class="bali-blogs-grid">
+          <article class="bali-card bali-card--featured">
+            <div class="bali-card-media">
+              <span class="blog-tag">Vlogger</span>
+              <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80"
+                alt="Exploring Bali" />
+              <div class="blog-video-bar"><span class="blog-play">&#9654;</span>
+                <div class="blog-progress">
+                  <div class="blog-progress-fill"></div>
+                </div>
+              </div>
+            </div>
+            <div class="bali-card-body">
+              <h3>Exploring Bali A Tropical Journey</h3>
+              <p>Dive deep into the heart of Bali with our captivating travel tales. From the majestic temples and lush
+                rice terraces to the vibrant cultural festivals and stunning beaches.</p>
+              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=5" alt="Janna Auniman"
+                  class="author-avatar" />
+                <div class="author-info"><strong>Janna Auniman</strong><span>I'm A World Traveller</span></div><button
+                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+              </div>
+            </div>
+          </article>
+          <article class="bali-card bali-card--img-only">
+            <img src="https://images.unsplash.com/photo-1555400038-63f5ba517a47?auto=format&fit=crop&w=600&q=80"
+              alt="Tech Nomad" class="bali-card-img" />
+            <div class="bali-card-body">
+              <h3>Tech Nomad's Guide to Bali Templates</h3>
+              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram"
+                  class="author-avatar" />
+                <div class="author-info"><strong>Leo Vikram</strong><span>Software Engineer</span></div><button
+                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+              </div>
+            </div>
+          </article>
+          <article class="bali-card bali-card--img-only">
+            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=400&q=80"
+              alt="Secrets of Ubud" class="bali-card-img" />
+            <div class="bali-card-body">
+              <h3>Secrets of Ubud: Culture and Nature</h3>
+              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram"
+                  class="author-avatar" />
+                <div class="author-info"><strong>Leo Vikram</strong><span>Software Engineer</span></div><button
+                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+              </div>
+            </div>
+          </article>
+          <article class="bali-card bali-card--featured">
+            <div class="bali-card-media">
+              <span class="blog-tag">Vlogger</span>
+              <img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=600&q=80"
+                alt="Bali adventure" />
+              <div class="blog-video-bar"><span class="blog-play">&#9654;</span>
+                <div class="blog-progress">
+                  <div class="blog-progress-fill"></div>
+                </div>
+              </div>
+            </div>
+            <div class="bali-card-body">
+              <h3>Adventures in Bali: Beyond the Beach</h3>
+              <p>Join us as we venture beyond Bali's renowned beaches to uncover its lesser-known treasures. From the
+                mystical Mount Batur at sunrise to the Jatiluwih Rice Terraces.</p>
+              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=47" alt="Sara Kumari"
+                  class="author-avatar" />
+                <div class="author-info"><strong>Sara Kumari</strong><span>Adventure Traveller</span></div><button
+                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="bali-blogs-footer"><button class="want-more-btn" type="button">Want to know more!</button></div>
+      </section>
+
+      <section class="instagram-showcase">
+        <div class="instagram-head">
+          <h2>Instagram</h2>
+          <p>Follow Us On @tripon</p>
+        </div>
+        <div class="instagram-strip">
+          <img src="images/insta_pic1.png" alt="Ocean cliffs" />
+          <img src="images/insta_pic2.png" alt="Tropical beach" />
+          <img src="images/insta_pic3.png" alt="Balinese dancer" />
+          <img src="images/insta_pic4.png" alt="Sunset beach" />
+          <img src="images/insta_pic5.png" alt="Temple statue" />
+          <img src="images/insta_pic6.png" alt="Bali temple lake" />
+          <img src="images/insta_pic7.png" alt="Rice field walk" />
+        </div>
+      </section>
+
+      <footer class="tripon-footer">
+        <div class="tripon-footer-top">
+          <div class="tripon-brand">tripon</div>
+          <nav class="tripon-links">
+            <a href="#">About</a><a href="#">Locations</a><a href="#">Careers</a>
+            <a href="#">Blogs</a><a href="packages.html">Packages</a><a href="contact.html">Contact Us</a>
+          </nav>
+          <div class="tripon-social-block">
+            <p>FOLLOW OUR TRAVELER COMMUNITY <span>&#128293;</span></p>
+            <div class="tripon-socials">
+              <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+              <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+              <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+              <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="tripon-footer-bottom">
+          <p>Copyright @ 2026 TRIPON All rights reserved</p>
+        </div>
+      </footer>
+    </section>
+  </div>
+  <script src="script1.js"></script>
+</body>
+
+</html>

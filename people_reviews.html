@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Read what travelers say about Tripon - ratings, reviews, and blog posts about Bali travel." />
+  <title>Tripon - People Reviews</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style1.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* Always show reviews screen on this page */
+    .people-reviews-screen {
+      display: block !important;
+      padding: 28px 0 50px;
+    }
+
+    .home-screen,
+    .packages-screen,
+    .contact-screen {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page reviews-active" id="pageRoot">
+    <header class="topbar">
+      <div class="topbar-left">
+        <img src="images/vector.png" alt="Tripon logo" class="logo" />
+        <span class="topbar-divider" aria-hidden="true"></span>
+        <div class="location-dropdown-wrapper">
+          <button class="location-pill" type="button">Bali <i class="fa-solid fa-chevron-down location-chevron"
+              aria-hidden="true"></i></button>
+          <ul class="location-dropdown" role="listbox">
+            <li role="option"><a href="#" data-location="bali">Bali</a></li>
+            <li role="option"><a href="#" data-location="thailand">Thailand</a></li>
+            <li role="option"><a href="#" data-location="maldives">Maldives</a></li>
+            <li role="option"><a href="#" data-location="dubai">Dubai</a></li>
+            <li role="option"><a href="#" data-location="indonesia">Indonesia</a></li>
+            <li role="option"><a href="#" data-location="singapore">Singapore</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="right-actions">
+        <nav class="main-nav">
+          <a href="people_reviews.html" class="is-active">People Reviews</a>
+          <a href="packages.html">Packages</a>
+          <!--<a href="contact_us.html">Contact Us</a>-->
+        </nav>
+        <button class="contact-btn" type="button" onclick="window.location.href='contact_us.html'">Contact Us</button>
+      </div>
+    </header>
+
+    <section class="people-reviews-screen" id="peopleReviewsScreen" aria-label="People reviews page">
+      <div class="reviews-shell">
+        <h2>Ratings &amp; Reviews</h2>
+
+        <div class="reviews-metrics">
+          <article>
+            <h3>4.8 <span>★</span></h3>
+            <p>Ratings &amp; Reviews</p>
+          </article>
+          <article>
+            <h3>5K+</h3>
+            <p>Happy Customers</p>
+          </article>
+          <article>
+            <h3>Best Travelers</h3>
+            <p>Award Winner</p>
+          </article>
+        </div>
+
+        <div class="reviews-row reviews-row-top">
+          <article class="reviews-card">
+            <div class="reviews-stars">★★★★<span>★</span></div>
+            <p>Our trip with Benua Travel Agency was memorable. They arranged everything perfectly and took us to dream
+              destinations. What an experience!</p>
+            <div class="reviews-author"><img src="https://i.pravatar.cc/80?img=15" alt="Don John" />
+              <div><strong>Don John</strong><small>@donjohn</small></div>
+            </div>
+          </article>
+          <article class="reviews-card">
+            <div class="reviews-stars">★★★★<span>★</span></div>
+            <p>Our trip with Benua Travel Agency was memorable. They arranged everything perfectly and took us to dream
+              destinations. What an experience!</p>
+            <div class="reviews-author"><img src="https://i.pravatar.cc/80?img=15" alt="Don John" />
+              <div><strong>Don John</strong><small>@donjohn</small></div>
+            </div>
+          </article>
+          <article class="reviews-card">
+            <div class="reviews-stars">★★★★<span>★</span></div>
+            <p>Our trip with Benua Travel Agency was memorable. They arranged everything perfectly and took us to dream
+              destinations. What an experience!</p>
+            <div class="reviews-author"><img src="https://i.pravatar.cc/80?img=15" alt="Don John" />
+              <div><strong>Don John</strong><small>@donjohn</small></div>
+            </div>
+          </article>
+          <span class="reviews-side-arrow reviews-side-arrow-right" aria-hidden="true">←</span>
+        </div>
+
+        <div class="reviews-row reviews-row-media">
+          <span class="reviews-side-arrow reviews-side-arrow-left" aria-hidden="true">→</span>
+          <article class="reviews-media-card">
+            <img src="images/review.png" alt="Snow cabin trip" />
+            <p>He Went to Bali Temple</p>
+          </article>
+          <article class="reviews-media-card">
+            <img src="images/review1.png" alt="Vlogger house" />
+            <p>She is a Vlogger of the month</p>
+          </article>
+          <article class="reviews-media-card">
+            <img src="images/review2.png" alt="Lake houses" />
+            <p>Unique stay we offer in bali</p>
+          </article>
+        </div>
+
+        <div class="reviews-row reviews-row-bottom">
+          <article class="reviews-card">
+            <div class="reviews-stars">★★★★<span>★</span></div>
+            <p>Our trip with Benua Travel Agency was memorable. They arranged everything perfectly and took us to dream
+              destinations. What an experience!</p>
+            <div class="reviews-author"><img src="https://i.pravatar.cc/80?img=15" alt="Don John" />
+              <div><strong>Don John</strong><small>@donjohn</small></div>
+            </div>
+          </article>
+          <article class="reviews-card">
+            <div class="reviews-stars">★★★★<span>★</span></div>
+            <p>Our trip with Benua Travel Agency was memorable. They arranged everything perfectly and took us to dream
+              destinations. What an experience!</p>
+            <div class="reviews-author"><img src="https://i.pravatar.cc/80?img=15" alt="Don John" />
+              <div><strong>Don John</strong><small>@donjohn</small></div>
+            </div>
+          </article>
+          <article class="reviews-card">
+            <div class="reviews-stars">★★★★<span>★</span></div>
+            <p>Our trip with Benua Travel Agency was memorable. They arranged everything perfectly and took us to dream
+              destinations. What an experience!</p>
+            <div class="reviews-author"><img src="https://i.pravatar.cc/80?img=15" alt="Don John" />
+              <div><strong>Don John</strong><small>@donjohn</small></div>
+            </div>
+          </article>
+          <span class="reviews-side-arrow reviews-side-arrow-right" aria-hidden="true">←</span>
+        </div>
+
+        <button class="reviews-continue" type="button" onclick="window.location.href='home.html'">
+          <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+          Continue
+        </button>
+      </div>
+
+      <section class="bali-blogs reviews-bali-blogs">
+        <h2>Blogs All About Bali</h2>
+        <div class="bali-blogs-grid">
+          <article class="bali-card bali-card--featured">
+            <div class="bali-card-media">
+              <span class="blog-tag">Vlogger</span>
+              <img src="images/review3.png"
+                alt="Exploring Bali" />
+              <div class="blog-video-bar"><span class="blog-play">&#9654;</span>
+                <div class="blog-progress">
+                  <div class="blog-progress-fill"></div>
+                </div>
+              </div>
+            </div>
+            <div class="bali-card-body">
+              <h3>Exploring Bali A Tropical Journey</h3>
+              <p>Dive deep into the heart of Bali with our captivating travel tales. From the majestic temples and lush
+                rice terraces to the vibrant cultural festivals and stunning beaches, we share our journey through
+                Bali's enchanting landscapes. Discover the island's rich heritage, exquisite cuisine, and the warm
+                hospitality of its people through our detailed travel experiences.</p>
+              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=5" alt="Janna Auniman"
+                  class="author-avatar" />
+                <div class="author-info"><strong>Janna Auniman</strong><span>I'm A World Traveller</span></div><button
+                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+              </div>
+            </div>
+          </article>
+          <article class="bali-card bali-card--img-only">
+            <img src="images\review4.png"
+              alt="Tech Nomad" class="bali-card-img" />
+            <div class="bali-card-body">
+              <h3>Tech Nomad's Guide to Bali Templates</h3>
+              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram"
+                  class="author-avatar" />
+                <div class="author-info"><strong>Leo Vikram</strong><span>Software Engineer</span></div><button
+                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+              </div>
+            </div>
+          </article>
+          <article class="bali-card bali-card--img-only">
+            <img src="images\review5.png"
+              alt="Secrets of Ubud" class="bali-card-img" />
+            <div class="bali-card-body">
+              <h3>Secrets of Ubud: Culture and Nature</h3>
+              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram"
+                  class="author-avatar" />
+                <div class="author-info"><strong>Leo Vikram</strong><span>Software Engineer</span></div><button
+                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+              </div>
+            </div>
+          </article>
+          <article class="bali-card bali-card--featured">
+            <div class="bali-card-media">
+              <span class="blog-tag">Vlogger</span>
+              <img src="images\review6.png" alt="Bali adventure" />
+              <div class="blog-video-bar"><span class="blog-play">&#9654;</span>
+                <div class="blog-progress">
+                  <div class="blog-progress-fill"></div>
+                </div>
+              </div>
+            </div>
+            <div class="bali-card-body">
+              <h3>Adventures in Bali: Beyond the Beach</h3>
+              <p>Join us as we venture beyond Bali's renowned beaches to uncover its lesser-known treasures. From the
+                mystical Mount Batur at sunrise to the serene beauty of the Jatiluwih Rice Terraces and the spiritual
+                ambiance of ancient temples, our adventures in Bali reveal the island's diverse landscapes and rich
+                cultural tapestry.</p>
+              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=47" alt="Sara Kumari"
+                  class="author-avatar" />
+                <div class="author-info"><strong>Sara Kumari</strong><span>Adventure Traveller</span></div><button
+                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+              </div>
+            </div>
+          </article>
+        </div>
+        <div class="bali-blogs-footer"><button class="want-more-btn" type="button">Want to know more!</button></div>
+      </section>
+
+      <section class="instagram-showcase reviews-instagram-showcase">
+        <div class="instagram-head">
+          <h2>Instagram</h2>
+          <p>Follow Us On @tripon</p>
+        </div>
+        <div class="instagram-strip">
+          <img src="images/insta_pic1.png" alt="Ocean cliffs" />
+          <img src="images/insta_pic2.png" alt="Tropical beach" />
+          <img src="images/insta_pic3.png" alt="Balinese dancer" />
+          <img src="images/insta_pic4.png" alt="Sunset beach" />
+          <img src="images/insta_pic5.png" alt="Temple statue" />
+          <img src="images/insta_pic6.png" alt="Bali temple lake" />
+          <img src="images/insta_pic7.png" alt="Rice field walk" />
+        </div>
+      </section>
+
+      <footer class="tripon-footer reviews-tripon-footer">
+        <div class="tripon-footer-top">
+          <div class="tripon-brand">tripon</div>
+          <nav class="tripon-links">
+            <a href="#">About</a><a href="#">Locations</a><a href="#">Careers</a>
+            <a href="#">Blogs</a><a href="packages.html">Packages</a><a href="contact.html">Contact Us</a>
+          </nav>
+          <div class="tripon-social-block">
+            <p>FOLLOW OUR TRAVELER COMMUNITY <span>&#128293;</span></p>
+            <div class="tripon-socials">
+              <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
+              <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+              <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+              <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+        <div class="tripon-footer-bottom">
+          <p>Copyright @ 2026 TRIPON All rights reserved</p>
+        </div>
+      </footer>
+    </section>
+  </div>
+  <script src="script1.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tripon Blogs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style1.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+  <div class="page blog-page">
+    <header class="topbar">
+      <div class="topbar-left">
+        <img src="images/vector.png" alt="Tripon logo" class="logo" />
+        <span class="topbar-divider" aria-hidden="true"></span>
+        <button class="location-pill" type="button">Bali <i class="fa-solid fa-chevron-down location-chevron"
+            aria-hidden="true"></i></button>
+      </div>
+      <div class="right-actions">
+        <nav class="main-nav">
+          <a href="people_reviews.html">People Reviews</a>
+          <a href="packages.html">Packages</a>
+        </nav>
+        <button class="contact-btn blog-contact-btn" type="button">Contact Us</button>
+      </div>
+    </header>
+
+    <main class="blog-main">
+      <section class="blog-hero">
+        <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=1800&q=80"
+          alt="Travel blog hero backdrop" />
+        <div class="blog-hero-content">
+          <h1>Your guide to everywhere</h1>
+          <p>Find inspiration, guides and stories for wherever you're going. Select a destination.</p>
+        </div>
+      </section>
+
+      <section class="blog-content-wrap">
+        <div class="blog-posts-list">
+          <article class="blog-post-row" data-post-id="kenya-safari" data-category="adventure" data-tags="adventure nature">
+            <img src="https://images.unsplash.com/photo-1517685352821-92cf88aee5a5?auto=format&fit=crop&w=800&q=80"
+              alt="Kenya safari travel post" />
+            <div class="blog-post-copy">
+              <p class="blog-meta">April 05 2023 <span>By Ali Tufan</span></p>
+              <h3>Kenya vs Tanzania Safari: The Better African Safari Experience</h3>
+              <p>From crazy beaches with cosmetic theatres to ember strolls through regal neighborhoods.</p>
+              <a href="#">Read More <span>↗</span></a>
+            </div>
+          </article>
+
+          <article class="blog-post-row" data-post-id="cambodia-islands" data-category="cultural" data-tags="cultural city">
+            <img src="https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=800&q=80"
+              alt="Cambodia travel post" />
+            <div class="blog-post-copy">
+              <p class="blog-meta">April 05 2023 <span>By Ali Tufan</span></p>
+              <h3>Cambodia in December: Island Hopping and Weather Tips</h3>
+              <p>From crazy beaches with cosmetic theatres to ember strolls through regal neighborhoods.</p>
+              <a href="#">Read More <span>↗</span></a>
+            </div>
+          </article>
+
+          <article class="blog-post-row" data-post-id="chile-beach" data-category="nature" data-tags="nature food">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80"
+              alt="Chile beach post" />
+            <div class="blog-post-copy">
+              <p class="blog-meta">April 05 2023 <span>By Ali Tufan</span></p>
+              <h3>Chile in February: Beach Fun in Summer Weather</h3>
+              <p>From crazy beaches with cosmetic theatres to ember strolls through regal neighborhoods.</p>
+              <a href="#">Read More <span>↗</span></a>
+            </div>
+          </article>
+
+          <article class="blog-post-row" data-post-id="sweden-summer" data-category="city" data-tags="city cultural">
+            <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=80"
+              alt="Sweden summer post" />
+            <div class="blog-post-copy">
+              <p class="blog-meta">April 05 2023 <span>By Ali Tufan</span></p>
+              <h3>Summer in Sweden: When the Sun Never Sets on Fun</h3>
+              <p>From crazy beaches with cosmetic theatres to ember strolls through regal neighborhoods.</p>
+              <a href="#">Read More <span>↗</span></a>
+            </div>
+          </article>
+
+          <article class="blog-post-row" data-post-id="norway-winter" data-category="cruises" data-tags="cruises adventure">
+            <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=800&q=80"
+              alt="Norway winter post" />
+            <div class="blog-post-copy">
+              <p class="blog-meta">April 05 2023 <span>By Ali Tufan</span></p>
+              <h3>Norway in Winter: Where Adventure Meets Serenity</h3>
+              <p>From crazy beaches with cosmetic theatres to ember strolls through regal neighborhoods.</p>
+              <a href="#">Read More <span>↗</span></a>
+            </div>
+          </article>
+        </div>
+
+        <aside class="blog-sidebar">
+          <div class="blog-sidebar-card">
+            <div class="blog-search-box">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" placeholder="Search" />
+            </div>
+          </div>
+
+          <div class="blog-sidebar-card blog-sidebar-group">
+            <section class="blog-sidebar-section">
+              <h4>Blog Categories</h4>
+              <ul class="blog-link-list">
+                <li><a href="#" data-blog-filter="adventure">Adventure</a></li>
+                <li><a href="#" data-blog-filter="nature">Nature</a></li>
+                <li><a href="#" data-blog-filter="cultural">Cultural</a></li>
+                <li><a href="#" data-blog-filter="food">Food</a></li>
+                <li><a href="#" data-blog-filter="city">City</a></li>
+                <li><a href="#" data-blog-filter="cruises">Cruises</a></li>
+              </ul>
+            </section>
+
+            <section class="blog-sidebar-section">
+              <h4>Recent Posts</h4>
+              <div class="recent-post-list">
+                <a href="#" class="recent-post-item" data-recent-post="kenya-safari"><img
+                    src="https://images.unsplash.com/photo-1517685352821-92cf88aee5a5?auto=format&fit=crop&w=200&q=80"
+                    alt="Recent post" /><span>Top of the best Solo Travel Destinations for Women<br> April 06
+                    2023</span></a>
+                <a href="#" class="recent-post-item" data-recent-post="cambodia-islands"><img
+                    src="https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=200&q=80"
+                    alt="Recent post" /><span>Top of the best Solo Travel Destinations for Women<br> April 06
+                    2023</span></a>
+                <a href="#" class="recent-post-item" data-recent-post="chile-beach"><img
+                    src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=200&q=80"
+                    alt="Recent post" /><span>Top of the best Solo Travel Destinations for Women<br> April 06
+                    2023</span></a>
+              </div>
+            </section>
+
+            <section class="blog-sidebar-section">
+              <h4>Tags</h4>
+              <div class="blog-tags">
+                <span data-blog-tag="adventure">Adventure</span><span data-blog-tag="nature">Nature</span><span
+                  data-blog-tag="cultural">Cultural</span><span data-blog-tag="food">Food</span>
+              </div>
+            </section>
+          </div>
+
+          <div class="blog-sidebar-card">
+            <h4>Never Miss News</h4>
+            <div class="blog-socials">
+              <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+              <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+              <a href="#" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+              <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+  </div>
+  <script src="script1.js"></script>
+</body>
+
+</html>
