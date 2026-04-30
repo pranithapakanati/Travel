@@ -42,7 +42,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="style1.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -74,8 +74,41 @@
         </nav>
         <button class="contact-btn" type="button" onclick="window.location.href='contact_us.html'">Contact Us</button>
       </div>
+      <button class="home-mobile-menu-toggle" id="homeMobileMenuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="homeMobileDrawer">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
 
     </header>
+    <div class="home-mobile-menu-overlay" id="homeMobileMenuOverlay" aria-hidden="true">
+      <aside class="home-mobile-drawer" id="homeMobileDrawer" aria-label="Mobile navigation">
+        <div class="home-mobile-drawer-header">
+          <img src="images\vector.png" alt="Tripon logo" class="home-mobile-drawer-logo" />
+          <button class="home-mobile-drawer-close" id="homeMobileDrawerClose" type="button" aria-label="Close menu">✕</button>
+        </div>
+        <div class="home-mobile-drawer-location">
+          <button class="home-mobile-location-toggle" id="homeMobileLocationToggle" type="button" aria-expanded="true" aria-controls="homeMobileLocationList">
+            <span>BALI</span>
+            <span class="home-mobile-location-icon" aria-hidden="true">−</span>
+          </button>
+          <div class="home-mobile-location-list active" id="homeMobileLocationList">
+            <a href="index.html" class="is-active">BALI</a>
+            <a href="#">ANDAMAN</a>
+            <span>More Adding Soon...</span>
+          </div>
+        </div>
+        <nav class="home-mobile-drawer-nav">
+          <a href="people_reviews.html">People Reviews</a>
+          <a href="packages.html">Packages</a>
+          <a href="contact_us.html">Contact Us</a>
+        </nav>
+        <div class="home-mobile-drawer-contact">
+          <p>For More Inquiry</p>
+          <a href="tel:+91740013770">+91 7400013770</a>
+        </div>
+      </aside>
+    </div>
 
     <main class="home-screen" id="homeScreen">
 
@@ -95,23 +128,99 @@
         <form class="search-box">
           <div class="field">
             <label><span class="field-icon">👤</span>Name</label>
-            <span>Enter Your Name</span>
+            <input type="text" placeholder="Enter Your Name" aria-label="Enter your name" />
           </div>
           <div class="field">
             <label><span class="field-icon">☎</span>Phone Number</label>
-            <span>Enter Your Phone Number</span>
+            <input type="tel" placeholder="Enter Your Phone Number" aria-label="Enter your phone number" />
           </div>
           <div class="field">
             <label><span class="field-icon">📅</span>Travel On</label>
-            <span>Select Date</span>
+            <input type="date" aria-label="Select travel date" />
           </div>
           <div class="field">
             <label><span class="field-icon">👥</span>Travelers</label>
-            <span>No. of Guests</span>
+            <input type="number" min="1" placeholder="No. of Guests" aria-label="Number of guests" />
           </div>
           <button class="send-btn" type="button">➤</button>
         </form>
+        <button class="mobile-hero-booking-trigger" type="button" id="mobileHeroBookingTrigger">
+          <span>Book a Trip With Us</span>
+          <span class="mobile-hero-booking-arrow" aria-hidden="true">➜</span>
+        </button>
       </section>
+
+      <div class="mobile-pref-modal-overlay" id="mobilePrefModal" aria-hidden="true">
+        <div class="mobile-pref-modal" role="dialog" aria-modal="true" aria-labelledby="mobilePrefTitle">
+          <button class="mobile-pref-close" type="button" id="mobilePrefClose" aria-label="Close popup">✕</button>
+          <p class="mobile-pref-brand">Bali <span>INDONESIA</span></p>
+          <div class="mobile-pref-step active" data-step="1">
+            <h3 class="mobile-pref-title" id="mobilePrefTitle">How many nights are you planning to stay in Bali?</h3>
+            <form class="mobile-pref-form">
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="3n4d" /><span>3 Nights 4 Days</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="4n5d" /><span>4 Nights 5 Days</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="5n6d" /><span>5 Nights 6 Days</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="6n7d" /><span>6 Nights 7 Days</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="7n8d" /><span>7 Nights 8 Days</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="suggest_days" /><span>Suggest Me How Many Days To Stay</span></label>
+            </form>
+          </div>
+          <div class="mobile-pref-step" data-step="2">
+            <h3 class="mobile-pref-title">How many travelers will be joining you on this trip?</h3>
+            <form class="mobile-pref-form">
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="2" /><span>2 People</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="3" /><span>3 People</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="4" /><span>4 People</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="5plus" /><span>5+ People</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="family" /><span>Traveling with Family</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="solo" /><span>Solo Trip</span></label>
+            </form>
+          </div>
+          <div class="mobile-pref-step" data-step="3">
+            <h3 class="mobile-pref-title">Share us your travel specific preferences</h3>
+            <form class="mobile-pref-form">
+              <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="started_planning" /><span>I just started planning for trip</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="booked_flight" /><span>I have booked my flight tickets</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="booking_this_week" /><span>I will book flight tickets this week</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="recommendations" /><span>I need personalised Bali recommendations</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="priority_contact" /><span>Please contact me in priority</span></label>
+            </form>
+          </div>
+          <div class="mobile-pref-step" data-step="4">
+            <h3 class="mobile-pref-title">May I ask for your name, please?</h3>
+            <form class="mobile-pref-form">
+              <input class="mobile-pref-input" type="text" name="travelerName" placeholder="Enter Your Name" />
+            </form>
+          </div>
+          <div class="mobile-pref-step" data-step="5">
+            <h3 class="mobile-pref-title">📞 Get a Call Back, Share Contact Details.</h3>
+            <form class="mobile-pref-form">
+              <input class="mobile-pref-input" type="tel" name="travelerPhone" placeholder="Enter Phone Number*" />
+              <input class="mobile-pref-input" type="email" name="travelerEmail" placeholder="Enter Email ID" />
+            </form>
+          </div>
+          <div class="mobile-pref-step" data-step="6">
+            <h3 class="mobile-pref-title">When would you like to secure your trip reservation?</h3>
+            <form class="mobile-pref-form">
+              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_week" /><span>Within This Week</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_month" /><span>Within This Month</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="next_month" /><span>Within Next Month</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="upcoming_month" /><span>Within Upcoming Month</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="suggest_time" /><span>Suggest Me The Best Time To Travel</span></label>
+            </form>
+          </div>
+          <div class="mobile-pref-step mobile-pref-step-final" data-step="7">
+            <p class="mobile-pref-thanks-bubble">Thank you for filling the form.</p>
+            <div class="mobile-pref-avatar" aria-hidden="true">🙏</div>
+            <p class="mobile-pref-thanks-text">Our Travel Expert Will Reach Out To You Soon.</p>
+            <a class="mobile-pref-whatsapp" href="https://wa.me/918919805038?text=Hi%2C%20I'm%20interested%20in%20a%20Bali%20tour%20package!" target="_blank" rel="noopener noreferrer">Reach us on WhatsApp <span>(For Faster Approach)</span></a>
+          </div>
+          <div class="mobile-pref-actions" id="mobilePrefActions">
+            <button class="mobile-pref-next" type="button" id="mobilePrefNext">Next (1/6)</button>
+            <button class="mobile-pref-prev" type="button" id="mobilePrefPrev">← Previous</button>
+          </div>
+        </div>
+      </div>
 
       <section class="adventure">
         <h2>Let’s go on an adventure</h2>
@@ -136,6 +245,34 @@
             <div class="place-content">
               <h3>Lombok</h3>
               <span>15+ Activities, 10 Sight Seedings</span>
+            </div>
+          </article>
+          <article class="place-item" data-location-link="location.html?place=seminyak">
+            <div class="place-icon">🏖</div>
+            <div class="place-content">
+              <h3>Seminyak</h3>
+              <span>18+ Activities, 14 Sight Seedings</span>
+            </div>
+          </article>
+          <article class="place-item" data-location-link="location.html?place=nusa-penida">
+            <div class="place-icon">⛵</div>
+            <div class="place-content">
+              <h3>Nusa Penida</h3>
+              <span>14+ Activities, 12 Sight Seedings</span>
+            </div>
+          </article>
+          <article class="place-item" data-location-link="location.html?place=uluwatu">
+            <div class="place-icon">🌅</div>
+            <div class="place-content">
+              <h3>Uluwatu</h3>
+              <span>12+ Activities, 9 Sight Seedings</span>
+            </div>
+          </article>
+          <article class="place-item place-item-see-all" data-location-link="location.html">
+            <div class="place-icon place-icon-see-all">Bali</div>
+            <div class="place-content">
+              <h3>See All The Locations</h3>
+              <span>Explore complete Bali destination list</span>
             </div>
           </article>
         </div>
@@ -200,7 +337,7 @@
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Ubud, Indonesia</p>
             <h4>Honey Moon Package in Bali</h4>
-            <p class="rating">★★★★★ <span>4.8 (136)</span></p>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (136)</span></p>
             <div class="meta"><span>◷ 4 Days</span><span>From ₹45,000</span></div>
           </article>
           <article class="package-card" data-type="couple">
@@ -210,7 +347,7 @@
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Nusa Penida, Indonesia</p>
             <h4>Isolated Mountains Retreat</h4>
-            <p class="rating">★★★★★ <span>4.8 (136)</span></p>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (136)</span></p>
             <div class="meta"><span>◷ 5 Days</span><span>From ₹50,000</span></div>
           </article>
           <article class="package-card" data-type="couple">
@@ -220,7 +357,7 @@
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Gili Trawangan, Indonesia</p>
             <h4>The White Beach Land</h4>
-            <p class="rating">★★★★★ <span>4.8 (136)</span></p>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (136)</span></p>
             <div class="meta"><span>◷ 6 Days</span><span>From ₹75,000</span></div>
           </article>
 
@@ -233,7 +370,7 @@
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Seminyak, Indonesia</p>
             <h4>Family Beach Resort Stay</h4>
-            <p class="rating">★★★★★ <span>4.7 (98)</span></p>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.7 (98)</span></p>
             <div class="meta"><span>◷ 5 Days</span><span>From ₹1,20,000</span></div>
           </article>
           <article class="package-card" data-type="family">
@@ -244,7 +381,7 @@
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Ubud, Indonesia</p>
             <h4>Cultural Village Explorer</h4>
-            <p class="rating">★★★★☆ <span>4.6 (74)</span></p>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <span>4.6 (74)</span></p>
             <div class="meta"><span>◷ 4 Days</span><span>From ₹95,000</span></div>
           </article>
           <article class="package-card" data-type="family">
@@ -255,7 +392,7 @@
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Kuta, Indonesia</p>
             <h4>Waterpark &amp; Temples Tour</h4>
-            <p class="rating">★★★★★ <span>4.9 (112)</span></p>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.9 (112)</span></p>
             <div class="meta"><span>◷ 6 Days</span><span>From ₹1,10,000</span></div>
           </article>
 
@@ -268,7 +405,7 @@
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Canggu, Indonesia</p>
             <h4>Adventure Surf Camp</h4>
-            <p class="rating">★★★★★ <span>4.8 (162)</span></p>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (162)</span></p>
             <div class="meta"><span>◷ 5 Days</span><span>From ₹55,000</span></div>
           </article>
           <article class="package-card" data-type="friends">
@@ -279,7 +416,7 @@
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Mount Batur, Indonesia</p>
             <h4>Volcano Trekking Trip</h4>
-            <p class="rating">★★★★☆ <span>4.5 (88)</span></p>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <span>4.5 (88)</span></p>
             <div class="meta"><span>◷ 3 Days</span><span>From ₹40,000</span></div>
           </article>
           <article class="package-card" data-type="friends">
@@ -290,7 +427,7 @@
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Nusa Lembongan, Indonesia</p>
             <h4>Island Hopping Tour</h4>
-            <p class="rating">★★★★★ <span>4.8 (140)</span></p>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (140)</span></p>
             <div class="meta"><span>◷ 4 Days</span><span>From ₹65,000</span></div>
           </article>
 
@@ -321,7 +458,7 @@
                 <p>@donjohn</p>
               </div>
             </div>
-            <div class="stars">★★★★<span>★</span></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">Our trip with Benua Travel Agency was memorable. They arranged everything perfectly
               and
               took us to dream destinations. What an experience!</p>
@@ -335,7 +472,7 @@
                 <p>@johnsmith</p>
               </div>
             </div>
-            <div class="stars">★★★★<span>★</span></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">Thank you Benua Travel Agency for an unforgettable trip. The selected destinations
               are
               simply amazing, and their services are very professional.</p>
@@ -355,7 +492,7 @@
                 <p>@knganas</p>
               </div>
             </div>
-            <div class="stars">★★★★<span>★</span></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">The customized travel packages from Benua Travel Agency are perfectly suited to our
               preferences. They arrange all the details well, so we can have the perfect holiday.</p>
           </article>
@@ -368,7 +505,7 @@
                 <p>@raim</p>
               </div>
             </div>
-            <div class="stars">★★★★<span>★</span></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">Benua Travel Agency made our travel dreams come true. They provide an amazing choice
               of
               destinations and pay great attention to detail.</p>
@@ -382,7 +519,7 @@
                 <p>@johndoe</p>
               </div>
             </div>
-            <div class="stars">★★★★<span>★</span></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">The team of travel experts from Benua Travel Agency really understood our needs. They
               provided personalized recommendations for every day.</p>
           </article>
@@ -395,7 +532,7 @@
                 <p>@jonathan</p>
               </div>
             </div>
-            <div class="stars">★★★★<span>★</span></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">We are very pleased with the family travel packages provided by Benua Travel Agency.
               They accommodate the needs of our entire family and children.</p>
           </article>
@@ -408,7 +545,10 @@
       </section>
 
       <section class="video-banner">
-        <img src="images\video_banner.png" alt="Cliffside beach in Bali" />
+        <video class="banner-bg-video" autoplay muted loop playsinline preload="metadata" aria-label="Bali background video">
+          <source src="videos/video4.mp4" type="video/mp4" />
+          <source src="videos/video3.mp4" type="video/mp4" />
+        </video>
         <div class="overlay"></div>
         <div class="banner-content">
           <img class="indo-map" src="images/map.png" alt="Indonesia map outline" />
@@ -832,6 +972,12 @@
         </div>
       </footer>
     </main>
+  </div>
+  <div class="submit-popup-overlay" id="submitPopup" aria-hidden="true">
+    <div class="submit-popup-box" role="dialog" aria-modal="true" aria-labelledby="submitPopupMessage">
+      <p class="submit-popup-message" id="submitPopupMessage">Thanks for filling the form!</p>
+      <button class="submit-popup-close" type="button" id="submitPopupClose">Close</button>
+    </div>
   </div>
   <script src="script1.js"></script>
 </body>
