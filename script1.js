@@ -78,6 +78,44 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   };
 
+  /** Removes all Unicode digit characters (for name fields: letters only, no numbers). */
+  const stripUnicodeDigitsFromString = (value) => {
+    if (typeof value !== "string") {
+      return "";
+    }
+    try {
+      return value.replace(/\p{Nd}/gu, "");
+    } catch {
+      return value.replace(/\d/g, "").replace(/[\uFF10-\uFF19]/g, "");
+    }
+  };
+
+  const bindNameFieldNoDigits = (input) => {
+    if (!input) {
+      return;
+    }
+    input.addEventListener("input", () => {
+      const prev = input.value;
+      const next = stripUnicodeDigitsFromString(prev);
+      if (next !== prev) {
+        const start = input.selectionStart ?? prev.length;
+        const end = input.selectionEnd ?? prev.length;
+        input.value = next;
+        const newStart = stripUnicodeDigitsFromString(prev.slice(0, start)).length;
+        const newEnd = stripUnicodeDigitsFromString(prev.slice(0, end)).length;
+        input.setSelectionRange(newStart, newEnd);
+      }
+    });
+    input.addEventListener("keydown", (e) => {
+      if (e.ctrlKey || e.metaKey || e.altKey) {
+        return;
+      }
+      if (e.key && /^\d$/.test(e.key)) {
+        e.preventDefault();
+      }
+    });
+  };
+
   const animateVisiblePackageCards = (cards) => {
     let visibleIndex = 0;
     cards.forEach((card) => {
@@ -258,10 +296,18 @@ document.addEventListener("DOMContentLoaded", () => {
       const arrows = Array.from(row.querySelectorAll(".reviews-side-arrow"));
       let activeIndex = 0;
       const isMediaRow = row.classList.contains("reviews-row-media");
+      /* ≤768 mobile/tablet strips; narrow phones ≤430 stay one-card-wide (320 / 375 / 425 UX). */
+      const reviewsMobileMql = window.matchMedia("(max-width: 768px)");
+      const reviewsNarrowPhoneMql = window.matchMedia("(max-width: 430px)");
+      const isReviewsMobileLayout = () => reviewsMobileMql.matches;
+      const isReviewsNarrowPhone = () => reviewsNarrowPhoneMql.matches;
       const shouldAutoMoveLeft = row.classList.contains("reviews-row-top") || row.classList.contains("reviews-row-bottom");
       let rowAutoTimer = null;
       let autoScrollIndex = 0;
+      let syncMediaRowLayout = () => {};
       const shouldPackageStyleMove = shouldAutoMoveLeft && !isMediaRow;
+      const horizontalStripActive = () =>
+        shouldPackageStyleMove || (isMediaRow && isReviewsMobileLayout());
 
       if (!cards.length) {
         return;
@@ -269,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (shouldPackageStyleMove) {
         const baseCards = Array.from(row.querySelectorAll(".reviews-card"));
-        const isSmallReviewLayout = () => window.matchMedia("(max-width: 425px)").matches;
+        const isSmallReviewLayout = () => isReviewsMobileLayout();
         if (baseCards.length) {
           while (row.querySelectorAll(".reviews-card").length < 6) {
             baseCards.forEach((card) => {
@@ -290,9 +336,13 @@ document.addEventListener("DOMContentLoaded", () => {
         row.style.alignItems = "stretch";
 
         const applyReviewCardWidth = () => {
-          const singleCardWidth = "calc(100% - 12px)";
+          const oneUpWidth = "min(100%, calc(100% - 12px))";
+          const twoUpWidth = "calc((100% - 12px) / 2)";
           const desktopCardWidth = "calc((100% - 40px) / 3)";
-          const targetWidth = isSmallReviewLayout() ? singleCardWidth : desktopCardWidth;
+          let targetWidth = desktopCardWidth;
+          if (isSmallReviewLayout()) {
+            targetWidth = isReviewsNarrowPhone() ? oneUpWidth : twoUpWidth;
+          }
           row.style.gap = isSmallReviewLayout() ? "12px" : "20px";
           Array.from(row.querySelectorAll(".reviews-card")).forEach((cardNode) => {
             cardNode.style.flex = `0 0 ${targetWidth}`;
@@ -304,18 +354,88 @@ document.addEventListener("DOMContentLoaded", () => {
         };
         applyReviewCardWidth();
         window.addEventListener("resize", applyReviewCardWidth);
+        reviewsMobileMql.addEventListener("change", applyReviewCardWidth);
+        reviewsNarrowPhoneMql.addEventListener("change", applyReviewCardWidth);
+      } else if (isMediaRow) {
+        const applyMediaStripWidth = () => {
+          if (!isReviewsMobileLayout()) {
+            return;
+          }
+          row.style.gap = "12px";
+          const w = isReviewsNarrowPhone()
+            ? "min(100%, calc(100% - 12px))"
+            : "calc((100% - 12px) / 2)";
+          Array.from(row.querySelectorAll(".reviews-media-card")).forEach((node) => {
+            node.style.flex = `0 0 ${w}`;
+            node.style.minWidth = w;
+            node.style.maxWidth = w;
+            node.style.scrollSnapAlign = "start";
+            node.style.margin = "0";
+          });
+        };
+
+        const clearMediaRowStripStyles = () => {
+          row.style.display = "";
+          row.style.flexWrap = "";
+          row.style.overflowX = "";
+          row.style.overflowY = "";
+          row.style.scrollSnapType = "";
+          row.style.scrollBehavior = "";
+          row.style.scrollbarWidth = "";
+          row.style.gap = "";
+          row.style.alignItems = "";
+          Array.from(row.querySelectorAll(".reviews-media-card")).forEach((node) => {
+            node.style.flex = "";
+            node.style.minWidth = "";
+            node.style.maxWidth = "";
+            node.style.scrollSnapAlign = "";
+            node.style.margin = "";
+          });
+        };
+
+        syncMediaRowLayout = () => {
+          if (!isReviewsMobileLayout()) {
+            clearMediaRowStripStyles();
+            return;
+          }
+          row.style.display = "flex";
+          row.style.flexWrap = "nowrap";
+          row.style.overflowX = "auto";
+          row.style.overflowY = "hidden";
+          row.style.scrollSnapType = "x mandatory";
+          row.style.scrollBehavior = "smooth";
+          row.style.scrollbarWidth = "none";
+          row.style.gap = "12px";
+          row.style.alignItems = "stretch";
+          applyMediaStripWidth();
+        };
+
+        syncMediaRowLayout();
+        window.addEventListener("resize", applyMediaStripWidth);
       }
+
+      const syncMediaVideos = () => {
+        if (!isMediaRow) {
+          return;
+        }
+        cards.forEach((card) => {
+          const v = card.querySelector("video");
+          if (v) {
+            v.play().catch(() => {});
+          }
+        });
+      };
 
       const renderRow = () => {
         cards.forEach((card, idx) => {
           const isActive = idx === activeIndex;
+          card.classList.remove("is-media-active");
           card.style.opacity = "1";
           card.style.transform = isMediaRow ? "translateY(0)" : (isActive ? "translateY(-2px)" : "translateY(0)");
           card.style.transition = "all 220ms ease";
         });
-        if (isMediaRow) {
-          cards[activeIndex]?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
-        }
+        row.classList.remove("reviews-row-media--rotator");
+        syncMediaVideos();
       };
 
       arrows.forEach((arrow) => {
@@ -347,11 +467,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       };
 
+      const carouselCardSelector = () =>
+        shouldPackageStyleMove ? ".reviews-card" : ".reviews-media-card";
+
       const moveRowLeftByOneCard = () => {
-        if (!shouldPackageStyleMove) {
+        if (!horizontalStripActive()) {
           return;
         }
-        const rowCards = Array.from(row.querySelectorAll(".reviews-card"));
+        const rowCards = Array.from(row.querySelectorAll(carouselCardSelector()));
         if (rowCards.length < 2) {
           return;
         }
@@ -362,39 +485,49 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       };
 
-      const startRowAutoplay = () => {
+      const startRowAutoplay = (immediate = false) => {
         stopRowAutoplay();
-        if (!shouldAutoMoveLeft || cards.length < 2) {
+        const wantsAutoplay = cards.length >= 2 && horizontalStripActive();
+        if (!wantsAutoplay) {
           return;
         }
-        rowAutoTimer = window.setInterval(() => {
-          if (isMediaRow) {
-            activeIndex = (activeIndex + 1) % cards.length;
-            renderRow();
-            return;
-          }
+        const slideMs = 2600;
+        if (immediate && horizontalStripActive()) {
           moveRowLeftByOneCard();
-        }, 2600);
+        }
+        rowAutoTimer = window.setInterval(() => {
+          moveRowLeftByOneCard();
+        }, slideMs);
       };
 
-      if (shouldPackageStyleMove) {
-        row.addEventListener(
-          "scroll",
-          () => {
-            const rowCards = Array.from(row.querySelectorAll(".reviews-card"));
-            if (!rowCards.length) {
-              return;
-            }
-            const nearestIndex = rowCards.reduce((bestIndex, card, idx) => {
-              const bestDistance = Math.abs(rowCards[bestIndex].offsetLeft - row.scrollLeft);
-              const currentDistance = Math.abs(card.offsetLeft - row.scrollLeft);
-              return currentDistance < bestDistance ? idx : bestIndex;
-            }, 0);
-            autoScrollIndex = nearestIndex;
-          },
-          { passive: true }
-        );
-      }
+      const onReviewsCarouselBreakpointChange = () => {
+        syncMediaRowLayout();
+        stopRowAutoplay();
+        renderRow();
+        startRowAutoplay(false);
+      };
+      reviewsMobileMql.addEventListener("change", onReviewsCarouselBreakpointChange);
+      reviewsNarrowPhoneMql.addEventListener("change", onReviewsCarouselBreakpointChange);
+
+      row.addEventListener(
+        "scroll",
+        () => {
+          if (!horizontalStripActive()) {
+            return;
+          }
+          const rowCards = Array.from(row.querySelectorAll(carouselCardSelector()));
+          if (!rowCards.length) {
+            return;
+          }
+          const nearestIndex = rowCards.reduce((bestIndex, card, idx) => {
+            const bestDistance = Math.abs(rowCards[bestIndex].offsetLeft - row.scrollLeft);
+            const currentDistance = Math.abs(card.offsetLeft - row.scrollLeft);
+            return currentDistance < bestDistance ? idx : bestIndex;
+          }, 0);
+          autoScrollIndex = nearestIndex;
+        },
+        { passive: true }
+      );
 
       row.addEventListener("mouseenter", stopRowAutoplay);
       row.addEventListener("mouseleave", startRowAutoplay);
@@ -402,7 +535,7 @@ document.addEventListener("DOMContentLoaded", () => {
       row.addEventListener("touchend", startRowAutoplay);
 
       renderRow();
-      startRowAutoplay();
+      startRowAutoplay(true);
     });
   }
 
@@ -575,8 +708,77 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const searchInputs = heroSection.querySelectorAll(".search-box .field input");
+    const heroNameInput = heroSection.querySelector('.search-box .field input[type="text"]');
+    const heroPhoneInput = heroSection.querySelector('.search-box .field input[type="tel"]');
     const travelDateInput = heroSection.querySelector('.search-box .field input[type="date"]');
+    const heroTravelersInput = heroSection.querySelector('.search-box .field input[type="number"]');
     const travelDateField = travelDateInput?.closest(".field");
+    const getTodayDateString = () => {
+      const now = new Date();
+      const localDate = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+      return localDate.toISOString().split("T")[0];
+    };
+
+    const validateHeroFields = () => {
+      if (heroNameInput) {
+        const nameValue = heroNameInput.value.trim();
+        if (!nameValue) {
+          heroNameInput.setCustomValidity("");
+        } else if (nameValue.length < 2) {
+          heroNameInput.setCustomValidity("Please enter at least 2 characters.");
+        } else {
+          heroNameInput.setCustomValidity("");
+        }
+      }
+
+      if (heroPhoneInput) {
+        const digitsOnly = heroPhoneInput.value.replace(/\D/g, "").slice(0, 10);
+        heroPhoneInput.value = digitsOnly;
+        if (!digitsOnly) {
+          heroPhoneInput.setCustomValidity("");
+        } else if (digitsOnly.length !== 10) {
+          heroPhoneInput.setCustomValidity("Please enter a valid 10-digit phone number.");
+        } else {
+          heroPhoneInput.setCustomValidity("");
+        }
+      }
+
+      if (heroTravelersInput) {
+        const travelersValue = Number(heroTravelersInput.value);
+        if (!heroTravelersInput.value) {
+          heroTravelersInput.setCustomValidity("");
+        } else if (Number.isNaN(travelersValue) || travelersValue < 1 || travelersValue > 20) {
+          heroTravelersInput.setCustomValidity("Please enter travelers between 1 and 20.");
+        } else {
+          heroTravelersInput.setCustomValidity("");
+        }
+      }
+    };
+
+    if (travelDateInput) {
+      travelDateInput.min = getTodayDateString();
+      const validateTravelDate = () => {
+        if (!travelDateInput.value) {
+          travelDateInput.setCustomValidity("");
+          return;
+        }
+        if (travelDateInput.value < travelDateInput.min) {
+          travelDateInput.setCustomValidity("Invalid date. Please select a future date.");
+          return;
+        }
+        travelDateInput.setCustomValidity("");
+      };
+
+      validateTravelDate();
+      travelDateInput.addEventListener("input", validateTravelDate);
+      travelDateInput.addEventListener("change", validateTravelDate);
+    }
+
+    bindNameFieldNoDigits(heroNameInput);
+    validateHeroFields();
+    heroNameInput?.addEventListener("input", validateHeroFields);
+    heroPhoneInput?.addEventListener("input", validateHeroFields);
+    heroTravelersInput?.addEventListener("input", validateHeroFields);
 
     const openTravelDatePicker = () => {
       if (!travelDateInput) {
@@ -588,23 +790,143 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    travelDateField?.addEventListener("click", openTravelDatePicker);
-    travelDateInput?.addEventListener("focus", openTravelDatePicker);
-
-    const sendBtn = heroSection.querySelector(".send-btn");
-    sendBtn?.addEventListener("click", () => {
-      const values = Array.from(searchInputs).map((input) => input.value.trim());
-      const hasEmptyValue = values.some((value) => !value);
-      if (hasEmptyValue) {
-        showStatus("Please fill all travel details");
+    const closeTravelDatePicker = () => {
+      if (!travelDateInput) {
         return;
       }
-      showSubmitPopup();
-      heroSection.querySelector(".search-box")?.reset();
+      if (document.activeElement === travelDateInput) {
+        travelDateInput.blur();
+      }
+    };
+
+    travelDateField?.addEventListener("click", openTravelDatePicker);
+    travelDateInput?.addEventListener("click", openTravelDatePicker);
+
+    const heroSearchForm = heroSection.querySelector(".search-box");
+    const submitPopup = document.querySelector("#submitPopup");
+    const submitPopupClose = document.querySelector("#submitPopupClose");
+    const submitPopupIconClose = document.querySelector("#submitPopupIconClose");
+    const hideSubmitPopup = () => {
+      if (!submitPopup) {
+        return;
+      }
+      submitPopup.classList.remove("active");
+      submitPopup.setAttribute("aria-hidden", "true");
+    };
+    const showSubmitPopup = () => {
+      if (!submitPopup) {
+        return;
+      }
+      closeTravelDatePicker();
+      submitPopup.classList.add("active");
+      submitPopup.setAttribute("aria-hidden", "false");
+    };
+    submitPopupClose?.addEventListener("click", hideSubmitPopup);
+    submitPopupIconClose?.addEventListener("click", hideSubmitPopup);
+    submitPopup?.addEventListener("click", (event) => {
+      if (event.target === submitPopup) {
+        hideSubmitPopup();
+      }
     });
 
+    const clearHeroValidationState = () => {
+      const fields = heroSection.querySelectorAll(".search-box .field");
+      fields.forEach((field) => {
+        field.classList.remove("hero-field-error");
+        field.querySelector(".hero-validation-tooltip")?.remove();
+      });
+    };
+
+    const showHeroValidationMessage = (input, message) => {
+      const parentField = input?.closest(".field");
+      if (!parentField) {
+        return;
+      }
+
+      clearHeroValidationState();
+      parentField.classList.add("hero-field-error");
+
+      const tip = document.createElement("div");
+      tip.className = "hero-validation-tooltip";
+      tip.innerHTML = '<span class="hero-validation-icon" aria-hidden="true"></span><span class="hero-validation-text"></span>';
+      tip.querySelector(".hero-validation-text").textContent = message;
+      parentField.appendChild(tip);
+      input.focus();
+    };
+
+    const getHeroValidationMessage = (input) => input?.validationMessage || "Please fill out this field.";
+
+    heroSearchForm?.querySelectorAll("input").forEach((input) => {
+      input.addEventListener("input", () => {
+        if (input.value.trim()) {
+          clearHeroValidationState();
+        }
+      });
+    });
+
+    const sendBtn = heroSection.querySelector(".send-btn");
+    let heroSendStateTimer = null;
+    const setHeroSendButtonState = (state) => {
+      if (!sendBtn) {
+        return;
+      }
+      sendBtn.classList.remove("is-sending", "is-submitted");
+      sendBtn.disabled = false;
+
+      if (state === "sending") {
+        sendBtn.classList.add("is-sending");
+        sendBtn.textContent = "Sending";
+        sendBtn.disabled = true;
+        return;
+      }
+
+      if (state === "submitted") {
+        sendBtn.classList.add("is-submitted");
+        sendBtn.textContent = "Submitted";
+        sendBtn.disabled = true;
+        return;
+      }
+
+      sendBtn.textContent = "➤";
+    };
+
+    sendBtn?.addEventListener("click", () => {
+      if (!heroSearchForm) {
+        return;
+      }
+      if (sendBtn.disabled) {
+        return;
+      }
+      const invalidInput = Array.from(heroSearchForm.querySelectorAll("input")).find((input) => !input.checkValidity());
+      if (invalidInput) {
+        showHeroValidationMessage(invalidInput, getHeroValidationMessage(invalidInput));
+        return;
+      }
+      clearHeroValidationState();
+      window.clearTimeout(heroSendStateTimer);
+      setHeroSendButtonState("sending");
+      heroSendStateTimer = window.setTimeout(() => {
+        setHeroSendButtonState("submitted");
+        heroSendStateTimer = window.setTimeout(() => {
+          showSubmitPopup();
+          heroSearchForm?.reset();
+          setHeroSendButtonState("default");
+        }, 550);
+      }, 900);
+    });
+  }
+
+  // Booking preferences modal: any page with #mobilePrefModal; desktop auto-open matches home (10s, then every 15s).
+  const mobilePrefModal = document.querySelector("#mobilePrefModal");
+  if (mobilePrefModal) {
+    const blurHeroTravelDateIfFocused = () => {
+      const travelDateInput = document.querySelector('.hero .search-box .field input[type="date"]');
+      if (travelDateInput && document.activeElement === travelDateInput) {
+        travelDateInput.blur();
+      }
+    };
+
     const mobileHeroBookingTrigger = document.querySelector("#mobileHeroBookingTrigger");
-    const mobilePrefModal = document.querySelector("#mobilePrefModal");
     const mobilePrefClose = document.querySelector("#mobilePrefClose");
     const mobilePrefSteps = Array.from(document.querySelectorAll(".mobile-pref-step"));
     const mobilePrefNext = document.querySelector("#mobilePrefNext");
@@ -612,17 +934,68 @@ document.addEventListener("DOMContentLoaded", () => {
     const mobilePrefActions = document.querySelector("#mobilePrefActions");
     let mobilePrefStepIndex = 0;
 
+    const PREF_MODAL_POST_INTERACTION_COOLDOWN_MS = 40000;
+    let prefModalAutoOpenSuppressedUntil = 0;
+    const schedulePrefModalAutoCooldown = () => {
+      prefModalAutoOpenSuppressedUntil = Math.max(
+        prefModalAutoOpenSuppressedUntil,
+        Date.now() + PREF_MODAL_POST_INTERACTION_COOLDOWN_MS
+      );
+    };
+
+    const isActiveInPrefModalPauseRegion = () => {
+      const el = document.activeElement;
+      if (!el || el === document.body) {
+        return false;
+      }
+      if (mobilePrefModal.classList.contains("active") && mobilePrefModal.contains(el)) {
+        return true;
+      }
+      if (el.closest(".hero .search-box")) {
+        return true;
+      }
+      if (el.closest(".contact-form")) {
+        return true;
+      }
+      if (el.closest(".blog-details-comment-form")) {
+        return true;
+      }
+      if (el.closest(".subscribe-showcase-form")) {
+        return true;
+      }
+      if (el.closest(".submit-popup-overlay.active")) {
+        return true;
+      }
+      if (el.closest(".reviews-video-overlay.active")) {
+        return true;
+      }
+      return false;
+    };
+
     const isMobilePrefStepValid = () => {
       const stepNumber = mobilePrefStepIndex + 1;
-      if (stepNumber === 1) return Boolean(document.querySelector('input[name="stayDuration"]:checked'));
-      if (stepNumber === 2) return Boolean(document.querySelector('input[name="travelerCount"]:checked'));
-      if (stepNumber === 3) return Boolean(document.querySelector('input[name="travelPreference"]:checked'));
-      if (stepNumber === 4) return Boolean(document.querySelector('input[name="travelerName"]')?.value.trim());
+      const activeStep = mobilePrefSteps[mobilePrefStepIndex];
+      if (!activeStep) {
+        return false;
+      }
+
+      if (stepNumber >= 1 && stepNumber <= 3) {
+        return Boolean(activeStep.querySelector('input[type="radio"]:checked'));
+      }
+
+      if (stepNumber === 4) {
+        return Boolean(activeStep.querySelector('input[name="travelerName"]')?.value.trim());
+      }
+
       if (stepNumber === 5) {
-        const phone = document.querySelector('input[name="travelerPhone"]')?.value.trim() || "";
+        const phone = activeStep.querySelector('input[name="travelerPhone"]')?.value.trim() || "";
         return phone.length >= 10;
       }
-      if (stepNumber === 6) return Boolean(document.querySelector('input[name="bookingTime"]:checked'));
+
+      if (stepNumber === 6) {
+        return Boolean(activeStep.querySelector('input[type="radio"]:checked'));
+      }
+
       return true;
     };
 
@@ -642,35 +1015,37 @@ document.addEventListener("DOMContentLoaded", () => {
         const isCurrentStepValid = isMobilePrefStepValid();
         mobilePrefNext.textContent = currentStep === 6 ? "Submit" : `Next (${currentStep}/6)`;
         mobilePrefNext.classList.toggle("is-enabled", isCurrentStepValid);
-        // Step 1: show Previous only after user picks an option.
-        // Step 2-6: always show Previous.
-        const shouldShowPrevious = currentStep > 1 || (currentStep === 1 && isCurrentStepValid);
+        // Show Previous only from step 2 onwards.
+        const shouldShowPrevious = currentStep > 1;
         mobilePrefPrev.style.visibility = shouldShowPrevious ? "visible" : "hidden";
         mobilePrefPrev.style.pointerEvents = shouldShowPrevious ? "auto" : "none";
       }
     };
 
     const hideMobilePrefModal = () => {
-      if (!mobilePrefModal) {
-        return;
-      }
       mobilePrefModal.classList.remove("active");
       mobilePrefModal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
       mobilePrefStepIndex = 0;
       paintMobilePrefStep();
+      schedulePrefModalAutoCooldown();
     };
 
     const showMobilePrefModal = () => {
-      if (!mobilePrefModal) {
-        return;
-      }
+      blurHeroTravelDateIfFocused();
       mobilePrefModal.classList.add("active");
       mobilePrefModal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
       mobilePrefStepIndex = 0;
       paintMobilePrefStep();
     };
+
+    const advanceMobilePrefStep = () => {
+      mobilePrefStepIndex = Math.min(mobilePrefStepIndex + 1, mobilePrefSteps.length - 1);
+      paintMobilePrefStep();
+    };
+
+    mobilePrefModal.querySelectorAll('input[name="travelerName"]').forEach((node) => bindNameFieldNoDigits(node));
 
     mobileHeroBookingTrigger?.addEventListener("click", showMobilePrefModal);
     mobilePrefClose?.addEventListener("click", hideMobilePrefModal);
@@ -679,36 +1054,74 @@ document.addEventListener("DOMContentLoaded", () => {
         showStatus("Please select or fill this step");
         return;
       }
-      mobilePrefStepIndex = Math.min(mobilePrefStepIndex + 1, mobilePrefSteps.length - 1);
-      paintMobilePrefStep();
+      advanceMobilePrefStep();
     });
     mobilePrefPrev?.addEventListener("click", () => {
       mobilePrefStepIndex = Math.max(mobilePrefStepIndex - 1, 0);
       paintMobilePrefStep();
     });
-    mobilePrefModal?.addEventListener("click", (event) => {
+    mobilePrefModal.addEventListener("click", (event) => {
       if (event.target === mobilePrefModal) {
         hideMobilePrefModal();
       }
     });
 
     const mobileStepInputs = Array.from(
-      mobilePrefModal?.querySelectorAll('input[type="radio"], input[type="text"], input[type="tel"], input[type="email"]') || []
+      mobilePrefModal.querySelectorAll('input[type="radio"], input[type="text"], input[type="tel"], input[type="email"]')
     );
     mobileStepInputs.forEach((input) => {
-      input.addEventListener("change", paintMobilePrefStep);
+      input.addEventListener("change", () => {
+        paintMobilePrefStep();
+
+        // Auto-move to next step on radio option selection.
+        if (input.type !== "radio") {
+          return;
+        }
+        const inputStep = input.closest(".mobile-pref-step");
+        const activeStep = mobilePrefSteps[mobilePrefStepIndex];
+        const currentStep = mobilePrefStepIndex + 1;
+        const isAutoAdvanceStep = currentStep === 1 || currentStep === 2 || currentStep === 3 || currentStep === 6;
+
+        if (inputStep === activeStep && isAutoAdvanceStep && isMobilePrefStepValid()) {
+          window.setTimeout(() => {
+            advanceMobilePrefStep();
+          }, 120);
+        }
+      });
       input.addEventListener("input", paintMobilePrefStep);
     });
     paintMobilePrefStep();
 
-    // Desktop homepage: first auto-open at 10s, then every 15s.
-    if (homeScreen && window.matchMedia("(min-width: 992px)").matches) {
+    // Desktop: first auto-open at 10s, then every 15s — paused while user is in a form/dialog, then cool down after.
+    if (window.matchMedia("(min-width: 992px)").matches) {
+      const PREF_MODAL_FOCUSOUT_SETTLE_MS = 400;
+      let prefModalFocusOutSettleTimer = null;
+
       const tryOpenDesktopPrefModal = () => {
-        if (mobilePrefModal?.classList.contains("active")) {
+        if (mobilePrefModal.classList.contains("active")) {
+          return;
+        }
+        if (Date.now() < prefModalAutoOpenSuppressedUntil) {
+          return;
+        }
+        if (isActiveInPrefModalPauseRegion()) {
           return;
         }
         showMobilePrefModal();
       };
+
+      document.addEventListener(
+        "focusout",
+        () => {
+          window.clearTimeout(prefModalFocusOutSettleTimer);
+          prefModalFocusOutSettleTimer = window.setTimeout(() => {
+            if (!isActiveInPrefModalPauseRegion()) {
+              schedulePrefModalAutoCooldown();
+            }
+          }, PREF_MODAL_FOCUSOUT_SETTLE_MS);
+        },
+        true
+      );
 
       window.setTimeout(() => {
         tryOpenDesktopPrefModal();
@@ -724,19 +1137,197 @@ document.addEventListener("DOMContentLoaded", () => {
 
   adventureSections.forEach((section) => {
     const row = section.querySelector(".place-row");
-    const items = Array.from(section.querySelectorAll(".place-item"));
+    let items = Array.from(section.querySelectorAll(".place-item"));
+    const initialPlaceOrder = row ? Array.from(row.querySelectorAll(".place-item")) : [];
     const controls = section.querySelectorAll(".arrow-controls button");
     const ANIMATION_MS = 480;
     const isSwipeLayout = () => window.matchMedia("(max-width: 430px)").matches;
+    /** ≥431px: same as desktop — transform carousel, DOM rotate, timed advance (not native overflow-x scroll). */
+    const usesAdventureTransformCarousel = () => window.matchMedia("(min-width: 431px)").matches;
     let isAnimating = false;
     let activeSwipeIndex = 0;
+    let carouselIntervalId = null;
 
-    const applySwipeCardStyles = () => {
+    const swipeRowPropList = [
+      "display",
+      "flex-wrap",
+      "overflow-x",
+      "overflow-y",
+      "scrollbar-width",
+      "-ms-overflow-style",
+      "scroll-snap-type",
+      "scroll-behavior",
+      "gap",
+      "padding",
+      "align-items"
+    ];
+
+    const swipeItemPropList = [
+      "flex",
+      "width",
+      "min-width",
+      "max-width",
+      "box-sizing",
+      "display",
+      "grid-template-columns",
+      "column-gap",
+      "flex-direction",
+      "flex-wrap",
+      "gap",
+      "justify-content",
+      "align-items",
+      "text-align",
+      "height",
+      "min-height",
+      "padding",
+      "border-radius",
+      "border",
+      "background",
+      "scroll-snap-align",
+      "box-shadow",
+      "color",
+      "overflow"
+    ];
+
+    const swipeContentPropList = [
+      "display",
+      "flex-direction",
+      "justify-content",
+      "min-width",
+      "width",
+      "flex",
+      "order",
+      "row-gap",
+      "overflow"
+    ];
+    const swipeIconPropList = [
+      "display",
+      "flex",
+      "flex-shrink",
+      "order",
+      "position",
+      "z-index",
+      "align-self",
+      "margin-top",
+      "min-width",
+      "max-width",
+      "place-items",
+      "visibility",
+      "opacity",
+      "width",
+      "height",
+      "font-size",
+      "border",
+      "background",
+      "color",
+      "font-family",
+      "font-weight",
+      "border-radius",
+      "box-shadow"
+    ];
+    const swipeTitlePropList = [
+      "margin",
+      "line-height",
+      "color",
+      "font-size",
+      "font-weight",
+      "white-space",
+      "display",
+      "overflow",
+      "overflow-wrap",
+      "word-break",
+      "-webkit-box-orient",
+      "-webkit-line-clamp",
+      "line-clamp"
+    ];
+    const swipeSubtitlePropList = [
+      "margin",
+      "margin-top",
+      "line-height",
+      "white-space",
+      "color",
+      "background",
+      "padding",
+      "border-radius",
+      "display",
+      "max-width",
+      "font-size",
+      "box-sizing",
+      "overflow",
+      "overflow-wrap",
+      "word-break",
+      "-webkit-box-orient",
+      "-webkit-line-clamp",
+      "line-clamp"
+    ];
+
+    const clearSwipeCardStyles = () => {
+      if (!row) {
+        return;
+      }
+      swipeRowPropList.forEach((prop) => row.style.removeProperty(prop));
+      row.classList.remove("hide-mobile-scrollbar");
+      items.forEach((item) => {
+        swipeItemPropList.forEach((prop) => item.style.removeProperty(prop));
+        const content = item.querySelector(".place-content");
+        const title = item.querySelector(".place-content h3");
+        const subtitle = item.querySelector(".place-content span");
+        const icon = item.querySelector(".place-icon");
+        if (content) {
+          swipeContentPropList.forEach((prop) => content.style.removeProperty(prop));
+        }
+        if (icon) {
+          swipeIconPropList.forEach((prop) => icon.style.removeProperty(prop));
+        }
+        if (title) {
+          swipeTitlePropList.forEach((prop) => title.style.removeProperty(prop));
+        }
+        if (subtitle) {
+          swipeSubtitlePropList.forEach((prop) => subtitle.style.removeProperty(prop));
+        }
+      });
+    };
+
+    const fitSwipeAdventureSubtitleFonts = () => {
       if (!row || !isSwipeLayout()) {
         return;
       }
-      const rowWidth = row.getBoundingClientRect().width;
-      const cardWidth = Math.max(220, Math.round(rowWidth - 12));
+
+      row.querySelectorAll(".place-item:not(.place-item-see-all)").forEach((item) => {
+        const content = item.querySelector(".place-content");
+        const subtitle = item.querySelector(".place-content span");
+        if (!content || !subtitle) {
+          return;
+        }
+        const cap = Math.max(64, Math.floor(content.getBoundingClientRect().width));
+
+        /* Shrink pill text so the full line fits inside the white card (scroll row width caps max-width). */
+        for (let fs = 10; fs >= 6.5; fs -= 0.5) {
+          subtitle.style.setProperty("font-size", `${fs}px`, "important");
+          if (subtitle.scrollWidth <= cap + 1) {
+            break;
+          }
+        }
+      });
+    };
+
+    const applySwipeCardStyles = () => {
+      if (!row) {
+        return;
+      }
+      if (!isSwipeLayout()) {
+        clearSwipeCardStyles();
+        return;
+      }
+
+      const rowWidth = row.clientWidth || row.getBoundingClientRect().width;
+      /** Card grows with subtitle pill up to viewport row width — fixed px width caused pill overflow outside the white card */
+      const maxCardWidthPx = Math.max(220, Math.round(rowWidth));
+      const vwRaw =
+        typeof window !== "undefined" ? window.visualViewport?.width ?? window.innerWidth : rowWidth;
+      const vwPxRounded =
+        typeof vwRaw === "number" && Number.isFinite(vwRaw) ? Math.round(vwRaw) : maxCardWidthPx;
+      /** Swipe strip is ≤430px; older rules only tweaked 321–375px so 390-wide emulators kept `white-space: normal` on see-all → wrapped title/pill */
       const setImportant = (node, prop, value) => {
         node.style.setProperty(prop, value, "important");
       };
@@ -750,26 +1341,58 @@ document.addEventListener("DOMContentLoaded", () => {
       setImportant(row, "scroll-snap-type", "x mandatory");
       setImportant(row, "scroll-behavior", "smooth");
       setImportant(row, "gap", "12px");
-      setImportant(row, "padding", "0 6px 4px");
+      setImportant(row, "padding", "0 4px 4px");
       setImportant(row, "align-items", "flex-start");
       row.classList.add("hide-mobile-scrollbar");
 
       items.forEach((item) => {
-        setImportant(item, "flex", `0 0 ${cardWidth}px`);
-        setImportant(item, "min-width", `${cardWidth}px`);
-        setImportant(item, "max-width", `${cardWidth}px`);
-        setImportant(item, "display", "grid");
-        setImportant(item, "grid-template-columns", "40px minmax(0, 1fr)");
-        setImportant(item, "column-gap", "8px");
-        setImportant(item, "align-items", "start");
+        const isSeeAll = item.classList.contains("place-item-see-all");
+        const itemMaxWidthPx =
+          isSeeAll ? Math.max(maxCardWidthPx, vwPxRounded - 8) : maxCardWidthPx;
+
+        setImportant(item, "flex", "0 0 auto");
+        setImportant(item, "width", "max-content");
+        setImportant(item, "min-width", `min(220px, ${maxCardWidthPx}px)`);
+        setImportant(item, "max-width", `${itemMaxWidthPx}px`);
         setImportant(item, "text-align", "left");
         setImportant(item, "height", "auto");
         setImportant(item, "min-height", "0");
-        setImportant(item, "padding", "10px");
-        setImportant(item, "border-radius", "12px");
-        setImportant(item, "border", "1px solid #e6ebf2");
-        setImportant(item, "background", "#ffffff");
+        setImportant(item, "padding", isSeeAll ? "12px 10px" : "10px 12px");
+        setImportant(item, "box-sizing", "border-box");
+        setImportant(item, "border-radius", "14px");
         setImportant(item, "scroll-snap-align", "start");
+        setImportant(item, "box-shadow", "none");
+
+        if (isSeeAll) {
+          /* Flex row keeps the Bali icon from disappearing (grid + max-content was collapsing the icon track on some widths). */
+          item.style.removeProperty("grid-template-columns");
+          item.style.removeProperty("column-gap");
+          setImportant(item, "display", "flex");
+          setImportant(item, "flex-direction", "row");
+          setImportant(item, "flex-wrap", "nowrap");
+          setImportant(item, "align-items", "flex-start");
+          setImportant(item, "justify-content", "flex-start");
+          setImportant(item, "gap", "12px");
+          setImportant(item, "overflow", "visible");
+          setImportant(item, "border", "1px solid rgba(255, 255, 255, 0.35)");
+          setImportant(
+            item,
+            "background",
+            "linear-gradient(120deg, #0f7c6b 0%, #17a589 100%)"
+          );
+          setImportant(item, "color", "#ffffff");
+        } else {
+          item.style.removeProperty("flex-direction");
+          item.style.removeProperty("flex-wrap");
+          item.style.removeProperty("gap");
+          item.style.removeProperty("justify-content");
+          setImportant(item, "display", "grid");
+          setImportant(item, "column-gap", "12px");
+          setImportant(item, "align-items", "center");
+          setImportant(item, "grid-template-columns", "44px max-content");
+          setImportant(item, "border", "1px solid #e6ebf2");
+          setImportant(item, "background", "#ffffff");
+        }
 
         const content = item.querySelector(".place-content");
         const title = item.querySelector(".place-content h3");
@@ -780,31 +1403,129 @@ document.addEventListener("DOMContentLoaded", () => {
           setImportant(content, "flex-direction", "column");
           setImportant(content, "justify-content", "center");
           setImportant(content, "min-width", "0");
-          setImportant(content, "row-gap", "4px");
+          setImportant(content, "width", isSeeAll ? "auto" : "100%");
+          if (isSeeAll) {
+            setImportant(content, "flex", "1 1 auto");
+            setImportant(content, "order", "1");
+          } else {
+            content.style.removeProperty("flex");
+            content.style.removeProperty("order");
+          }
+          setImportant(content, "overflow", "visible");
+          setImportant(content, "row-gap", "6px");
         }
         if (icon) {
-          setImportant(icon, "width", "40px");
-          setImportant(icon, "height", "40px");
-          setImportant(icon, "font-size", "16px");
-          setImportant(icon, "border", "none");
-          setImportant(icon, "background", "radial-gradient(circle at 30% 30%, #d8f2ed 0%, #8ad4bf 100%)");
-          setImportant(icon, "color", "#1b3b34");
-          setImportant(icon, "font-family", "inherit");
-          setImportant(icon, "font-weight", "600");
+          if (isSeeAll) {
+            setImportant(icon, "display", "grid");
+            setImportant(icon, "flex", "0 0 44px");
+            setImportant(icon, "flex-shrink", "0");
+            setImportant(icon, "order", "0");
+            setImportant(icon, "position", "relative");
+            setImportant(icon, "z-index", "1");
+            setImportant(icon, "align-self", "flex-start");
+            setImportant(icon, "margin-top", "2px");
+            setImportant(icon, "min-width", "44px");
+            setImportant(icon, "max-width", "44px");
+            setImportant(icon, "place-items", "center");
+            setImportant(icon, "visibility", "visible");
+            setImportant(icon, "opacity", "1");
+            setImportant(icon, "width", "44px");
+            setImportant(icon, "height", "44px");
+            setImportant(icon, "font-size", "18px");
+            setImportant(icon, "border-radius", "50%");
+            setImportant(icon, "border", "2px solid rgba(255, 255, 255, 0.9)");
+            setImportant(icon, "background", "#f5fffb");
+            setImportant(icon, "color", "#0f7c6b");
+            setImportant(icon, "font-family", '"Caveat", cursive');
+            setImportant(icon, "font-weight", "700");
+            setImportant(icon, "box-shadow", "none");
+          } else {
+            icon.style.removeProperty("flex");
+            icon.style.removeProperty("flex-shrink");
+            icon.style.removeProperty("order");
+            icon.style.removeProperty("position");
+            icon.style.removeProperty("z-index");
+            icon.style.removeProperty("align-self");
+            icon.style.removeProperty("margin-top");
+            icon.style.removeProperty("min-width");
+            icon.style.removeProperty("max-width");
+            setImportant(icon, "width", "40px");
+            setImportant(icon, "height", "40px");
+            setImportant(icon, "font-size", "16px");
+            setImportant(icon, "border-radius", "50%");
+            setImportant(icon, "border", "none");
+            setImportant(icon, "background", "radial-gradient(circle at 30% 30%, #d8f2ed 0%, #8ad4bf 100%)");
+            setImportant(icon, "color", "#1b3b34");
+            setImportant(icon, "font-family", "inherit");
+            setImportant(icon, "font-weight", "600");
+            setImportant(icon, "box-shadow", "none");
+          }
         }
         if (title) {
           setImportant(title, "margin", "0");
           setImportant(title, "line-height", "1.2");
-          setImportant(title, "color", "#1f2937");
-          setImportant(title, "font-size", "16px");
+          if (isSeeAll) {
+            setImportant(title, "color", "#ffffff");
+            setImportant(title, "font-size", "clamp(13px, 3.95vw, 17px)");
+            setImportant(title, "font-weight", "800");
+            setImportant(title, "white-space", "normal");
+            setImportant(title, "overflow-wrap", "anywhere");
+            setImportant(title, "word-break", "break-word");
+            setImportant(title, "display", "-webkit-box");
+            setImportant(title, "-webkit-box-orient", "vertical");
+            setImportant(title, "-webkit-line-clamp", "2");
+            setImportant(title, "line-clamp", "2");
+            setImportant(title, "overflow", "hidden");
+            setImportant(title, "line-height", "1.2");
+          } else {
+            setImportant(title, "color", "#1f2937");
+            setImportant(title, "font-size", "16px");
+            setImportant(title, "font-weight", "700");
+          }
         }
         if (subtitle) {
-          setImportant(subtitle, "margin", "0");
-          setImportant(subtitle, "line-height", "1.35");
-          setImportant(subtitle, "white-space", "normal");
-          setImportant(subtitle, "color", "#6b7280");
-          setImportant(subtitle, "background", "transparent");
+          if (isSeeAll) {
+            setImportant(subtitle, "white-space", "normal");
+            setImportant(subtitle, "overflow-wrap", "anywhere");
+            setImportant(subtitle, "word-break", "break-word");
+            setImportant(subtitle, "display", "-webkit-box");
+            setImportant(subtitle, "-webkit-box-orient", "vertical");
+            setImportant(subtitle, "-webkit-line-clamp", "2");
+            setImportant(subtitle, "line-clamp", "2");
+            setImportant(subtitle, "overflow", "hidden");
+            setImportant(subtitle, "font-size", "clamp(9px, 2.85vw, 11px)");
+            setImportant(subtitle, "margin", "0");
+            setImportant(subtitle, "margin-top", "3px");
+            setImportant(subtitle, "line-height", "1.35");
+            setImportant(subtitle, "max-width", "100%");
+            setImportant(subtitle, "box-sizing", "border-box");
+            setImportant(subtitle, "padding", "4px 8px");
+            setImportant(subtitle, "color", "#f2fffb");
+            setImportant(subtitle, "background", "rgba(255, 255, 255, 0.22)");
+            setImportant(subtitle, "border-radius", "999px");
+          } else {
+            /* Single-line pill, fully visible — same readability as wider (e.g. 320px full-bleed) cards */
+            setImportant(subtitle, "white-space", "nowrap");
+            setImportant(subtitle, "margin", "0");
+            setImportant(subtitle, "margin-top", "1px");
+            setImportant(subtitle, "line-height", "1.35");
+            setImportant(subtitle, "max-width", "none");
+            setImportant(subtitle, "box-sizing", "border-box");
+            setImportant(subtitle, "overflow", "visible");
+            setImportant(subtitle, "font-size", "10px");
+            setImportant(subtitle, "color", "#5d6678");
+            setImportant(subtitle, "background", "#d9dee8");
+            setImportant(subtitle, "padding", "3px 8px");
+            setImportant(subtitle, "border-radius", "999px");
+            setImportant(subtitle, "display", "inline-block");
+          }
         }
+      });
+
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(() => {
+          fitSwipeAdventureSubtitleFonts();
+        });
       });
     };
 
@@ -821,6 +1542,21 @@ document.addEventListener("DOMContentLoaded", () => {
       return firstItem.getBoundingClientRect().width + gapValue;
     };
 
+    const restorePlaceRowOrderAndClearMotion = () => {
+      if (!row || initialPlaceOrder.length === 0) {
+        return;
+      }
+      initialPlaceOrder.forEach((node) => {
+        if (node.parentNode === row) {
+          row.appendChild(node);
+        }
+      });
+      items = Array.from(row.querySelectorAll(".place-item"));
+      row.style.removeProperty("transition");
+      row.style.removeProperty("transform");
+      isAnimating = false;
+    };
+
     const shiftLeft = () => {
       if (!row || items.length < 2 || isAnimating) {
         return;
@@ -828,6 +1564,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isSwipeLayout()) {
         activeSwipeIndex = (activeSwipeIndex + 1) % items.length;
         row.scrollTo({ left: items[activeSwipeIndex].offsetLeft, behavior: "smooth" });
+        return;
+      }
+      if (!usesAdventureTransformCarousel()) {
         return;
       }
       const distance = getMoveDistance();
@@ -861,6 +1600,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isSwipeLayout()) {
         activeSwipeIndex = (activeSwipeIndex - 1 + items.length) % items.length;
         row.scrollTo({ left: items[activeSwipeIndex].offsetLeft, behavior: "smooth" });
+        return;
+      }
+      if (!usesAdventureTransformCarousel()) {
         return;
       }
       const distance = getMoveDistance();
@@ -928,23 +1670,160 @@ document.addEventListener("DOMContentLoaded", () => {
       );
     }
 
-    if (row && items.length > 1) {
-      window.setInterval(() => {
+    const syncAdventureCarouselAutomation = () => {
+      if (carouselIntervalId != null) {
+        window.clearInterval(carouselIntervalId);
+        carouselIntervalId = null;
+      }
+      if (!row || items.length < 2) {
+        return;
+      }
+      /* Phones (≤430px): reset transform/DOM rotation from wider viewports — keep auto-slide via scrollTo in shiftLeft. */
+      if (!usesAdventureTransformCarousel()) {
+        restorePlaceRowOrderAndClearMotion();
+      }
+      carouselIntervalId = window.setInterval(() => {
         shiftLeft();
       }, 3200);
-    }
+    };
+
+    syncAdventureCarouselAutomation();
+    window.addEventListener("resize", syncAdventureCarouselAutomation);
   });
 
-  // Location things: selectable activity cards + quick jump from "20+ More"
+  // Location things: selectable activity cards + gallery lightbox from "20+ More"
   const locationThingsSection = document.querySelector(".location-things");
   if (locationThingsSection) {
     const thingCards = Array.from(locationThingsSection.querySelectorAll(".location-things-grid article"));
-    const packagesTarget = document.querySelector(".location-packages");
+    const lightbox = document.getElementById("locationThingsLightbox");
+    const lightboxImg = document.getElementById("locationThingsLightboxImg");
+    const lightboxCaption = lightbox?.querySelector(".location-things-lightbox-caption");
+    const lightboxCounter = lightbox?.querySelector(".location-things-lightbox-counter");
+    const moreCard = document.getElementById("locationThingsMoreCard");
 
     const setActiveThing = (card) => {
       thingCards.forEach((node) => node.classList.remove("is-active"));
       card.classList.add("is-active");
     };
+
+    const collectGalleryItems = () => {
+      const items = [];
+      thingCards.forEach((card) => {
+        if (card.classList.contains("location-more-card")) {
+          return;
+        }
+        const img = card.querySelector("img");
+        if (!img?.src) {
+          return;
+        }
+        const caption =
+          card.querySelector("span")?.textContent?.replace(/\s+/g, " ").trim() || img.alt || "Activity";
+        items.push({ src: img.currentSrc || img.src, alt: img.alt || caption, caption });
+      });
+      locationThingsSection.querySelectorAll(".location-things-gallery-extra img").forEach((img) => {
+        if (!img.src) {
+          return;
+        }
+        const cap = img.alt?.trim() || "Ubud experience";
+        items.push({ src: img.currentSrc || img.src, alt: img.alt || cap, caption: cap });
+      });
+      return items;
+    };
+
+    let galleryItems = [];
+    let galleryIndex = 0;
+    let lightboxReturnFocus = null;
+
+    const renderLightbox = () => {
+      if (!lightbox || !lightboxImg || galleryItems.length === 0) {
+        return;
+      }
+      const item = galleryItems[galleryIndex];
+      lightboxImg.src = item.src;
+      lightboxImg.alt = item.alt;
+      if (lightboxCaption) {
+        lightboxCaption.textContent = item.caption;
+      }
+      if (lightboxCounter) {
+        lightboxCounter.textContent = `${galleryIndex + 1} / ${galleryItems.length}`;
+      }
+    };
+
+    const openLightbox = () => {
+      if (!lightbox) {
+        return;
+      }
+      galleryItems = collectGalleryItems();
+      if (galleryItems.length === 0) {
+        showStatus("No gallery images available");
+        return;
+      }
+      galleryIndex = 0;
+      renderLightbox();
+      lightboxReturnFocus = document.activeElement;
+      lightbox.classList.add("is-open");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      lightbox.querySelector(".location-things-lightbox-close")?.focus({ preventScroll: true });
+    };
+
+    const closeLightbox = () => {
+      if (!lightbox?.classList.contains("is-open")) {
+        return;
+      }
+      lightbox.classList.remove("is-open");
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (lightboxImg) {
+        lightboxImg.removeAttribute("src");
+      }
+      const back = lightboxReturnFocus;
+      lightboxReturnFocus = null;
+      if (back instanceof HTMLElement && document.contains(back)) {
+        back.focus({ preventScroll: true });
+      } else {
+        moreCard?.focus({ preventScroll: true });
+      }
+    };
+
+    const stepLightbox = (delta) => {
+      if (galleryItems.length === 0) {
+        return;
+      }
+      galleryIndex = (galleryIndex + delta + galleryItems.length) % galleryItems.length;
+      renderLightbox();
+    };
+
+    if (lightbox) {
+      lightbox.querySelector(".location-things-lightbox-prev")?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        stepLightbox(-1);
+      });
+      lightbox.querySelector(".location-things-lightbox-next")?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        stepLightbox(1);
+      });
+      lightbox.querySelector(".location-things-lightbox-close")?.addEventListener("click", (e) => {
+        e.stopPropagation();
+        closeLightbox();
+      });
+      lightbox.querySelector(".location-things-lightbox-backdrop")?.addEventListener("click", closeLightbox);
+      window.addEventListener("keydown", (event) => {
+        if (!lightbox.classList.contains("is-open")) {
+          return;
+        }
+        if (event.key === "Escape") {
+          event.preventDefault();
+          closeLightbox();
+        } else if (event.key === "ArrowLeft") {
+          event.preventDefault();
+          stepLightbox(-1);
+        } else if (event.key === "ArrowRight") {
+          event.preventDefault();
+          stepLightbox(1);
+        }
+      });
+    }
 
     thingCards.forEach((card, idx) => {
       card.style.cursor = "pointer";
@@ -953,8 +1832,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const activateCard = () => {
         if (card.classList.contains("location-more-card")) {
-          packagesTarget?.scrollIntoView({ behavior: "smooth", block: "start" });
-          showStatus("Showing package offers");
+          openLightbox();
           return;
         }
 
@@ -1253,82 +2131,105 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Location packages: days chips filtering + right arrow rotation
+  // Location packages: ‹ › cycle day chips (≤768px); horizontal strip shows up to three cards for that duration (no autoplay)
   const locationPackagesSection = document.querySelector(".location-packages");
   if (locationPackagesSection) {
     const filterSection = locationPackagesSection.querySelector(".package-screen-filters");
     const chips = Array.from(filterSection?.querySelectorAll(".chip") || []);
+    const packagesCustomSelectedClass = "packages-custom-selected";
+    const chipDayDullClass = "chip-day-dull";
     const cards = Array.from(locationPackagesSection.querySelectorAll(".package-screen-grid .package-card"));
-    const nextArrow = locationPackagesSection.querySelector(".location-packages-arrow");
-    const VISIBLE_CARDS = 3;
-    let startIndex = 0;
+    const packageTrack = locationPackagesSection.querySelector(".package-screen-grid");
+    const prevDayArrow = filterSection?.querySelector(".package-day-arrow-prev");
+    const nextDayArrow = filterSection?.querySelector(".package-day-arrow-next");
     let selectedDays = null;
+    const dayChips = chips.filter((chip) => !chip.classList.contains("chip-custom"));
 
     const extractDaysFromChip = (chip) => chip.textContent.match(/\d+/g)?.[1] || null;
-
-    const getCurrentPool = () => {
-      const dayMatched = selectedDays ? cards.filter((card) => card.dataset.days === selectedDays) : cards.slice();
-      if (dayMatched.length >= VISIBLE_CARDS) {
-        return dayMatched;
+    const getCardDaysValue = (card) => {
+      const dataDays = card.dataset.days || null;
+      if (dataDays) {
+        return dataDays;
       }
-
-      const withFallback = dayMatched.slice();
-      cards.forEach((card) => {
-        if (!withFallback.includes(card)) {
-          withFallback.push(card);
-        }
-      });
-      return withFallback;
+      const metaText =
+        card.querySelector(".package-meta-days-text")?.textContent?.trim() ||
+        card.querySelector(".package-meta-duration")?.textContent?.trim() ||
+        "";
+      const visibleDays = metaText.match(/\d+/)?.[0] || null;
+      return visibleDays || null;
     };
 
-    const renderVisibleCards = () => {
-      const pool = getCurrentPool();
-      const visibleCount = Math.min(VISIBLE_CARDS, pool.length);
+    const getCurrentPool = () => {
+      const dayMatched = selectedDays ? cards.filter((card) => getCardDaysValue(card) === selectedDays) : cards.slice();
+      return dayMatched.slice(0, 3);
+    };
 
+    const applyLocationPackagesTrackLayout = () => {
       cards.forEach((card) => {
-        card.style.display = "none";
+        card.style.removeProperty("flex");
+        card.style.removeProperty("minWidth");
+        card.style.removeProperty("maxWidth");
+        card.style.removeProperty("width");
       });
+    };
 
-      for (let i = 0; i < visibleCount; i += 1) {
-        const cardIndex = (startIndex + i) % pool.length;
-        pool[cardIndex].style.display = "block";
-      }
-
-      if (nextArrow) {
-        nextArrow.disabled = pool.length <= visibleCount;
-      }
+    const applyLocationPackagesFilter = () => {
+      applyLocationPackagesTrackLayout();
+      const pool = getCurrentPool();
+      cards.forEach((card) => {
+        if (pool.includes(card)) {
+          card.style.removeProperty("display");
+        } else {
+          card.style.display = "none";
+        }
+        card.classList.remove("package-card-animate");
+      });
+      packageTrack?.scrollTo({ left: 0, top: 0, behavior: "auto" });
       animateVisiblePackageCards(cards);
+    };
+
+    const moveLocationDayChip = (step) => {
+      const activeIndex = dayChips.findIndex((c) => c.classList.contains("chip-active"));
+      const dullIndex = dayChips.findIndex((c) => c.classList.contains(chipDayDullClass));
+      const baseIndex = activeIndex >= 0 ? activeIndex : (dullIndex >= 0 ? dullIndex : 0);
+      const targetIndex = (baseIndex + step + dayChips.length) % dayChips.length;
+      dayChips[targetIndex]?.click();
     };
 
     chips.forEach((chip) => {
       chip.addEventListener("click", () => {
-        chips.forEach((node) => node.classList.remove("chip-active"));
-        chip.classList.add("chip-active");
-
         if (chip.classList.contains("chip-custom")) {
+          const previousDay =
+            filterSection?.querySelector(".chip-active:not(.chip-custom)") ||
+            filterSection?.querySelector(`.chip.${chipDayDullClass}:not(.chip-custom)`);
+          chips.forEach((node) => node.classList.remove("chip-active"));
+          chip.classList.add("chip-active");
+          dayChips.forEach((d) => d.classList.remove(chipDayDullClass));
+          previousDay?.classList.add(chipDayDullClass);
+          filterSection?.classList.add(packagesCustomSelectedClass);
           showStatus("Custom package feature coming soon!");
           selectedDays = null;
         } else {
+          dayChips.forEach((d) => d.classList.remove(chipDayDullClass));
+          filterSection?.classList.remove(packagesCustomSelectedClass);
+          chips.forEach((node) => node.classList.remove("chip-active"));
+          chip.classList.add("chip-active");
           selectedDays = extractDaysFromChip(chip);
         }
-
-        startIndex = 0;
-        renderVisibleCards();
+        applyLocationPackagesFilter();
       });
     });
 
-    nextArrow?.addEventListener("click", () => {
-      const pool = getCurrentPool();
-      if (pool.length <= VISIBLE_CARDS) {
-        return;
-      }
-      startIndex = (startIndex + 1) % pool.length;
-      renderVisibleCards();
-    });
+    if (filterSection && dayChips.length > 1 && prevDayArrow && nextDayArrow) {
+      prevDayArrow.addEventListener("click", () => moveLocationDayChip(-1));
+      nextDayArrow.addEventListener("click", () => moveLocationDayChip(1));
+    }
+
+    window.addEventListener("resize", applyLocationPackagesTrackLayout);
 
     const defaultChip = filterSection?.querySelector(".chip-active:not(.chip-custom)");
     selectedDays = defaultChip ? extractDaysFromChip(defaultChip) : null;
-    renderVisibleCards();
+    applyLocationPackagesFilter();
   }
 
   // Packages page: filter cards by selected day chip
@@ -1336,12 +2237,15 @@ document.addEventListener("DOMContentLoaded", () => {
   if (packagesScreenSection) {
     const filterSection = packagesScreenSection.querySelector(".package-screen-filters");
     const chips = Array.from(filterSection?.querySelectorAll(".chip") || []);
+    const dayChips = chips.filter((chip) => !chip.classList.contains("chip-custom"));
     const cards = Array.from(packagesScreenSection.querySelectorAll(".package-screen-grid .package-card"));
     const packageTrack = packagesScreenSection.querySelector(".package-screen-grid");
-    const VISIBLE_CARDS = 3;
+    const getPackagesVisibleCardsCount = () => 3;
     const supportsHoverImageSwap = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
     const packageImageLoadCache = new Map();
     let packageAutoScrollTimer = null;
+    let isPackagesAutoStepRunning = false;
+    let packageAutoStepResetTimer = null;
     let selectedDays = null;
     let activePackageIndex = 0;
     let isPackagesScreenVisible = false;
@@ -1370,6 +2274,18 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     const extractDaysFromChip = (chip) => chip.textContent.match(/\d+/g)?.[1] || null;
+    const getCardDaysValue = (card) => {
+      const dataDays = card.dataset.days || null;
+      if (dataDays) {
+        return dataDays;
+      }
+      const metaText =
+        card.querySelector(".package-meta-days-text")?.textContent?.trim() ||
+        card.querySelector(".package-meta-duration")?.textContent?.trim() ||
+        "";
+      const visibleDays = metaText.match(/\d+/)?.[0] || null;
+      return visibleDays || null;
+    };
 
     const preloadPackageImage = (src) => {
       if (!src) {
@@ -1389,69 +2305,43 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const getPackagesPool = () => {
-      const dayMatched = selectedDays ? cards.filter((card) => card.dataset.days === selectedDays) : cards.slice();
-      if (dayMatched.length >= VISIBLE_CARDS) {
-        return dayMatched;
-      }
-
-      const withFallback = dayMatched.slice();
-      cards.forEach((card) => {
-        if (!withFallback.includes(card)) {
-          withFallback.push(card);
-        }
-      });
-      return withFallback;
+      const dayMatched = selectedDays ? cards.filter((card) => getCardDaysValue(card) === selectedDays) : cards.slice();
+      return dayMatched.slice(0, 3);
     };
 
-    const stopPackageAutoplay = () => {
-      if (packageAutoScrollTimer) {
-        window.clearInterval(packageAutoScrollTimer);
-        packageAutoScrollTimer = null;
-      }
-    };
+    const stopPackageAutoplay = () => {};
 
     const getVisiblePackageCards = () => cards.filter((card) => card.style.display !== "none");
 
-    const scrollToPackage = (index) => {
-      if (!packageTrack) {
-        return;
-      }
-      const visibleCards = getVisiblePackageCards();
-      if (!visibleCards.length) {
-        return;
-      }
-      activePackageIndex = (index + visibleCards.length) % visibleCards.length;
-      packageTrack.scrollTo({
-        left: visibleCards[activePackageIndex].offsetLeft,
-        behavior: "smooth"
+    const applyPackagesTrackLayout = () => {
+      cards.forEach((card) => {
+        card.style.flex = "";
+        card.style.minWidth = "";
+        card.style.maxWidth = "";
+        card.style.width = "";
       });
     };
 
-    const startPackageAutoplay = () => {
-      stopPackageAutoplay();
-      const visibleCards = getVisiblePackageCards();
-      if (!packageTrack || visibleCards.length < 2 || !isPackagesScreenVisible) {
-        return;
-      }
-      packageAutoScrollTimer = window.setInterval(() => {
-        scrollToPackage(activePackageIndex + 1);
-      }, 3000);
-    };
+    const scrollToPackage = () => {};
+
+    const runPackageLeftStep = () => {};
+
+    const startPackageAutoplay = () => {};
 
     const applyPackagesDayFilter = () => {
+      applyPackagesTrackLayout();
       const pool = getPackagesPool();
       cards.forEach((card) => {
-        card.style.display = pool.includes(card) ? "block" : "none";
+        // Keep stylesheet `display:flex` on .package-card; `block` breaks column flex + .meta margin-top:auto.
+        if (pool.includes(card)) {
+          card.style.removeProperty("display");
+        } else {
+          card.style.display = "none";
+        }
       });
       activePackageIndex = 0;
-      const firstVisibleCard = getVisiblePackageCards()[0];
-      if (firstVisibleCard) {
-        packageTrack?.scrollTo({ left: firstVisibleCard.offsetLeft, behavior: "smooth" });
-      } else {
-        packageTrack?.scrollTo({ left: 0, behavior: "smooth" });
-      }
+      packageTrack?.scrollTo({ left: 0, behavior: "auto" });
       animateVisiblePackageCards(cards);
-      startPackageAutoplay();
     };
 
     cards.forEach((card, idx) => {
@@ -1509,58 +2399,79 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
+    const packagesCustomSelectedClass = "packages-custom-selected";
+    const chipDayDullClass = "chip-day-dull";
+
     chips.forEach((chip) => {
       chip.addEventListener("click", () => {
-        chips.forEach((node) => node.classList.remove("chip-active"));
-        chip.classList.add("chip-active");
-
         if (chip.classList.contains("chip-custom")) {
+          const previousDay =
+            filterSection?.querySelector(".chip-active:not(.chip-custom)") ||
+            filterSection?.querySelector(`.chip.${chipDayDullClass}:not(.chip-custom)`);
+
+          chips.forEach((node) => node.classList.remove("chip-active"));
+          chip.classList.add("chip-active");
+          dayChips.forEach((d) => d.classList.remove(chipDayDullClass));
+          previousDay?.classList.add(chipDayDullClass);
+          filterSection?.classList.add(packagesCustomSelectedClass);
+
           selectedDays = null;
           applyPackagesDayFilter();
           showStatus("Custom package feature coming soon!");
           return;
         }
 
+        dayChips.forEach((d) => d.classList.remove(chipDayDullClass));
+        filterSection?.classList.remove(packagesCustomSelectedClass);
+        chips.forEach((node) => node.classList.remove("chip-active"));
+        chip.classList.add("chip-active");
+
         selectedDays = extractDaysFromChip(chip);
         applyPackagesDayFilter();
       });
     });
 
+    if (filterSection && dayChips.length > 1) {
+      const createDayArrow = (direction) => {
+        const arrow = document.createElement("button");
+        arrow.type = "button";
+        arrow.className = `package-day-arrow package-day-arrow-${direction}`;
+        arrow.setAttribute("aria-label", direction === "prev" ? "Previous day option" : "Next day option");
+        arrow.textContent = direction === "prev" ? "‹" : "›";
+        return arrow;
+      };
+
+      const prevArrow = createDayArrow("prev");
+      const nextArrow = createDayArrow("next");
+      filterSection.prepend(prevArrow);
+      filterSection.append(nextArrow);
+
+      const moveDayChip = (step) => {
+        const activeIndex = dayChips.findIndex((chip) => chip.classList.contains("chip-active"));
+        const dullIndex = dayChips.findIndex((chip) => chip.classList.contains(chipDayDullClass));
+        const baseIndex = activeIndex >= 0 ? activeIndex : (dullIndex >= 0 ? dullIndex : 0);
+        const targetIndex = (baseIndex + step + dayChips.length) % dayChips.length;
+        dayChips[targetIndex]?.click();
+      };
+
+      prevArrow.addEventListener("click", () => moveDayChip(-1));
+      nextArrow.addEventListener("click", () => moveDayChip(1));
+    }
+
     if (packageTrack) {
-      packageTrack.classList.add("one-by-one-package-slider");
-      packageTrack.addEventListener(
-        "scroll",
-        () => {
-          const visibleCards = getVisiblePackageCards();
-          if (!visibleCards.length) {
-            return;
-          }
-          const nearestIndex = visibleCards.reduce((bestIndex, card, idx) => {
-            const bestDistance = Math.abs(visibleCards[bestIndex].offsetLeft - packageTrack.scrollLeft);
-            const currentDistance = Math.abs(card.offsetLeft - packageTrack.scrollLeft);
-            return currentDistance < bestDistance ? idx : bestIndex;
-          }, 0);
-          activePackageIndex = nearestIndex;
-        },
-        { passive: true }
-      );
-      packageTrack.addEventListener("mouseenter", stopPackageAutoplay);
-      packageTrack.addEventListener("mouseleave", startPackageAutoplay);
-      packageTrack.addEventListener("touchstart", stopPackageAutoplay, { passive: true });
-      packageTrack.addEventListener("touchend", startPackageAutoplay);
+      packageTrack.classList.remove("one-by-one-package-slider");
+      packageTrack.scrollTo({ left: 0, behavior: "auto" });
     }
 
     const packagesVisibilityObserver = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
         isPackagesScreenVisible = Boolean(entry?.isIntersecting);
-        if (isPackagesScreenVisible) {
-          startPackageAutoplay();
-        } else {
+        if (!isPackagesScreenVisible) {
           stopPackageAutoplay();
         }
       },
-      { threshold: 0.2, rootMargin: "0px 0px -10% 0px" }
+      { threshold: 0.01, rootMargin: "0px" }
     );
     packagesVisibilityObserver.observe(packagesScreenSection);
 
@@ -1639,11 +2550,14 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     };
 
-    const startPackageAutoplay = () => {
+    const startPackageAutoplay = (immediate = false) => {
       stopPackageAutoplay();
       const visibleCards = getVisiblePackageCards();
       if (!packageTrack || visibleCards.length < 2 || !isPackageSectionVisible) {
         return;
+      }
+      if (immediate) {
+        scrollToPackage(activePackageIndex + 1);
       }
       packageAutoScrollTimer = window.setInterval(() => {
         scrollToPackage(activePackageIndex + 1);
@@ -1682,12 +2596,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const [entry] = entries;
         isPackageSectionVisible = Boolean(entry?.isIntersecting);
         if (isPackageSectionVisible) {
-          startPackageAutoplay();
+          startPackageAutoplay(true);
         } else {
           stopPackageAutoplay();
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+      { threshold: 0.01, rootMargin: "0px" }
     );
     packageVisibilityObserver.observe(packageSection);
 
@@ -1812,10 +2726,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    const startTestimonialAutoplay = () => {
+    const startTestimonialAutoplay = (immediate = false) => {
       stopTestimonialAutoplay();
       if (reviewCards.length < 2 || !isTestimonialsVisible) {
         return;
+      }
+      if (immediate) {
+        scrollToTestimonial(testimonialActiveIndex + 1);
       }
       testimonialAutoScrollTimer = window.setInterval(() => {
         scrollToTestimonial(testimonialActiveIndex + 1);
@@ -1840,12 +2757,12 @@ document.addEventListener("DOMContentLoaded", () => {
           const [entry] = entries;
           isTestimonialsVisible = Boolean(entry?.isIntersecting);
           if (isTestimonialsVisible) {
-            startTestimonialAutoplay();
+            startTestimonialAutoplay(true);
           } else {
             stopTestimonialAutoplay();
           }
         },
-        { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
+        { threshold: 0.01, rootMargin: "0px" }
       );
 
       testimonialsObserver.observe(testimonials);
@@ -2144,6 +3061,251 @@ document.addEventListener("DOMContentLoaded", () => {
     applyBlogFilters();
   }
 
+  // Blog details: Prev / Next swap in-place article content (circular list)
+  const blogDetailsNavPrev = document.querySelector("#blogDetailsNavPrev");
+  const blogDetailsNavNext = document.querySelector("#blogDetailsNavNext");
+  if (blogDetailsNavPrev && blogDetailsNavNext) {
+    const blogDetailPosts = [
+      {
+        slug: "dublin-pubs",
+        pageTitle: "Tripon — Pubs with History: Dublin",
+        heroSrc: "https://images.unsplash.com/photo-1525874684015-58379d421a52?auto=format&fit=crop&w=1800&q=80",
+        heroAlt: "Historic European city street at dusk",
+        heroH1: "Pubs with History: 7 of Dublin's Most Storied Drinking Dens",
+        breadcrumb: "Home / Blog / Europe / Pubs with History",
+        leadTitle: "The Brazen Head",
+        leadBody:
+          "At over eight hundred years old, The Brazen Head is one of Dublin's most iconic pubs. Tucked near the River Liffey, it blends old brick walls, low wooden ceilings, and live Irish music into an experience that feels deeply rooted in the city's past. Today it remains a must-visit stop for traditional food, local stories, and a true taste of Irish pub heritage.",
+        points: [
+          "Live trad sessions most nights of the week.",
+          "Hearty Irish plates and local ales on tap.",
+          "Stories of writers and revolutionaries who drank here.",
+          "Short walk from the Liffey and Temple Bar."
+        ],
+        quote:
+          "\"The Brazen Head reminds you that Dublin's best nights still happen where timber beams meet candlelight and song.\"",
+        longcopy:
+          "Donec purus posuere nullam lacus aliquam egestas arcu. A egestas a, tellus massa, ornare vulputate. Erat enim eget laoreet ullamcorper lectus aliquet nullam tempus id. Dignissim convallis quam aliquam rhoncus, lectus nullam viverra. Bibendum dignissim tortor, phasellus pellentesque commodo, turpis vel eu.",
+        subcopies: [
+          "Neque nulla porta ut urna rutrum. Aliquam cursus arcu tincidunt mus dictum sit euismod cum id. Dictum integer ultricies arcu fermentum fermentum sem consectetur.",
+          "Donec purus posuere nullam lacus aliquam egestas arcu. Tellus massa, ornare vulputate. Erat enim eget laoreet ullamcorper lectus aliquet nullam tempus id.",
+          "Neque nulla porta ut urna rutrum. Aliquam cursus arcu tincidunt mus dictum sit euismod cum id. Faucibus ipsum felis et duis fames."
+        ],
+        gallery: [
+          {
+            src: "https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?auto=format&fit=crop&w=800&q=80",
+            alt: "Warm pub interior with wooden bar",
+            caption: "Low ceilings and candlelit corners set the mood."
+          },
+          {
+            src: "https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&w=800&q=80",
+            alt: "Friends sharing drinks at a table",
+            caption: "Evenings here stretch long after sunset."
+          }
+        ],
+        tags: ["Adventure", "Culture", "Food"],
+        author: {
+          name: "Brooklyn Simmons",
+          role: "Travel Writer",
+          bio: "Etiam vitae leo et diam pellentesque porta. Sed eleifend ultricies risus, vel rutrum erat commodo ut. Praesent finibus congue euismod. Curabitur placerat finibus lacus.",
+          img: "https://i.pravatar.cc/90?img=47",
+          imgAlt: "Brooklyn Simmons profile photo"
+        },
+        navPreview: "Pubs with History: Dublin's storied drinking dens"
+      },
+      {
+        slug: "algarve-coast",
+        pageTitle: "Tripon — Algarve Coast Road Trip",
+        heroSrc: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1800&q=80",
+        heroAlt: "Turquoise ocean meeting golden cliffs",
+        heroH1: "Algarve Coast: Cliffs, Coves, and Slow Sunsets",
+        breadcrumb: "Home / Blog / Europe / Portugal",
+        leadTitle: "Seven Stops Along the Southern Edge",
+        leadBody:
+          "Portugal's Algarve pairs dramatic sea arches with sleepy fishing villages. Rent a small car, pack sunscreen, and hop between boardwalk trails, hidden coves, and seafood grills where the catch was swimming that morning.",
+        points: [
+          "Benagil sea cave by kayak at calm tide.",
+          "Sagres for wide-open Atlantic views.",
+          "Olhão market for grilled sardines and fruit.",
+          "Lagos old town for cobblestone evenings."
+        ],
+        quote: "\"The Algarve teaches you to measure distance in viewpoints, not kilometers.\"",
+        longcopy:
+          "Curabitur placerat finibus lacus. Risus dui ut viverra venenatis ipsum tincidunt non, proin. Euismod pharetra sit ac nisi. Erat lacus, amet quisque urna faucibus. Rhoncus praesent faucibus rhoncus nec adipiscing tristique sed facilisis velit.",
+        subcopies: [
+          "Pack layers: Atlantic breezes cool even bright afternoons. Book sea-cave tours early; slots fill fast in summer.",
+          "Parking near popular beaches is tight mid-day—arrive before ten or after four for easier access.",
+          "Local vinho verde pairs beautifully with grilled fish; ask servers for the house white."
+        ],
+        gallery: [
+          {
+            src: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?auto=format&fit=crop&w=800&q=80",
+            alt: "Cliffs and turquoise water",
+            caption: "Sea stacks along the southern coastline."
+          },
+          {
+            src: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80",
+            alt: "Small boat on calm water",
+            caption: "Calm mornings are ideal for paddling out."
+          }
+        ],
+        tags: ["Nature", "Road trip", "Beach"],
+        author: {
+          name: "Cameron Lee",
+          role: "Photojournalist",
+          bio: "Cameron documents coastal communities across Europe. His work focuses on sustainable tourism and small-business guides for independent travelers.",
+          img: "https://i.pravatar.cc/90?img=12",
+          imgAlt: "Cameron Lee profile photo"
+        },
+        navPreview: "Algarve: cliffs, coves, and slow sunsets"
+      },
+      {
+        slug: "tokyo-nights",
+        pageTitle: "Tripon — Tokyo After Dark",
+        heroSrc: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=1800&q=80",
+        heroAlt: "Neon city street at night in Tokyo",
+        heroH1: "Tokyo After Dark: Alleys, Izakayas, and Late Trains",
+        breadcrumb: "Home / Blog / Asia / Japan",
+        leadTitle: "How to Explore Without a Rigid Plan",
+        leadBody:
+          "Tokyo rewards wandering. Duck into lantern-lit alleys, follow the smell of yakitori smoke, and hop the last trains with locals. This guide keeps logistics light so you can focus on small shops, vinyl bars, and convenience-store snacks that deserve their own fan club.",
+        points: [
+          "Golden Gai for micro-bars and conversation.",
+          "Omoide Yokocho for grilled skewers and beer.",
+          "Last train times—screens update in real time.",
+          "IC cards work on trains, lockers, and vending machines."
+        ],
+        quote: "\"The best Tokyo night is the one where you miss one train and discover three new streets.\"",
+        longcopy:
+          "Sem libero, tortor suspendisse et, purus euismod posuere sit. Risus dui ut viverra venenatis ipsum tincidunt non, proin. Euismod pharetra sit ac nisi. Erat lacus, amet quisque urna faucibus. Vitae et leo vulputate dictumst ullamcorper.",
+        subcopies: [
+          "Carry cash: some izakayas and ticket windows still prefer yen notes.",
+          "Station lockers are plentiful; note your bay number before you wander.",
+          "Quiet cars on certain lines—watch platform decals before boarding."
+        ],
+        gallery: [
+          {
+            src: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80",
+            alt: "Lanterns along a narrow alley",
+            caption: "Yokocho alleys glow after sunset."
+          },
+          {
+            src: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=800&q=80",
+            alt: "City skyline at blue hour",
+            caption: "Blue hour from a rooftop viewing deck."
+          }
+        ],
+        tags: ["City", "Nightlife", "Food"],
+        author: {
+          name: "Aiko Taneda",
+          role: "Local Guide Editor",
+          bio: "Aiko writes neighborhood-first guides for first-time visitors to Japan, with an emphasis on respectful etiquette and transit-friendly routes.",
+          img: "https://i.pravatar.cc/90?img=32",
+          imgAlt: "Aiko Taneda profile photo"
+        },
+        navPreview: "Tokyo after dark: alleys and izakayas"
+      }
+    ];
+
+    const $ = (id) => document.getElementById(id);
+    let blogDetailIndex = 0;
+
+    const applyBlogDetailPost = (index) => {
+      const n = blogDetailPosts.length;
+      const i = ((index % n) + n) % n;
+      blogDetailIndex = i;
+      const post = blogDetailPosts[i];
+      const prevPost = blogDetailPosts[(i - 1 + n) % n];
+      const nextPost = blogDetailPosts[(i + 1) % n];
+
+      document.title = post.pageTitle;
+
+      const heroImg = $("blogDetailsHeroImg");
+      if (heroImg) {
+        heroImg.src = post.heroSrc;
+        heroImg.alt = post.heroAlt;
+      }
+      const setText = (id, text) => {
+        const node = $(id);
+        if (node) {
+          node.textContent = text;
+        }
+      };
+
+      setText("blogDetailsHeroTitle", post.heroH1);
+      setText("blogDetailsBreadcrumb", post.breadcrumb);
+      setText("blogDetailsLeadTitle", post.leadTitle);
+      setText("blogDetailsLeadBody", post.leadBody);
+      post.points.forEach((text, idx) => setText(`blogDetailsPoint${idx + 1}`, text));
+      setText("blogDetailsQuote", post.quote);
+      setText("blogDetailsLongcopy", post.longcopy);
+      post.subcopies.forEach((text, idx) => setText(`blogDetailsSubcopy${idx + 1}`, text));
+
+      const g1 = post.gallery[0];
+      const g2 = post.gallery[1] || g1;
+      const img1 = $("blogDetailsGalleryImg1");
+      const img2 = $("blogDetailsGalleryImg2");
+      if (img1 && g1) {
+        img1.src = g1.src;
+        img1.alt = g1.alt;
+      }
+      if (img2 && g2) {
+        img2.src = g2.src;
+        img2.alt = g2.alt;
+      }
+      setText("blogDetailsGalleryCap1", g1?.caption || "");
+      setText("blogDetailsGalleryCap2", g2?.caption || "");
+
+      post.tags.forEach((tag, idx) => setText(`blogDetailsTag${idx + 1}`, tag));
+
+      const auth = post.author;
+      const aImg = $("blogDetailsAuthorImg");
+      if (aImg && auth) {
+        aImg.src = auth.img;
+        aImg.alt = auth.imgAlt;
+      }
+      setText("blogDetailsAuthorName", auth.name);
+      setText("blogDetailsAuthorRole", auth.role);
+      setText("blogDetailsAuthorBio", auth.bio);
+
+      setText("blogDetailsNavPrevSub", prevPost.navPreview);
+      setText("blogDetailsNavNextSub", nextPost.navPreview);
+
+      document.querySelectorAll(".blog-details-tags span").forEach((chip) => chip.classList.remove("is-active"));
+      document.querySelectorAll(".blog-details-related-grid .blog-related-card").forEach((card) => {
+        card.style.removeProperty("display");
+      });
+
+      window.history.replaceState(null, "", `#${post.slug}`);
+    };
+
+    const fromHash = () => {
+      const raw = (window.location.hash || "").replace(/^#/, "");
+      if (!raw) {
+        return 0;
+      }
+      const idx = blogDetailPosts.findIndex((p) => p.slug === raw);
+      return idx >= 0 ? idx : 0;
+    };
+
+    blogDetailIndex = fromHash();
+    applyBlogDetailPost(blogDetailIndex);
+
+    window.addEventListener("hashchange", () => {
+      applyBlogDetailPost(fromHash());
+    });
+
+    blogDetailsNavPrev.addEventListener("click", (event) => {
+      event.preventDefault();
+      applyBlogDetailPost(blogDetailIndex - 1);
+    });
+
+    blogDetailsNavNext.addEventListener("click", (event) => {
+      event.preventDefault();
+      applyBlogDetailPost(blogDetailIndex + 1);
+    });
+  }
+
   // Blog details meta row: share actions + related-card filtering by tag
   const blogDetailsMetaRow = document.querySelector(".blog-details-meta-row");
   if (blogDetailsMetaRow) {
@@ -2152,19 +3314,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const relatedCards = Array.from(document.querySelectorAll(".blog-details-related-grid .blog-related-card"));
     let activeTag = null;
 
-    const currentUrl = encodeURIComponent(window.location.href);
-    const currentTitle = encodeURIComponent(document.title || "Tripon Blog Details");
-
-    const shareTargets = {
-      Facebook: `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`,
-      X: `https://twitter.com/intent/tweet?url=${currentUrl}&text=${currentTitle}`,
-      LinkedIn: `https://www.linkedin.com/sharing/share-offsite/?url=${currentUrl}`
-    };
-
     shareLinks.forEach((link) => {
       const label = link.getAttribute("aria-label") || "";
       link.addEventListener("click", (event) => {
         event.preventDefault();
+        const pageUrl = encodeURIComponent(window.location.href);
+        const pageTitle = encodeURIComponent(document.title || "Tripon Blog Details");
+        const shareTargets = {
+          Facebook: `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`,
+          X: `https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`,
+          LinkedIn: `https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`
+        };
         const target = shareTargets[label];
 
         if (target) {
@@ -2250,6 +3410,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const blogCommentForm = document.querySelector(".blog-details-comment-form");
   const blogCommentPopup = document.querySelector("#blogCommentPopup");
   const blogCommentPopupClose = document.querySelector("#blogCommentPopupClose");
+  const blogCommentPopupIconClose = document.querySelector("#blogCommentPopupIconClose");
+  const blogReplySection = document.querySelector(".blog-details-reply");
+  const blogCommentSubmitBtn = blogCommentForm?.querySelector(".blog-comment-submit");
+  let blogCommentSubmitTimer = null;
 
   const blogRatingItems = Array.from(document.querySelectorAll(".blog-details-rating-item"));
   blogRatingItems.forEach((item) => {
@@ -2259,31 +3423,42 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    let selectedRating = 5;
-    starText.textContent = "";
+    starText.replaceChildren();
     starText.classList.add("blog-rating-stars");
+
+    const applyOneStarVisual = (btn, active) => {
+      btn.classList.toggle("is-active", active);
+      const icon = btn.querySelector("i");
+      if (icon) {
+        icon.classList.toggle("fa-solid", active);
+        icon.classList.toggle("fa-regular", !active);
+      }
+    };
 
     for (let value = 1; value <= 5; value += 1) {
       const starBtn = document.createElement("button");
       starBtn.type = "button";
       starBtn.className = "blog-rating-star";
-      starBtn.textContent = "★";
-      starBtn.setAttribute("aria-label", `${label} rating ${value} star${value > 1 ? "s" : ""}`);
+      starBtn.innerHTML = '<i class="fa-solid fa-star" aria-hidden="true"></i>';
+      let isOn = true;
 
-      const paintStars = () => {
-        const stars = Array.from(starText.querySelectorAll(".blog-rating-star"));
-        stars.forEach((starNode, idx) => {
-          starNode.classList.toggle("is-active", idx < selectedRating);
-        });
+      const syncAria = () => {
+        starBtn.setAttribute(
+          "aria-label",
+          `${label}: star ${value} of 5, ${isOn ? "highlighted" : "not highlighted"}`
+        );
+        starBtn.setAttribute("aria-pressed", isOn ? "true" : "false");
       };
 
       starBtn.addEventListener("click", () => {
-        selectedRating = value;
-        paintStars();
+        isOn = !isOn;
+        applyOneStarVisual(starBtn, isOn);
+        syncAria();
       });
 
+      applyOneStarVisual(starBtn, isOn);
+      syncAria();
       starText.appendChild(starBtn);
-      paintStars();
     }
   });
 
@@ -2303,7 +3478,29 @@ document.addEventListener("DOMContentLoaded", () => {
     blogCommentPopup.setAttribute("aria-hidden", "false");
   };
 
+  const setBlogCommentSubmitState = (state) => {
+    if (!blogCommentSubmitBtn) {
+      return;
+    }
+    blogCommentSubmitBtn.classList.remove("is-sending", "is-submitted");
+    blogCommentSubmitBtn.disabled = false;
+    if (state === "sending") {
+      blogCommentSubmitBtn.classList.add("is-sending");
+      blogCommentSubmitBtn.textContent = "Sending";
+      blogCommentSubmitBtn.disabled = true;
+      return;
+    }
+    if (state === "submitted") {
+      blogCommentSubmitBtn.classList.add("is-submitted");
+      blogCommentSubmitBtn.textContent = "Submitted";
+      blogCommentSubmitBtn.disabled = true;
+      return;
+    }
+    blogCommentSubmitBtn.textContent = "Post Comment";
+  };
+
   blogCommentPopupClose?.addEventListener("click", hideBlogCommentPopup);
+  blogCommentPopupIconClose?.addEventListener("click", hideBlogCommentPopup);
   blogCommentPopup?.addEventListener("click", (event) => {
     if (event.target === blogCommentPopup) {
       hideBlogCommentPopup();
@@ -2311,19 +3508,164 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   if (blogCommentForm) {
+    const blogCommentEmailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const blogCommentNameLetterPattern = /[a-zA-Z\u00C0-\u024F\u1E00-\u1EFF]/;
+
+    const getBlogFieldErrorNode = (input) => {
+      const describedBy = input.getAttribute("aria-describedby");
+      if (!describedBy) {
+        return null;
+      }
+      return document.getElementById(describedBy);
+    };
+
+    const clearBlogCommentField = (input) => {
+      input.classList.remove("blog-details-input-invalid");
+      const err = getBlogFieldErrorNode(input);
+      if (err) {
+        err.textContent = "";
+      }
+    };
+
+    const clearBlogCommentFormErrors = () => {
+      blogCommentForm.querySelectorAll("input, textarea").forEach(clearBlogCommentField);
+    };
+
+    const setBlogCommentFieldError = (input, message) => {
+      input.classList.add("blog-details-input-invalid");
+      const err = getBlogFieldErrorNode(input);
+      if (err) {
+        err.textContent = message;
+      }
+    };
+
+    const blogCommentNameDigitPattern = /\p{Nd}/u;
+
+    const validateBlogCommentName = (raw) => {
+      const value = raw.trim();
+      if (!value) {
+        return "Please enter your name.";
+      }
+      if (blogCommentNameDigitPattern.test(value)) {
+        return "Name cannot include numbers.";
+      }
+      if (value.length < 2) {
+        return "Name must be at least 2 characters.";
+      }
+      if (value.length > 80) {
+        return "Name must be at most 80 characters.";
+      }
+      if (!blogCommentNameLetterPattern.test(value)) {
+        return "Name should include at least one letter.";
+      }
+      return "";
+    };
+
+    const validateBlogCommentEmail = (raw) => {
+      const value = raw.trim();
+      if (!value) {
+        return "Please enter your email.";
+      }
+      if (!blogCommentEmailPattern.test(value)) {
+        return "Please enter a valid email address.";
+      }
+      return "";
+    };
+
+    const validateBlogCommentTitle = (raw) => {
+      const value = raw.trim();
+      if (!value) {
+        return "Please enter a title.";
+      }
+      if (value.length < 2) {
+        return "Title must be at least 2 characters.";
+      }
+      if (value.length > 200) {
+        return "Title must be at most 200 characters.";
+      }
+      return "";
+    };
+
+    const validateBlogCommentBody = (raw) => {
+      const value = raw.trim();
+      if (!value) {
+        return "Please enter your comment.";
+      }
+      if (value.length < 10) {
+        return "Comment must be at least 10 characters.";
+      }
+      if (value.length > 5000) {
+        return "Comment must be at most 5000 characters.";
+      }
+      return "";
+    };
+
+    const validateBlogCommentForm = () => {
+      const nameInput = blogCommentForm.querySelector("#blog-comment-name");
+      const emailInput = blogCommentForm.querySelector("#blog-comment-email");
+      const titleInput = blogCommentForm.querySelector("#blog-comment-title");
+      const bodyInput = blogCommentForm.querySelector("#blog-comment-body");
+
+      clearBlogCommentFormErrors();
+
+      const checks = [
+        { input: nameInput, run: () => validateBlogCommentName(nameInput?.value || "") },
+        { input: emailInput, run: () => validateBlogCommentEmail(emailInput?.value || "") },
+        { input: titleInput, run: () => validateBlogCommentTitle(titleInput?.value || "") },
+        { input: bodyInput, run: () => validateBlogCommentBody(bodyInput?.value || "") }
+      ];
+
+      let firstInvalid = null;
+      checks.forEach(({ input, run }) => {
+        if (!input) {
+          return;
+        }
+        const message = run();
+        if (message) {
+          setBlogCommentFieldError(input, message);
+          if (!firstInvalid) {
+            firstInvalid = input;
+          }
+        }
+      });
+
+      return firstInvalid;
+    };
+
+    const nameInputEl = blogCommentForm.querySelector("#blog-comment-name");
+    bindNameFieldNoDigits(nameInputEl);
+
+    blogCommentForm.querySelectorAll("input, textarea").forEach((field) => {
+      field.addEventListener("input", () => {
+        clearBlogCommentField(field);
+      });
+      field.addEventListener("change", () => clearBlogCommentField(field));
+    });
+
     blogCommentForm.addEventListener("submit", (event) => {
       event.preventDefault();
-
-      const inputs = blogCommentForm.querySelectorAll("input, textarea");
-      const hasEmptyField = Array.from(inputs).some((input) => !input.value.trim());
-
-      if (hasEmptyField) {
-        showStatus("Please fill all fields");
+      if (blogCommentSubmitBtn?.disabled) {
         return;
       }
 
-      showBlogCommentPopup();
-      blogCommentForm.reset();
+      const firstInvalid = validateBlogCommentForm();
+      if (firstInvalid) {
+        firstInvalid.focus();
+        showStatus("Please fix the highlighted fields.");
+        return;
+      }
+
+      window.clearTimeout(blogCommentSubmitTimer);
+      setBlogCommentSubmitState("sending");
+      blogCommentSubmitTimer = window.setTimeout(() => {
+        setBlogCommentSubmitState("submitted");
+        blogCommentSubmitTimer = window.setTimeout(() => {
+          showBlogCommentPopup();
+          blogCommentForm.reset();
+          clearBlogCommentFormErrors();
+          setBlogCommentSubmitState("default");
+        }, 550);
+      }, 950);
     });
   }
 
@@ -2493,52 +3835,210 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Contact form submission
   const contactForm = document.querySelector(".contact-form");
-  const submitPopup = document.querySelector("#submitPopup");
-  const submitPopupClose = document.querySelector("#submitPopupClose");
+  const submitPopupSuccess = document.querySelector("#submitPopupSuccess");
+  const submitPopupError = document.querySelector("#submitPopupError");
+  const submitPopupSuccessClose = document.querySelector("#submitPopupSuccessClose");
+  const submitPopupErrorClose = document.querySelector("#submitPopupErrorClose");
+  const submitPopupSuccessIconClose = document.querySelector("#submitPopupSuccessIconClose");
+  const submitPopupErrorIconClose = document.querySelector("#submitPopupErrorIconClose");
 
-  const hideSubmitPopup = () => {
-    if (!submitPopup) {
+  const hidePopup = (popupElement) => {
+    if (!popupElement) {
       return;
     }
-    submitPopup.classList.remove("active");
-    submitPopup.setAttribute("aria-hidden", "true");
+    popupElement.classList.remove("active");
+    popupElement.setAttribute("aria-hidden", "true");
   };
 
-  const showSubmitPopup = () => {
-    if (!submitPopup) {
+  const showPopup = (popupElement) => {
+    if (!popupElement) {
       return;
     }
-    submitPopup.classList.add("active");
-    submitPopup.setAttribute("aria-hidden", "false");
+    popupElement.classList.add("active");
+    popupElement.setAttribute("aria-hidden", "false");
   };
 
-  submitPopupClose?.addEventListener("click", hideSubmitPopup);
-  submitPopup?.addEventListener("click", (event) => {
-    if (event.target === submitPopup) {
-      hideSubmitPopup();
+  submitPopupSuccessClose?.addEventListener("click", () => hidePopup(submitPopupSuccess));
+  submitPopupErrorClose?.addEventListener("click", () => hidePopup(submitPopupError));
+  submitPopupSuccessIconClose?.addEventListener("click", () => hidePopup(submitPopupSuccess));
+  submitPopupErrorIconClose?.addEventListener("click", () => hidePopup(submitPopupError));
+
+  submitPopupSuccess?.addEventListener("click", (event) => {
+    if (event.target === submitPopupSuccess) {
+      hidePopup(submitPopupSuccess);
+    }
+  });
+
+  submitPopupError?.addEventListener("click", (event) => {
+    if (event.target === submitPopupError) {
+      hidePopup(submitPopupError);
     }
   });
 
   if (contactForm) {
-    contactForm.addEventListener("submit", (e) => {
-      e.preventDefault();
+    const contactSubmitBtn = contactForm.querySelector(".contact-submit");
+    let contactSubmitTimer = null;
 
-      const inputs = contactForm.querySelectorAll("input, textarea");
-      let isEmpty = false;
+    const contactFields = {
+      fullNameInput: contactForm.querySelector("#contactFullName"),
+      phoneInput: contactForm.querySelector("#contactPhoneNumber"),
+      emailInput: contactForm.querySelector("#contactEmailId"),
+      locationInput: contactForm.querySelector("#contactLocation"),
+      messageInput: contactForm.querySelector("#contactMessage")
+    };
 
-      inputs.forEach((input) => {
-        if (!input.value.trim()) {
-          isEmpty = true;
-        }
-      });
+    bindNameFieldNoDigits(contactFields.fullNameInput);
+    bindNameFieldNoDigits(contactFields.locationInput);
 
-      if (isEmpty) {
-        showStatus("Please fill all fields");
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const setContactSubmitState = (state) => {
+      if (!contactSubmitBtn) {
+        return;
+      }
+      contactSubmitBtn.classList.remove("is-sending", "is-submitted");
+      contactSubmitBtn.disabled = false;
+
+      if (state === "sending") {
+        contactSubmitBtn.textContent = "Sending...";
+        contactSubmitBtn.classList.add("is-sending");
+        contactSubmitBtn.disabled = true;
         return;
       }
 
-      showSubmitPopup();
-      contactForm.reset();
+      if (state === "submitted") {
+        contactSubmitBtn.textContent = "Submitted";
+        contactSubmitBtn.classList.add("is-submitted");
+        contactSubmitBtn.disabled = true;
+        return;
+      }
+
+      contactSubmitBtn.textContent = "Submit";
+    };
+
+    const markInvalid = (inputElement) => {
+      if (!inputElement) {
+        return;
+      }
+      inputElement.classList.add("contact-invalid-field");
+      const parentLabel = inputElement.closest("label");
+      parentLabel?.classList.add("contact-invalid-label");
+    };
+
+    const clearInvalid = (inputElement) => {
+      if (!inputElement) {
+        return;
+      }
+      inputElement.classList.remove("contact-invalid-field");
+      const parentLabel = inputElement.closest("label");
+      parentLabel?.classList.remove("contact-invalid-label");
+    };
+
+    const clearContactValidationTooltip = () => {
+      contactForm.querySelectorAll(".hero-validation-tooltip").forEach((node) => node.remove());
+    };
+
+    const showContactValidationTooltip = (inputElement, message) => {
+      const parentLabel = inputElement?.closest("label");
+      if (!parentLabel) {
+        return;
+      }
+      clearContactValidationTooltip();
+      const tip = document.createElement("div");
+      tip.className = "hero-validation-tooltip";
+      tip.innerHTML = '<span class="hero-validation-icon" aria-hidden="true"></span><span class="hero-validation-text"></span>';
+      tip.querySelector(".hero-validation-text").textContent = message || "Please fill out this field.";
+      parentLabel.appendChild(tip);
+    };
+
+    Object.values(contactFields).forEach((field) => {
+      field?.addEventListener("input", () => {
+        clearInvalid(field);
+        if (field.checkValidity()) {
+          clearContactValidationTooltip();
+        }
+      });
+    });
+
+    contactFields.phoneInput?.addEventListener("input", () => {
+      const digitsOnly = (contactFields.phoneInput.value || "").replace(/\D/g, "").slice(0, 10);
+      contactFields.phoneInput.value = digitsOnly;
+      const isPartialPhone = digitsOnly.length > 0 && digitsOnly.length < 10;
+      contactFields.phoneInput.classList.toggle("contact-phone-partial", isPartialPhone);
+    });
+
+    contactForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (contactSubmitBtn?.disabled) {
+        return;
+      }
+
+      const fullName = contactFields.fullNameInput?.value.trim() || "";
+      const rawPhone = contactFields.phoneInput?.value.trim() || "";
+      const phoneDigitsOnly = rawPhone.replace(/\D/g, "");
+      const emailValue = contactFields.emailInput?.value.trim() || "";
+      const locationValue = contactFields.locationInput?.value.trim() || "";
+      const messageValue = contactFields.messageInput?.value.trim() || "";
+      const hasValidPhone = phoneDigitsOnly.length === 10;
+      const hasValidEmail = emailPattern.test(emailValue);
+
+      Object.values(contactFields).forEach((field) => clearInvalid(field));
+
+      if (!fullName) {
+        markInvalid(contactFields.fullNameInput);
+        hidePopup(submitPopupSuccess);
+        hidePopup(submitPopupError);
+        showContactValidationTooltip(contactFields.fullNameInput, "Please fill out this field.");
+        contactFields.fullNameInput?.focus();
+        return;
+      }
+
+      if (!hasValidPhone) {
+        markInvalid(contactFields.phoneInput);
+        hidePopup(submitPopupSuccess);
+        hidePopup(submitPopupError);
+        showContactValidationTooltip(contactFields.phoneInput, "Please enter a valid phone number.");
+        contactFields.phoneInput?.focus();
+        return;
+      }
+
+      if (!hasValidEmail) {
+        markInvalid(contactFields.emailInput);
+        hidePopup(submitPopupSuccess);
+        hidePopup(submitPopupError);
+        showContactValidationTooltip(contactFields.emailInput, "Please enter a valid email address.");
+        contactFields.emailInput?.focus();
+        return;
+      }
+
+      if (!locationValue) {
+        markInvalid(contactFields.locationInput);
+        hidePopup(submitPopupSuccess);
+        hidePopup(submitPopupError);
+        showContactValidationTooltip(contactFields.locationInput, "Please fill out this field.");
+        contactFields.locationInput?.focus();
+        return;
+      }
+
+      if (messageValue.length < 10) {
+        markInvalid(contactFields.messageInput);
+        hidePopup(submitPopupSuccess);
+        hidePopup(submitPopupError);
+        showContactValidationTooltip(contactFields.messageInput, "Message should be at least 10 characters.");
+        contactFields.messageInput?.focus();
+        return;
+      }
+
+      clearContactValidationTooltip();
+      hidePopup(submitPopupError);
+      window.clearTimeout(contactSubmitTimer);
+      setContactSubmitState("sending");
+      contactSubmitTimer = window.setTimeout(() => {
+        setContactSubmitState("submitted");
+        contactSubmitTimer = window.setTimeout(() => {
+          showPopup(submitPopupSuccess);
+          setContactSubmitState("default");
+        }, 500);
+      }, 1100);
     });
   }
 
@@ -2549,11 +4049,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const favButtons = contactExploreWrap.querySelectorAll(".contact-explore-fav");
     const cards = exploreGrid ? Array.from(exploreGrid.querySelectorAll(".contact-explore-card")) : [];
 
-    let activeIndex = 0;
     let contactExploreAutoTimer = null;
+    let isExploreAnimating = false;
 
     const renderExploreCards = () => {
-      if (!cards.length) {
+      if (!cards.length || !exploreGrid) {
         return;
       }
       cards.forEach((card) => {
@@ -2561,11 +4061,40 @@ document.addEventListener("DOMContentLoaded", () => {
         card.style.transform = "none";
         card.style.transition = "none";
       });
-      if (exploreGrid) {
-        exploreGrid.scrollTo({ left: cards[activeIndex].offsetLeft, behavior: "smooth" });
-      } else {
-        cards[activeIndex]?.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      exploreGrid.scrollLeft = 0;
+    };
+
+    const getExploreStep = () => {
+      if (!exploreGrid || !cards.length) {
+        return 0;
       }
+      const firstCard = cards[0];
+      if (!firstCard) {
+        return 0;
+      }
+      const rowStyles = window.getComputedStyle(exploreGrid);
+      const gap = Number.parseFloat(rowStyles.columnGap || rowStyles.gap || "0") || 0;
+      return firstCard.getBoundingClientRect().width + gap;
+    };
+
+    const shiftExploreLeftOneByOne = () => {
+      if (!exploreGrid || cards.length < 2 || isExploreAnimating) {
+        return;
+      }
+      const firstCard = cards[0];
+      const step = getExploreStep();
+      if (!firstCard || !step) {
+        return;
+      }
+      isExploreAnimating = true;
+      exploreGrid.scrollTo({ left: step, behavior: "smooth" });
+      window.setTimeout(() => {
+        // Rotate cards in DOM so motion is always leftward (never snaps back to the right).
+        exploreGrid.appendChild(firstCard);
+        cards.push(cards.shift());
+        exploreGrid.scrollLeft = 0;
+        isExploreAnimating = false;
+      }, 480);
     };
 
     const stopExploreAutoplay = () => {
@@ -2575,30 +4104,22 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     };
 
-    const startExploreAutoplay = () => {
+    const startExploreAutoplay = (immediate = false) => {
       stopExploreAutoplay();
       if (!exploreGrid || cards.length < 2) {
         return;
       }
+      if (immediate) {
+        shiftExploreLeftOneByOne();
+      }
       contactExploreAutoTimer = window.setInterval(() => {
-        activeIndex = (activeIndex + 1) % cards.length;
-        renderExploreCards();
+        shiftExploreLeftOneByOne();
       }, 2800);
     };
+    let hasEnteredViewport = false;
+    let isExploreInViewport = false;
 
     if (exploreGrid) {
-      exploreGrid.addEventListener(
-        "scroll",
-        () => {
-          const nearestIndex = cards.reduce((bestIndex, card, idx) => {
-            const bestDistance = Math.abs(cards[bestIndex].offsetLeft - exploreGrid.scrollLeft);
-            const currentDistance = Math.abs(card.offsetLeft - exploreGrid.scrollLeft);
-            return currentDistance < bestDistance ? idx : bestIndex;
-          }, 0);
-          activeIndex = nearestIndex;
-        },
-        { passive: true }
-      );
       exploreGrid.addEventListener("mouseenter", stopExploreAutoplay);
       exploreGrid.addEventListener("mouseleave", startExploreAutoplay);
       exploreGrid.addEventListener("touchstart", stopExploreAutoplay, { passive: true });
@@ -2617,7 +4138,40 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     renderExploreCards();
-    startExploreAutoplay();
+
+    if (contactExploreWrap && "IntersectionObserver" in window) {
+      const exploreObserver = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          const nowVisible = Boolean(entry?.isIntersecting && entry.intersectionRatio >= 0.35);
+          if (nowVisible) {
+            isExploreInViewport = true;
+            if (!hasEnteredViewport) {
+              hasEnteredViewport = true;
+              startExploreAutoplay(true);
+            } else {
+              startExploreAutoplay(false);
+            }
+            return;
+          }
+          isExploreInViewport = false;
+          stopExploreAutoplay();
+        },
+        { threshold: [0.35, 0.6] }
+      );
+      exploreObserver.observe(contactExploreWrap);
+    } else {
+      // Fallback for older browsers: keep previous behavior.
+      startExploreAutoplay(true);
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        stopExploreAutoplay();
+      } else if (isExploreInViewport) {
+        startExploreAutoplay(false);
+      }
+    });
   }
 
   // Footer: social links open matching platforms

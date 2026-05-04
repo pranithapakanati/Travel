@@ -106,7 +106,7 @@
         </nav>
         <div class="home-mobile-drawer-contact">
           <p>For More Inquiry</p>
-          <a href="tel:+91740013770">+91 7400013770</a>
+          <a href="tel:+917685487647">+91 7685487647</a>
         </div>
       </aside>
     </div>
@@ -126,22 +126,22 @@
             href="https://wa.me/918919805038?text=Hi%2C%20I'm%20interested%20in%20a%20Bali%20tour%20package!"
             target="_blank" rel="noopener noreferrer" aria-label="Chat us on WhatsApp">✆ Chat Us On WhatsApp</a>
         </div>
-        <form class="search-box">
+        <form class="search-box" novalidate>
           <div class="field">
             <label><span class="field-icon">👤</span>Name</label>
-            <input type="text" placeholder="Enter Your Name" aria-label="Enter your name" />
+            <input type="text" placeholder="Enter Your Name" aria-label="Enter your name" minlength="2" required />
           </div>
           <div class="field">
             <label><span class="field-icon">☎</span>Phone Number</label>
-            <input type="tel" placeholder="Enter Your Phone Number" aria-label="Enter your phone number" />
+            <input type="tel" placeholder="Enter Your Phone Number" aria-label="Enter your phone number" inputmode="numeric" maxlength="10" minlength="10" pattern="[0-9]{10}" required />
           </div>
           <div class="field">
-            <label><span class="field-icon">📅</span>Travel On</label>
-            <input type="date" aria-label="Select travel date" />
+            <label>Travel On</label>
+            <input type="date" aria-label="Select travel date" required />
           </div>
           <div class="field">
             <label><span class="field-icon">👥</span>Travelers</label>
-            <input type="number" min="1" placeholder="No. of Guests" aria-label="Number of guests" />
+            <input type="number" min="1" max="20" placeholder="No. of Guests" aria-label="Number of guests" required />
           </div>
           <button class="send-btn" type="button">➤</button>
         </form>
@@ -231,42 +231,42 @@
             <div class="place-icon">🏯</div>
             <div class="place-content">
               <h3>Ubud</h3>
-              <span>20+ Activities, 18 Sight Seedings</span>
+              <span>20+ Activities, 18 Sight Seeing</span>
             </div>
           </article>
           <article class="place-item" data-location-link="location.html?place=kuta">
             <div class="place-icon">🛕</div>
             <div class="place-content">
               <h3>Kuta, Gali</h3>
-              <span>16+ Activities, 20 Sight Seedings</span>
+              <span>16+ Activities, 20 Sight Seeing</span>
             </div>
           </article>
           <article class="place-item" data-location-link="location.html?place=lombok">
             <div class="place-icon">🗼</div>
             <div class="place-content">
               <h3>Lombok</h3>
-              <span>15+ Activities, 10 Sight Seedings</span>
+              <span>15+ Activities, 10 Sight Seeing</span>
             </div>
           </article>
           <article class="place-item" data-location-link="location.html?place=seminyak">
             <div class="place-icon">🏖</div>
             <div class="place-content">
               <h3>Seminyak</h3>
-              <span>18+ Activities, 14 Sight Seedings</span>
+              <span>18+ Activities, 14 Sight Seeing</span>
             </div>
           </article>
           <article class="place-item" data-location-link="location.html?place=nusa-penida">
             <div class="place-icon">⛵</div>
             <div class="place-content">
               <h3>Nusa Penida</h3>
-              <span>14+ Activities, 12 Sight Seedings</span>
+              <span>14+ Activities, 12 Sight Seeing</span>
             </div>
           </article>
           <article class="place-item" data-location-link="location.html?place=uluwatu">
             <div class="place-icon">🌅</div>
             <div class="place-content">
               <h3>Uluwatu</h3>
-              <span>12+ Activities, 9 Sight Seedings</span>
+              <span>12+ Activities, 9 Sight Seeing</span>
             </div>
           </article>
           <article class="place-item place-item-see-all" data-location-link="location.html">
@@ -339,7 +339,7 @@
             <p class="location"><i class="fa-solid fa-location-dot"></i> Ubud, Indonesia</p>
             <h4>Honey Moon Package in Bali</h4>
             <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (136)</span></p>
-            <div class="meta"><span>◷ 4 Days</span><span>From ₹45,000</span></div>
+            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">4 Days</span></span><span>From ₹45,000</span></div>
           </article>
           <article class="package-card" data-type="couple">
             <div class="package-thumb">
@@ -349,7 +349,7 @@
             <p class="location"><i class="fa-solid fa-location-dot"></i> Nusa Penida, Indonesia</p>
             <h4>Isolated Mountains Retreat</h4>
             <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (136)</span></p>
-            <div class="meta"><span>◷ 5 Days</span><span>From ₹50,000</span></div>
+            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">5 Days</span></span><span>From ₹50,000</span></div>
           </article>
           <article class="package-card" data-type="couple">
             <div class="package-thumb">
@@ -359,7 +359,7 @@
             <p class="location"><i class="fa-solid fa-location-dot"></i> Gili Trawangan, Indonesia</p>
             <h4>The White Beach Land</h4>
             <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (136)</span></p>
-            <div class="meta"><span>◷ 6 Days</span><span>From ₹75,000</span></div>
+            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">6 Days</span></span><span>From ₹75,000</span></div>
           </article>
 
           <!-- Family packages -->
@@ -372,7 +372,7 @@
             <p class="location"><i class="fa-solid fa-location-dot"></i> Seminyak, Indonesia</p>
             <h4>Family Beach Resort Stay</h4>
             <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.7 (98)</span></p>
-            <div class="meta"><span>◷ 5 Days</span><span>From ₹1,20,000</span></div>
+            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">5 Days</span></span><span>From ₹1,20,000</span></div>
           </article>
           <article class="package-card" data-type="family">
             <div class="package-thumb">
@@ -383,7 +383,7 @@
             <p class="location"><i class="fa-solid fa-location-dot"></i> Ubud, Indonesia</p>
             <h4>Cultural Village Explorer</h4>
             <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <span>4.6 (74)</span></p>
-            <div class="meta"><span>◷ 4 Days</span><span>From ₹95,000</span></div>
+            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">4 Days</span></span><span>From ₹95,000</span></div>
           </article>
           <article class="package-card" data-type="family">
             <div class="package-thumb">
@@ -394,7 +394,7 @@
             <p class="location"><i class="fa-solid fa-location-dot"></i> Kuta, Indonesia</p>
             <h4>Waterpark &amp; Temples Tour</h4>
             <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.9 (112)</span></p>
-            <div class="meta"><span>◷ 6 Days</span><span>From ₹1,10,000</span></div>
+            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">6 Days</span></span><span>From ₹1,10,000</span></div>
           </article>
 
           <!-- Friends packages -->
@@ -407,7 +407,7 @@
             <p class="location"><i class="fa-solid fa-location-dot"></i> Canggu, Indonesia</p>
             <h4>Adventure Surf Camp</h4>
             <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (162)</span></p>
-            <div class="meta"><span>◷ 5 Days</span><span>From ₹55,000</span></div>
+            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">5 Days</span></span><span>From ₹55,000</span></div>
           </article>
           <article class="package-card" data-type="friends">
             <div class="package-thumb">
@@ -418,7 +418,7 @@
             <p class="location"><i class="fa-solid fa-location-dot"></i> Mount Batur, Indonesia</p>
             <h4>Volcano Trekking Trip</h4>
             <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <span>4.5 (88)</span></p>
-            <div class="meta"><span>◷ 3 Days</span><span>From ₹40,000</span></div>
+            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">3 Days</span></span><span>From ₹40,000</span></div>
           </article>
           <article class="package-card" data-type="friends">
             <div class="package-thumb">
@@ -429,7 +429,7 @@
             <p class="location"><i class="fa-solid fa-location-dot"></i> Nusa Lembongan, Indonesia</p>
             <h4>Island Hopping Tour</h4>
             <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (140)</span></p>
-            <div class="meta"><span>◷ 4 Days</span><span>From ₹65,000</span></div>
+            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">4 Days</span></span><span>From ₹65,000</span></div>
           </article>
 
         </div>
@@ -975,8 +975,11 @@
     </main>
   </div>
   <div class="submit-popup-overlay" id="submitPopup" aria-hidden="true">
-    <div class="submit-popup-box" role="dialog" aria-modal="true" aria-labelledby="submitPopupMessage">
-      <p class="submit-popup-message" id="submitPopupMessage">Thanks for filling the form!</p>
+    <div class="submit-popup-box submit-popup-box-home" role="dialog" aria-modal="true" aria-labelledby="submitPopupMessage">
+      <button type="button" class="submit-popup-icon-close" id="submitPopupIconClose" aria-label="Close popup">✕</button>
+      <div class="home-thanks-bubble" id="submitPopupMessage">Thank you for filling the form.</div>
+      <div class="home-thanks-avatar-icon" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></div>
+      <p class="submit-popup-subtext">Our travel expert will contact you shortly.</p>
       <button class="submit-popup-close" type="button" id="submitPopupClose">Close</button>
     </div>
   </div>

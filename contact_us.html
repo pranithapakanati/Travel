@@ -71,7 +71,7 @@
         </nav>
         <div class="home-mobile-drawer-contact">
           <p>For More Inquiry</p>
-          <a href="tel:+91740013770">+91 7400013770</a>
+          <a href="tel:+917685487647">+91 7685487647</a>
         </div>
       </aside>
     </div>
@@ -79,21 +79,22 @@
     <section class="contact-screen" id="contactScreen" aria-label="Contact page">
       <div class="contact-shell">
         <h2>Contact Us</h2>
-        <p class="contact-subtitle">We Quickly available for a Call or WhatsApp at 99999-99999</p>
+        <p class="contact-subtitle">We are quickly available for a call or WhatsApp at
+          <a class="contact-subtitle-phone" href="tel:+918765456745">+91 8765456745</a></p>
 
         <form class="contact-form" novalidate>
           <h3>Get A Call Back</h3>
 
           <div class="contact-grid">
-            <label><span>FULL NAME</span><input type="text" placeholder="Enter your name" /></label>
-            <label><span>PHONE NUMBER</span><input type="tel" placeholder="Enter your phone number" /></label>
-            <label><span>EMAIL ID</span><input type="email" placeholder="Enter your email ID" /></label>
-            <label><span>WHERE ARE YOU FROM</span><input type="text" placeholder="Enter your location" /></label>
+            <label><span>FULL NAME*</span><input id="contactFullName" type="text" placeholder="Enter your name" required /></label>
+            <label><span>PHONE NUMBER*</span><input id="contactPhoneNumber" type="tel" placeholder="+91 (Enter Your Phone Number)" inputmode="numeric" maxlength="10" minlength="10" pattern="[0-9]{10}" required /></label>
+            <label><span>EMAIL ID*</span><input id="contactEmailId" type="email" placeholder="Enter your email ID" required /></label>
+            <label><span>WHERE ARE YOU FROM*</span><input id="contactLocation" type="text" placeholder="Enter your location" required /></label>
           </div>
 
           <label class="contact-message">
-            <span>MESSAGE</span>
-            <textarea rows="6" placeholder="Enter your message, let us know your quire in detailed"></textarea>
+            <span>MESSAGE*</span>
+            <textarea id="contactMessage" rows="6" placeholder="Enter your message, let us know your quire in detailed" required></textarea>
           </label>
 
           <button class="contact-submit" type="submit">Submit</button>
@@ -229,10 +230,96 @@
       </footer>
     </section>
   </div>
-  <div class="submit-popup-overlay" id="submitPopup" aria-hidden="true">
-    <div class="submit-popup-box" role="dialog" aria-modal="true" aria-label="Submission status">
-      <p class="submit-popup-message">Successfully submitted</p>
-      <button type="button" class="submit-popup-close" id="submitPopupClose">OK</button>
+  <div class="submit-popup-overlay" id="submitPopupSuccess" aria-hidden="true">
+    <div class="submit-popup-box submit-popup-box-success" role="dialog" aria-modal="true" aria-labelledby="submitPopupSuccessMessage">
+      <button type="button" class="submit-popup-icon-close" id="submitPopupSuccessIconClose" aria-label="Close popup">✕</button>
+      <p class="submit-popup-message" id="submitPopupSuccessMessage">Thanks! Your request has been submitted.</p>
+      <p class="submit-popup-subtext">Our travel expert will contact you shortly.</p>
+      <div class="submit-popup-actions">
+        <button type="button" class="submit-popup-close" id="submitPopupSuccessClose">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-popup-overlay" id="submitPopupError" aria-hidden="true">
+    <div class="submit-popup-box submit-popup-box-error" role="dialog" aria-modal="true" aria-labelledby="submitPopupErrorMessage">
+      <button type="button" class="submit-popup-icon-close" id="submitPopupErrorIconClose" aria-label="Close popup">✕</button>
+      <p class="submit-popup-message" id="submitPopupErrorMessage">Please enter valid contact details.</p>
+      <p class="submit-popup-subtext">Add your name and a valid 10-digit phone number to continue.</p>
+      <div class="submit-popup-actions">
+        <button type="button" class="submit-popup-close" id="submitPopupErrorClose">Fix Details</button>
+      </div>
+    </div>
+  </div>
+  <div class="mobile-pref-modal-overlay" id="mobilePrefModal" aria-hidden="true">
+    <div class="mobile-pref-modal" role="dialog" aria-modal="true" aria-labelledby="mobilePrefTitle">
+      <button class="mobile-pref-close" type="button" id="mobilePrefClose" aria-label="Close popup">✕</button>
+      <p class="mobile-pref-brand">Bali <span>INDONESIA</span></p>
+      <div class="mobile-pref-step active" data-step="1">
+        <h3 class="mobile-pref-title" id="mobilePrefTitle">How many nights are you planning to stay in Bali?</h3>
+        <form class="mobile-pref-form">
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="3n4d" /><span>3 Nights 4 Days</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="4n5d" /><span>4 Nights 5 Days</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="5n6d" /><span>5 Nights 6 Days</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="6n7d" /><span>6 Nights 7 Days</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="7n8d" /><span>7 Nights 8 Days</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="suggest_days" /><span>Suggest Me How Many Days To Stay</span></label>
+        </form>
+      </div>
+      <div class="mobile-pref-step" data-step="2">
+        <h3 class="mobile-pref-title">How many travelers will be joining you on this trip?</h3>
+        <form class="mobile-pref-form">
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="2" /><span>2 People</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="3" /><span>3 People</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="4" /><span>4 People</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="5plus" /><span>5+ People</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="family" /><span>Traveling with Family</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="solo" /><span>Solo Trip</span></label>
+        </form>
+      </div>
+      <div class="mobile-pref-step" data-step="3">
+        <h3 class="mobile-pref-title">Share us your travel specific preferences</h3>
+        <form class="mobile-pref-form">
+          <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="started_planning" /><span>I just started planning for trip</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="booked_flight" /><span>I have booked my flight tickets</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="booking_this_week" /><span>I will book flight tickets this week</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="recommendations" /><span>I need personalised Bali recommendations</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="priority_contact" /><span>Please contact me in priority</span></label>
+        </form>
+      </div>
+      <div class="mobile-pref-step" data-step="4">
+        <h3 class="mobile-pref-title">May I ask for your name, please?</h3>
+        <form class="mobile-pref-form">
+          <input class="mobile-pref-input" type="text" name="travelerName" placeholder="Enter Your Name" />
+        </form>
+      </div>
+      <div class="mobile-pref-step" data-step="5">
+        <h3 class="mobile-pref-title">📞 Get a Call Back, Share Contact Details.</h3>
+        <form class="mobile-pref-form">
+          <input class="mobile-pref-input" type="tel" name="travelerPhone" placeholder="Enter Phone Number*" />
+          <input class="mobile-pref-input" type="email" name="travelerEmail" placeholder="Enter Email ID" />
+        </form>
+      </div>
+      <div class="mobile-pref-step" data-step="6">
+        <h3 class="mobile-pref-title">When would you like to secure your trip reservation?</h3>
+        <form class="mobile-pref-form">
+          <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_week" /><span>Within This Week</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_month" /><span>Within This Month</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="next_month" /><span>Within Next Month</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="upcoming_month" /><span>Within Upcoming Month</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="suggest_time" /><span>Suggest Me The Best Time To Travel</span></label>
+        </form>
+      </div>
+      <div class="mobile-pref-step mobile-pref-step-final" data-step="7">
+        <p class="mobile-pref-thanks-bubble">Thank you for filling the form.</p>
+        <div class="mobile-pref-avatar" aria-hidden="true">🙏</div>
+        <p class="mobile-pref-thanks-text">Our Travel Expert Will Reach Out To You Soon.</p>
+        <a class="mobile-pref-whatsapp" href="https://wa.me/918919805038?text=Hi%2C%20I'm%20interested%20in%20a%20Bali%20tour%20package!" target="_blank" rel="noopener noreferrer">Reach us on WhatsApp <span>(For Faster Approach)</span></a>
+      </div>
+      <div class="mobile-pref-actions" id="mobilePrefActions">
+        <button class="mobile-pref-next" type="button" id="mobilePrefNext">Next (1/6)</button>
+        <button class="mobile-pref-prev" type="button" id="mobilePrefPrev">← Previous</button>
+      </div>
     </div>
   </div>
   <script src="script1.js"></script>
