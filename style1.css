@@ -980,6 +980,121 @@ body {
   transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
 }
 
+.contact-phone-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-country-picker {
+  position: relative;
+  flex: 0 0 108px;
+  width: 108px;
+  min-width: 108px;
+}
+
+.contact-country-trigger {
+  width: 100%;
+  border: 1px solid #d2d7df;
+  border-radius: 12px;
+  background: #f4f4f4;
+  color: #4a5668;
+  font-size: 16px;
+  padding: 14px 10px;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.contact-country-trigger:focus {
+  outline: none;
+  border-color: #0b8a56;
+  background: #f3fbf8;
+  box-shadow: 0 0 0 3px rgba(11, 138, 86, 0.16);
+}
+
+.contact-country-flag-img {
+  width: 18px;
+  height: 14px;
+  border-radius: 2px;
+  object-fit: cover;
+  display: block;
+}
+
+.contact-country-code-text {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.contact-country-caret {
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.contact-country-picker.open .contact-country-caret {
+  transform: rotate(180deg);
+}
+
+.contact-country-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 20;
+  width: 190px;
+  max-height: 250px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid #d2d7df;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 10px 20px rgba(32, 36, 47, 0.14);
+  display: none;
+}
+
+.contact-country-picker.open .contact-country-menu {
+  display: block;
+}
+
+.contact-country-menu li button {
+  width: 100%;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 15px;
+  color: #243145;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.contact-country-option-flag-img {
+  width: 18px;
+  height: 14px;
+  border-radius: 2px;
+  object-fit: cover;
+  display: block;
+}
+
+.contact-country-menu li button:hover,
+.contact-country-menu li button:focus {
+  background: #eef8f3;
+  outline: none;
+}
+
+.contact-phone-field #contactPhoneNumber {
+  flex: 1;
+}
+
 .contact-form input:focus,
 .contact-form textarea:focus {
   outline: none;
@@ -1003,6 +1118,12 @@ body {
 
 .contact-form .contact-invalid-field,
 .contact-form .contact-invalid-field:focus {
+  border-color: #c62828;
+  background: #fff5f5;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.2);
+}
+
+.contact-form .contact-invalid-label .contact-country-trigger {
   border-color: #c62828;
   background: #fff5f5;
   box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.2);
@@ -8404,6 +8525,25 @@ h2 {
     padding: 12px 14px;
   }
 
+  .contact-country-picker {
+    flex-basis: 98px;
+    width: 98px;
+    min-width: 98px;
+  }
+
+  .contact-country-trigger {
+    font-size: 14px;
+    padding: 12px 10px;
+  }
+
+  .contact-country-code-text {
+    font-size: 16px;
+  }
+
+  .contact-country-menu {
+    width: 170px;
+  }
+
   .contact-submit {
     width: 100%;
     font-size: 22px;
@@ -12116,6 +12256,7 @@ h2 {
   justify-content: center;
   padding: 10px;
   z-index: 12000;
+  overscroll-behavior: contain;
 }
 
 .mobile-pref-modal-overlay.active {
@@ -12123,9 +12264,10 @@ h2 {
 }
 
 .mobile-pref-modal {
-  width: min(560px, calc(100vw - 20px));
+  width: min(500px, calc(100vw - 28px));
   max-height: min(92vh, 820px);
   overflow-y: auto;
+  overscroll-behavior: contain;
   scrollbar-width: none;
   -ms-overflow-style: none;
   background: linear-gradient(160deg, #ffffff 0%, #f3fbf8 100%);
@@ -12178,10 +12320,10 @@ h2 {
 
 .mobile-pref-title {
   margin: 14px auto 16px;
-  max-width: 95%;
-  font-size: clamp(26px, 5.5vw, 40px);
-  line-height: 1.2;
-  font-weight: 700;
+  max-width: 100%;
+  font-size: clamp(22px, 4.8vw, 34px);
+  line-height: 1.16;
+  font-weight: 650;
   text-align: center;
   color: #102937;
 }
@@ -12256,11 +12398,9 @@ h2 {
   grid-template-columns: 1fr;
   gap: 6px;
   margin-top: 10px;
-  position: sticky;
-  bottom: 0;
-  z-index: 4;
+  position: static;
   padding-top: 10px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0), #ffffff 35%);
+  background: transparent;
 }
 
 .mobile-pref-next {
@@ -12287,8 +12427,9 @@ h2 {
   display: block;
   width: 100%;
   border: none;
-  background: transparent;
-  color: #9ca3af;
+  background: #eef2f7;
+  color: #5f6b7a;
+  border-radius: 8px;
   font-size: clamp(20px, 4.8vw, 30px);
   font-weight: 600;
   min-height: 56px;
@@ -12350,7 +12491,7 @@ h2 {
   }
 
   .mobile-pref-modal {
-    width: min(760px, calc(100vw - 56px));
+    width: min(640px, calc(100vw - 72px));
     max-height: min(90vh, 860px);
     padding: 34px 36px 30px;
     border-radius: 24px;
@@ -12360,7 +12501,8 @@ h2 {
     border: 1px solid rgba(16, 41, 55, 0.13);
     box-shadow: 0 30px 58px rgba(2, 12, 27, 0.3);
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .mobile-pref-modal::after {
@@ -12400,10 +12542,11 @@ h2 {
   }
 
   .mobile-pref-title {
-    margin: 20px auto 22px;
-    max-width: 92%;
-    font-size: clamp(30px, 2.9vw, 42px);
-    line-height: 1.22;
+    margin: 18px auto 18px;
+    max-width: 96%;
+    font-size: clamp(25px, 2.4vw, 34px);
+    line-height: 1.14;
+    font-weight: 650;
     color: #102937;
     text-wrap: balance;
   }
@@ -12468,7 +12611,7 @@ h2 {
     margin-top: 20px;
     gap: 10px;
     padding-top: 12px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0), #f3fbf8 35%);
+    background: transparent;
   }
 
   .mobile-pref-next {
@@ -12493,7 +12636,9 @@ h2 {
   .mobile-pref-prev {
     min-height: 52px;
     font-size: clamp(20px, 1.8vw, 26px);
-    color: #6b7788;
+    color: #5f6b7a;
+    background: #e9eef5;
+    border-radius: 10px;
     transition: color 0.2s ease;
   }
 
@@ -13129,4 +13274,18 @@ h2 {
   .contact-page .social-instagram .social-brand strong {
     font-size: clamp(30px, 10.2vw, 42px) !important;
   }
+
+/* Keep full hero slideshow image visible without zoom-crop. */
+.home-screen .hero > img {
+  object-fit: contain !important;
+  object-position: center center !important;
+  background: #0f2430;
+}
+
+@media (min-width: 992px) {
+  .home-screen .hero > img {
+    height: auto !important;
+    max-height: 600px !important;
+  }
+}
 

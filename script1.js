@@ -640,9 +640,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (heroImage) {
       const heroSlides = [
         { src: "images/img1.png", alt: "Bali beach" },
-        { src: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=1600&q=80", alt: "Bali cliffside coast" },
-        { src: "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?auto=format&fit=crop&w=1600&q=80", alt: "Tropical Bali island view" },
-        { src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=80", alt: "Sunset beach in Bali" }
+        { src: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=max&w=1600&q=80", alt: "Bali cliffside coast" },
+        { src: "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?auto=format&fit=max&w=1600&q=80", alt: "Tropical Bali island view" },
+        { src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=max&w=1600&q=80", alt: "Sunset beach in Bali" }
       ];
       const FADE_DURATION_MS = 1800;
       const SLIDE_INTERVAL_MS = 6500;
@@ -936,11 +936,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const PREF_MODAL_POST_INTERACTION_COOLDOWN_MS = 40000;
     let prefModalAutoOpenSuppressedUntil = 0;
+    let prefModalLockedScrollY = 0;
     const schedulePrefModalAutoCooldown = () => {
       prefModalAutoOpenSuppressedUntil = Math.max(
         prefModalAutoOpenSuppressedUntil,
         Date.now() + PREF_MODAL_POST_INTERACTION_COOLDOWN_MS
       );
+    };
+
+    const lockPageScrollForPrefModal = () => {
+      prefModalLockedScrollY = window.scrollY || window.pageYOffset || 0;
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${prefModalLockedScrollY}px`;
+      document.body.style.left = "0";
+      document.body.style.right = "0";
+      document.body.style.width = "100%";
+    };
+
+    const unlockPageScrollForPrefModal = () => {
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
+      window.scrollTo(0, prefModalLockedScrollY);
     };
 
     const isActiveInPrefModalPauseRegion = () => {
@@ -1017,7 +1040,7 @@ document.addEventListener("DOMContentLoaded", () => {
         mobilePrefNext.classList.toggle("is-enabled", isCurrentStepValid);
         // Show Previous only from step 2 onwards.
         const shouldShowPrevious = currentStep > 1;
-        mobilePrefPrev.style.visibility = shouldShowPrevious ? "visible" : "hidden";
+        mobilePrefPrev.style.display = shouldShowPrevious ? "block" : "none";
         mobilePrefPrev.style.pointerEvents = shouldShowPrevious ? "auto" : "none";
       }
     };
@@ -1025,7 +1048,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const hideMobilePrefModal = () => {
       mobilePrefModal.classList.remove("active");
       mobilePrefModal.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
+      unlockPageScrollForPrefModal();
       mobilePrefStepIndex = 0;
       paintMobilePrefStep();
       schedulePrefModalAutoCooldown();
@@ -1035,7 +1058,7 @@ document.addEventListener("DOMContentLoaded", () => {
       blurHeroTravelDateIfFocused();
       mobilePrefModal.classList.add("active");
       mobilePrefModal.setAttribute("aria-hidden", "false");
-      document.body.style.overflow = "hidden";
+      lockPageScrollForPrefModal();
       mobilePrefStepIndex = 0;
       paintMobilePrefStep();
     };
@@ -3877,10 +3900,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (contactForm) {
     const contactSubmitBtn = contactForm.querySelector(".contact-submit");
+    const countryPicker = contactForm.querySelector("#contactCountryPicker");
+    const countryTrigger = contactForm.querySelector("#contactCountryTrigger");
+    const countryFlagImg = contactForm.querySelector("#contactCountryFlagImg");
+    const countryCodeText = contactForm.querySelector("#contactCountryCodeText");
+    const countryMenu = contactForm.querySelector("#contactCountryMenu");
     let contactSubmitTimer = null;
 
     const contactFields = {
       fullNameInput: contactForm.querySelector("#contactFullName"),
+      countryCodeSelect: contactForm.querySelector("#contactCountryCode"),
       phoneInput: contactForm.querySelector("#contactPhoneNumber"),
       emailInput: contactForm.querySelector("#contactEmailId"),
       locationInput: contactForm.querySelector("#contactLocation"),
@@ -3891,6 +3920,56 @@ document.addEventListener("DOMContentLoaded", () => {
     bindNameFieldNoDigits(contactFields.locationInput);
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    const closeCountryMenu = () => {
+      if (!countryPicker || !countryTrigger) {
+        return;
+      }
+      countryPicker.classList.remove("open");
+      countryTrigger.setAttribute("aria-expanded", "false");
+    };
+
+    const openCountryMenu = () => {
+      if (!countryPicker || !countryTrigger) {
+        return;
+      }
+      countryPicker.classList.add("open");
+      countryTrigger.setAttribute("aria-expanded", "true");
+    };
+
+    countryTrigger?.addEventListener("click", () => {
+      if (countryPicker?.classList.contains("open")) {
+        closeCountryMenu();
+        return;
+      }
+      openCountryMenu();
+    });
+
+    countryMenu?.querySelectorAll("button[data-code]").forEach((optionBtn) => {
+      optionBtn.addEventListener("click", () => {
+        const selectedCode = optionBtn.getAttribute("data-code") || "+91";
+        const selectedCountry = optionBtn.getAttribute("data-country") || "in";
+        if (contactFields.countryCodeSelect) {
+          contactFields.countryCodeSelect.value = selectedCode;
+        }
+        if (countryFlagImg) {
+          countryFlagImg.src = `https://flagcdn.com/w40/${selectedCountry}.png`;
+        }
+        if (countryCodeText) {
+          countryCodeText.textContent = selectedCode;
+        }
+        closeCountryMenu();
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!(event.target instanceof Element)) {
+        return;
+      }
+      if (!countryPicker?.contains(event.target)) {
+        closeCountryMenu();
+      }
+    });
     const setContactSubmitState = (state) => {
       if (!contactSubmitBtn) {
         return;
@@ -3951,18 +4030,23 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     Object.values(contactFields).forEach((field) => {
-      field?.addEventListener("input", () => {
+      if (!field) {
+        return;
+      }
+      const clearFieldErrorState = () => {
         clearInvalid(field);
-        if (field.checkValidity()) {
+        if (typeof field.checkValidity === "function" && field.checkValidity()) {
           clearContactValidationTooltip();
         }
-      });
+      };
+      field.addEventListener("input", clearFieldErrorState);
+      field.addEventListener("change", clearFieldErrorState);
     });
 
     contactFields.phoneInput?.addEventListener("input", () => {
-      const digitsOnly = (contactFields.phoneInput.value || "").replace(/\D/g, "").slice(0, 10);
+      const digitsOnly = (contactFields.phoneInput.value || "").replace(/\D/g, "").slice(0, 15);
       contactFields.phoneInput.value = digitsOnly;
-      const isPartialPhone = digitsOnly.length > 0 && digitsOnly.length < 10;
+      const isPartialPhone = digitsOnly.length > 0 && digitsOnly.length < 4;
       contactFields.phoneInput.classList.toggle("contact-phone-partial", isPartialPhone);
     });
 
@@ -3974,11 +4058,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const fullName = contactFields.fullNameInput?.value.trim() || "";
       const rawPhone = contactFields.phoneInput?.value.trim() || "";
+      const selectedCountryCode = contactFields.countryCodeSelect?.value || "";
       const phoneDigitsOnly = rawPhone.replace(/\D/g, "");
+      const countryCodeDigits = selectedCountryCode.replace(/\D/g, "");
+      const totalPhoneDigits = `${countryCodeDigits}${phoneDigitsOnly}`;
       const emailValue = contactFields.emailInput?.value.trim() || "";
       const locationValue = contactFields.locationInput?.value.trim() || "";
       const messageValue = contactFields.messageInput?.value.trim() || "";
-      const hasValidPhone = phoneDigitsOnly.length === 10;
+      const hasValidPhone = phoneDigitsOnly.length >= 4 && totalPhoneDigits.length >= 7 && totalPhoneDigits.length <= 15;
       const hasValidEmail = emailPattern.test(emailValue);
 
       Object.values(contactFields).forEach((field) => clearInvalid(field));
