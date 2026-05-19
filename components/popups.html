@@ -1,0 +1,82 @@
+<div class="spotlight-3d-modal-overlay" id="spotlight3dModal" aria-hidden="true">
+  <div class="spotlight-3d-modal" role="dialog" aria-modal="true" aria-labelledby="spotlight3dTitle">
+    <button type="button" class="spotlight-3d-modal-close" id="spotlight3dClose" aria-label="Close video">✕</button>
+    <h2 id="spotlight3dTitle" class="spotlight-3d-modal-title">Bali in 3D</h2>
+    <div class="spotlight-3d-modal-frame">
+      <iframe id="spotlight3dIframe" width="560" height="315" title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+<div class="submit-popup-overlay" id="submitPopup" aria-hidden="true">
+  <div class="submit-popup-box submit-popup-box-success" role="dialog" aria-modal="true"
+    aria-labelledby="submitPopupMessage">
+    <button type="button" class="submit-popup-icon-close" id="submitPopupIconClose"
+      aria-label="Close popup">✕</button>
+    <p class="submit-popup-message" id="submitPopupMessage">Thanks for filling the form.</p>
+    <p class="submit-popup-subtext">Our travel expert will contact you shortly.</p>
+    <div class="submit-popup-actions">
+      <button class="submit-popup-close" type="button" id="submitPopupClose">Close</button>
+    </div>
+  </div>
+</div>
+<div class="submit-popup-overlay" id="submitPopupSuccess" aria-hidden="true">
+  <div class="submit-popup-box submit-popup-box-success" role="dialog" aria-modal="true" aria-labelledby="submitPopupSuccessMessage">
+    <button type="button" class="submit-popup-icon-close" id="submitPopupSuccessIconClose" aria-label="Close popup">✕</button>
+    <p class="submit-popup-message" id="submitPopupSuccessMessage">Thanks for filling the form.</p>
+    <p class="submit-popup-subtext">Our travel expert will contact you shortly.</p>
+    <div class="submit-popup-actions">
+      <button type="button" class="submit-popup-close" id="submitPopupSuccessClose">Close</button>
+    </div>
+  </div>
+</div>
+
+<div class="submit-popup-overlay" id="submitPopupError" aria-hidden="true">
+  <div class="submit-popup-box submit-popup-box-error" role="dialog" aria-modal="true" aria-labelledby="submitPopupErrorMessage">
+    <button type="button" class="submit-popup-icon-close" id="submitPopupErrorIconClose" aria-label="Close popup">✕</button>
+    <p class="submit-popup-message" id="submitPopupErrorMessage">Please enter valid contact details.</p>
+    <p class="submit-popup-subtext">Add your name and a valid 10-digit phone number to continue.</p>
+    <div class="submit-popup-actions">
+      <button type="button" class="submit-popup-close" id="submitPopupErrorClose">Fix Details</button>
+    </div>
+  </div>
+</div>
+<div class="tripon-social-fab" id="triponSocialFab" role="region" aria-label="Quick contact">
+  <div class="tripon-social-fab__backdrop" data-tripon-fab-dismiss="true" aria-hidden="true"></div>
+  <ul class="tripon-social-fab__actions" id="triponSocialFabActions">
+    <li class="tripon-social-fab__row tripon-social-fab__row--instagram" style="--fab-i:0">
+      <a class="tripon-social-fab__link" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+        <span class="tripon-social-fab__label">Instagram</span>
+        <span class="tripon-social-fab__orb"><i class="fa-brands fa-instagram" aria-hidden="true"></i></span>
+      </a>
+    </li>
+    <li class="tripon-social-fab__row tripon-social-fab__row--whatsapp" style="--fab-i:1">
+      <a class="tripon-social-fab__link" href="https://wa.me/918919805038?text=Hi%20Tripon%2C%20I%27m%20interested%20in%20planning%20a%20trip." target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+        <span class="tripon-social-fab__label">WhatsApp</span>
+        <span class="tripon-social-fab__orb"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i></span>
+      </a>
+    </li>
+    <li class="tripon-social-fab__row tripon-social-fab__row--call" style="--fab-i:2">
+      <a class="tripon-social-fab__link" href="tel:+918919805038" aria-label="Call us">
+        <span class="tripon-social-fab__label">Call</span>
+        <span class="tripon-social-fab__orb"><i class="fa-solid fa-phone" aria-hidden="true"></i></span>
+      </a>
+    </li>
+    <li class="tripon-social-fab__row tripon-social-fab__row--telegram" style="--fab-i:3">
+      <a class="tripon-social-fab__link" href="https://t.me/share/url?url=&amp;text=Hello%20Tripon%2C%20I%27d%20like%20to%20know%20more%20about%20your%20trips." target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+        <span class="tripon-social-fab__label">Telegram</span>
+        <span class="tripon-social-fab__orb"><i class="fa-brands fa-telegram" aria-hidden="true"></i></span>
+      </a>
+    </li>
+  </ul>
+  <button type="button" class="tripon-social-fab__main" id="triponSocialFabToggle" aria-expanded="false" aria-controls="triponSocialFabActions">
+    <span class="tripon-social-fab__main-drift">
+      <span class="tripon-social-fab__toggle" aria-hidden="true">
+        <span class="tripon-social-fab__bar tripon-social-fab__bar--a"></span>
+        <span class="tripon-social-fab__bar tripon-social-fab__bar--b"></span>
+      </span>
+    </span>
+    <span class="tripon-social-fab__sr">Open contact menu</span>
+  </button>
+</div>

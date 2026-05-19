@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="images/fav_icon.png" />
+  <link rel="icon" type="image/png" href="assets/images/fav_icon.png" />
   <meta name="description"
     content="Plan your perfect Bali trip with Tripon. Explore curated itineraries, top activities, and easy booking support for an unforgettable holiday." />
   <meta name="keywords" content="Bali trip, Bali packages, Tripon, Bali travel, holiday packages" />
@@ -16,7 +16,7 @@
   <meta property="og:title" content="Trip Bali Landing Page | Tripon" />
   <meta property="og:description"
     content="Discover Bali with Tripon through curated packages, handpicked adventures, and smooth travel planning." />
-  <meta property="og:image" content="images/img1.png" />
+  <meta property="og:image" content="assets/images/img1.png" />
   <meta property="og:url" content="home_page.html" />
   <meta property="og:site_name" content="Tripon" />
   <meta property="og:locale" content="en_IN" />
@@ -26,14 +26,14 @@
   <meta name="twitter:title" content="Trip Bali Landing Page | Tripon" />
   <meta name="twitter:description"
     content="Discover Bali with Tripon through curated packages, handpicked adventures, and smooth travel planning." />
-  <meta name="twitter:image" content="images/img1.png" />
+  <meta name="twitter:image" content="assets/images/img1.png" />
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "TravelAgency",
       "name": "Tripon",
       "url": "home_page.html",
-      "image": "images/img1.png",
+      "image": "assets/images/img1.png",
       "description": "Tripon helps travelers discover and book curated Bali travel packages and activities.",
       "areaServed": "Bali",
       "inLanguage": "en"
@@ -45,76 +45,19 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Poppins:wght@300;400;500;600;700;800;900&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="style1.css" />
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/responsive.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-<body>
+<body data-tripon-nav="people-reviews">
   <div class="page">
-    <header class="topbar">
-      <div class="topbar-left">
-        <img src="images\vector.png" alt="Tripon logo" class="logo" />
-        <span class="topbar-divider" aria-hidden="true"></span>
-        <div class="location-dropdown-wrapper">
-          <button class="location-pill" type="button">Bali <i class="fa-solid fa-chevron-down location-chevron"
-              aria-hidden="true"></i></button>
-          <ul class="location-dropdown" role="listbox">
-            <li role="option"><a href="#" data-location="bali">Baloblogs</a></li>
-            <li role="option"><a href="#" data-location="thailand">Thailand</a></li>
-            <li role="option"><a href="#" data-location="maldives">Maldives</a></li>
-            <li role="option"><a href="#" data-location="dubai">Dubai</a></li>
-            <li role="option"><a href="#" data-location="indonesia">Indonesia</a></li>
-            <li role="option"><a href="#" data-location="singapore">Singapore</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="right-actions">
-        <nav class="main-nav">
-          <a href="people_reviews.html" class="is-active">People Reviews</a>
-          <a href="packages.html">Packages</a>
-        </nav>
-        <button class="contact-btn" type="button" onclick="window.location.href='contact_us.html'">Contact Us</button>
-      </div>
-      <button class="home-mobile-menu-toggle" id="homeMobileMenuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="homeMobileDrawer">
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
-
-    </header>
-    <div class="home-mobile-menu-overlay" id="homeMobileMenuOverlay" aria-hidden="true">
-      <aside class="home-mobile-drawer" id="homeMobileDrawer" aria-label="Mobile navigation">
-        <div class="home-mobile-drawer-header">
-          <img src="images\vector.png" alt="Tripon logo" class="home-mobile-drawer-logo" />
-          <button class="home-mobile-drawer-close" id="homeMobileDrawerClose" type="button" aria-label="Close menu">✕</button>
-        </div>
-        <div class="home-mobile-drawer-location">
-          <button class="home-mobile-location-toggle" id="homeMobileLocationToggle" type="button" aria-expanded="true" aria-controls="homeMobileLocationList">
-            <span>BALI</span>
-            <span class="home-mobile-location-icon" aria-hidden="true">−</span>
-          </button>
-          <div class="home-mobile-location-list active" id="homeMobileLocationList">
-            <a href="index.html" class="is-active">BALI</a>
-            <a href="#">ANDAMAN</a>
-            <span>More Adding Soon...</span>
-          </div>
-        </div>
-        <nav class="home-mobile-drawer-nav">
-          <a href="people_reviews.html">People Reviews</a>
-          <a href="packages.html">Packages</a>
-          <a href="contact_us.html">Contact Us</a>
-        </nav>
-        <div class="home-mobile-drawer-contact">
-          <p>For More Inquiry</p>
-          <a href="tel:+917685487647">+91 7685487647</a>
-        </div>
-      </aside>
-    </div>
+    <div id="tripon-navbar-zone" class="tripon-include-mount" style="display:contents"></div>
 
     <main class="home-screen" id="homeScreen">
 
       <section class="hero">
-        <img src="images\img1.png" alt="Bali beach" />
+        <img src="assets/images/img1.png" alt="Bali beach" />
         <div class="overlay"></div>
         <div class="hero-content">
           <p class="seek">Seek Out</p>
@@ -128,19 +71,20 @@
         </div>
         <form class="search-box" novalidate>
           <div class="field">
-            <label><span class="field-icon">👤</span>Name</label>
+            <label><span class="field-icon"><i class="fa-regular fa-user"></i></span>Name</label>
             <input type="text" placeholder="Enter Your Name" aria-label="Enter your name" minlength="2" required />
           </div>
           <div class="field">
-            <label><span class="field-icon">☎</span>Phone Number</label>
-            <input type="tel" placeholder="Enter Your Phone Number" aria-label="Enter your phone number" inputmode="numeric" maxlength="10" minlength="10" pattern="[0-9]{10}" required />
+            <label><span class="field-icon"><i class="fa-solid fa-phone"></i></span>Phone Number</label>
+            <input type="tel" placeholder="Enter Your Phone Number" aria-label="Enter your phone number"
+              inputmode="numeric" maxlength="10" minlength="10" pattern="[0-9]{10}" required />
           </div>
           <div class="field">
-            <label>Travel On</label>
+            <label><span class="field-icon"><i class="fa-regular fa-calendar"></i></span>Travel On</label>
             <input type="date" aria-label="Select travel date" required />
           </div>
           <div class="field">
-            <label><span class="field-icon">👥</span>Travelers</label>
+            <label><span class="field-icon"><i class="fa-solid fa-users"></i></span>Travelers</label>
             <input type="number" min="1" max="20" placeholder="No. of Guests" aria-label="Number of guests" required />
           </div>
           <button class="send-btn" type="button">➤</button>
@@ -158,33 +102,50 @@
           <div class="mobile-pref-step active" data-step="1">
             <h3 class="mobile-pref-title" id="mobilePrefTitle">How many nights are you planning to stay in Bali?</h3>
             <form class="mobile-pref-form">
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="3n4d" /><span>3 Nights 4 Days</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="4n5d" /><span>4 Nights 5 Days</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="5n6d" /><span>5 Nights 6 Days</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="6n7d" /><span>6 Nights 7 Days</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="7n8d" /><span>7 Nights 8 Days</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="suggest_days" /><span>Suggest Me How Many Days To Stay</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="3n4d" /><span>3 Nights 4
+                  Days</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="4n5d" /><span>4 Nights 5
+                  Days</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="5n6d" /><span>5 Nights 6
+                  Days</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="6n7d" /><span>6 Nights 7
+                  Days</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="7n8d" /><span>7 Nights 8
+                  Days</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="stayDuration"
+                  value="suggest_days" /><span>Suggest Me How Many Days To Stay</span></label>
             </form>
           </div>
           <div class="mobile-pref-step" data-step="2">
             <h3 class="mobile-pref-title">How many travelers will be joining you on this trip?</h3>
             <form class="mobile-pref-form">
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="2" /><span>2 People</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="3" /><span>3 People</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="4" /><span>4 People</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="5plus" /><span>5+ People</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="family" /><span>Traveling with Family</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="solo" /><span>Solo Trip</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="2" /><span>2
+                  People</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="3" /><span>3
+                  People</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="4" /><span>4
+                  People</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="5plus" /><span>5+
+                  People</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount"
+                  value="family" /><span>Traveling with Family</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="solo" /><span>Solo
+                  Trip</span></label>
             </form>
           </div>
           <div class="mobile-pref-step" data-step="3">
             <h3 class="mobile-pref-title">Share us your travel specific preferences</h3>
             <form class="mobile-pref-form">
-              <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="started_planning" /><span>I just started planning for trip</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="booked_flight" /><span>I have booked my flight tickets</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="booking_this_week" /><span>I will book flight tickets this week</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="recommendations" /><span>I need personalised Bali recommendations</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelPreference" value="priority_contact" /><span>Please contact me in priority</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelPreference"
+                  value="started_planning" /><span>I just started planning for trip</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelPreference"
+                  value="booked_flight" /><span>I have booked my flight tickets</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelPreference"
+                  value="booking_this_week" /><span>I will book flight tickets this week</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelPreference"
+                  value="recommendations" /><span>I need personalised Bali recommendations</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="travelPreference"
+                  value="priority_contact" /><span>Please contact me in priority</span></label>
             </form>
           </div>
           <div class="mobile-pref-step" data-step="4">
@@ -196,25 +157,34 @@
           <div class="mobile-pref-step" data-step="5">
             <h3 class="mobile-pref-title">📞 Get a Call Back, Share Contact Details.</h3>
             <form class="mobile-pref-form">
-              <input class="mobile-pref-input" type="tel" name="travelerPhone" placeholder="Enter Phone Number*" />
+              <input class="mobile-pref-input" type="tel" name="travelerPhone" placeholder="Enter Phone Number*"
+                inputmode="numeric" pattern="[0-9]{10,11}" maxlength="11" minlength="10"
+                title="Enter your phone number" />
               <input class="mobile-pref-input" type="email" name="travelerEmail" placeholder="Enter Email ID" />
             </form>
           </div>
           <div class="mobile-pref-step" data-step="6">
             <h3 class="mobile-pref-title">When would you like to secure your trip reservation?</h3>
             <form class="mobile-pref-form">
-              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_week" /><span>Within This Week</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_month" /><span>Within This Month</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="next_month" /><span>Within Next Month</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="upcoming_month" /><span>Within Upcoming Month</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="suggest_time" /><span>Suggest Me The Best Time To Travel</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_week" /><span>Within
+                  This Week</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_month" /><span>Within
+                  This Month</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="next_month" /><span>Within
+                  Next Month</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="bookingTime"
+                  value="upcoming_month" /><span>Within Upcoming Month</span></label>
+              <label class="mobile-pref-option"><input type="radio" name="bookingTime"
+                  value="suggest_time" /><span>Suggest Me The Best Time To Travel</span></label>
             </form>
           </div>
           <div class="mobile-pref-step mobile-pref-step-final" data-step="7">
             <p class="mobile-pref-thanks-bubble">Thank you for filling the form.</p>
             <div class="mobile-pref-avatar" aria-hidden="true">🙏</div>
             <p class="mobile-pref-thanks-text">Our Travel Expert Will Reach Out To You Soon.</p>
-            <a class="mobile-pref-whatsapp" href="https://wa.me/918919805038?text=Hi%2C%20I'm%20interested%20in%20a%20Bali%20tour%20package!" target="_blank" rel="noopener noreferrer">Reach us on WhatsApp <span>(For Faster Approach)</span></a>
+            <a class="mobile-pref-whatsapp"
+              href="https://wa.me/918919805038?text=Hi%2C%20I'm%20interested%20in%20a%20Bali%20tour%20package!"
+              target="_blank" rel="noopener noreferrer">Reach us on WhatsApp <span>(For Faster Approach)</span></a>
           </div>
           <div class="mobile-pref-actions" id="mobilePrefActions">
             <button class="mobile-pref-next" type="button" id="mobilePrefNext">Next (1/6)</button>
@@ -227,49 +197,61 @@
         <h2>Let’s go on an adventure</h2>
         <p class="adventure-sub">See What you can do in Bali</p>
         <div class="place-row">
-          <article class="place-item" data-location-link="location.html?place=ubud">
-            <div class="place-icon">🏯</div>
+          <article class="place-item" data-location-link="/locations/ubud.html">
+            <div class="place-icon">
+              <img src="assets/images/location1.png" alt="Ubud" />
+            </div>
             <div class="place-content">
               <h3>Ubud</h3>
               <span>20+ Activities, 18 Sight Seeing</span>
             </div>
           </article>
-          <article class="place-item" data-location-link="location.html?place=kuta">
-            <div class="place-icon">🛕</div>
+          <article class="place-item" data-location-link="/locations/kuta.html">
+            <div class="place-icon">
+              <img src="assets/images/location2.png" alt="Kuta" />
+            </div>
             <div class="place-content">
               <h3>Kuta, Gali</h3>
               <span>16+ Activities, 20 Sight Seeing</span>
             </div>
           </article>
-          <article class="place-item" data-location-link="location.html?place=lombok">
-            <div class="place-icon">🗼</div>
+          <article class="place-item" data-location-link="/locations/lombok.html">
+            <div class="place-icon">
+              <img src="assets/images/location3.png" alt="Lombok" />
+            </div>
             <div class="place-content">
               <h3>Lombok</h3>
               <span>15+ Activities, 10 Sight Seeing</span>
             </div>
           </article>
-          <article class="place-item" data-location-link="location.html?place=seminyak">
-            <div class="place-icon">🏖</div>
+          <article class="place-item" data-location-link="/locations/seminyak.html">
+            <div class="place-icon">
+              <img src="assets/images/location4.png" alt="Seminyak" />
+            </div>
             <div class="place-content">
               <h3>Seminyak</h3>
               <span>18+ Activities, 14 Sight Seeing</span>
             </div>
           </article>
-          <article class="place-item" data-location-link="location.html?place=nusa-penida">
-            <div class="place-icon">⛵</div>
+          <article class="place-item" data-location-link="/locations/nusa-penida.html">
+            <div class="place-icon">
+              <img src="assets/images/location5.png" alt="Nusa Penida" />
+            </div>
             <div class="place-content">
               <h3>Nusa Penida</h3>
               <span>14+ Activities, 12 Sight Seeing</span>
             </div>
           </article>
-          <article class="place-item" data-location-link="location.html?place=uluwatu">
-            <div class="place-icon">🌅</div>
+          <article class="place-item" data-location-link="/locations/uluwatu.html">
+            <div class="place-icon">
+              <img src="assets/images/location6.png" alt="Uluwatu" />
+            </div>
             <div class="place-content">
               <h3>Uluwatu</h3>
               <span>12+ Activities, 9 Sight Seeing</span>
             </div>
           </article>
-          <article class="place-item place-item-see-all" data-location-link="location.html">
+          <article class="place-item place-item-see-all" data-location-link="/locations/">
             <div class="place-icon place-icon-see-all">Bali</div>
             <div class="place-content">
               <h3>See All The Locations</h3>
@@ -299,7 +281,7 @@
       <section class="reasons">
         <h2>5 Reasons Why You Should<br />Visit <span>Bali</span></h2>
         <div class="reasons-layout">
-          <img src="images\reason.png" alt="Bali culture dance" />
+          <img src="assets/images/reason.png" alt="Bali culture dance" />
           <div class="reason-text">
             <div class="reason-marker"></div>
             <h4 class="active">Festivals</h4>
@@ -331,105 +313,161 @@
         <div class="package-grid-new">
 
           <!-- Couple packages -->
-          <article class="package-card" data-type="couple">
+          <article class="package-card" data-type="couple"
+            data-package-places="Tanah Lot Temple,Ubud Rice Terraces,Campuhan Ridge,Tirta Empul"
+            data-package-activities="Balinese cooking class,Couple spa,Rice terrace walk,Traditional dance evening"
+            data-package-detail-images="images/couple.png,images/couple1.png,images/couple2.png"
+            data-package-hover-images="images/couple.png,images/couple1.png,images/couple2.png">
             <div class="package-thumb">
               <span class="offer">10% off</span>
-              <img src="images\packages_card1.png" alt="Honey Moon Package" />
+              <img src="assets/images/couple.png" alt="Honey Moon Package" />
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Ubud, Indonesia</p>
             <h4>Honey Moon Package in Bali</h4>
-            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (136)</span></p>
-            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">4 Days</span></span><span>From ₹45,000</span></div>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8
+                (136)</span></p>
+            <div class="meta"><span class="package-meta-duration"><i
+                  class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
+                  class="package-meta-days-text">4 Days</span></span><span>From ₹45,000</span></div>
           </article>
-          <article class="package-card" data-type="couple">
+          <article class="package-card" data-type="couple"
+            data-package-places="Kelingking Beach,Diamond Beach,Broken Beach,Angel Billabong,Crystal Bay"
+            data-package-activities="Snorkel with manta rays,Island coastal drive,Cliff viewpoint hike,Sunset at the beach"
+            data-package-detail-images="images/isolated.png,images/isolated1.png,images/isolated2.png"
+            data-package-hover-images="images/isolated.png,images/isolated1.png,images/isolated2.png">
             <div class="package-thumb">
               <span class="offer">15% off</span>
-              <img src="images\packages_card2.png" alt="Isolated Mountains" />
+              <img src="assets/images/isolated.png" alt="Isolated Mountains" />
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Nusa Penida, Indonesia</p>
             <h4>Isolated Mountains Retreat</h4>
-            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (136)</span></p>
-            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">5 Days</span></span><span>From ₹50,000</span></div>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8
+                (136)</span></p>
+            <div class="meta"><span class="package-meta-duration"><i
+                  class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
+                  class="package-meta-days-text">5 Days</span></span><span>From ₹50,000</span></div>
           </article>
-          <article class="package-card" data-type="couple">
+          <article class="package-card" data-type="couple"
+            data-package-places="Gili Trawangan beaches,Gili Meno sandbar,Gili Air village,Turtle snorkeling point"
+            data-package-activities="Beach cycling,Snorkeling day trip,Sunset swing photo stop,Island café crawl"
+            data-package-detail-images="images/gilli.png,images/gilli1.png,images/gilli2.png"
+            data-package-hover-images="images/gilli.png,images/gilli1.png,images/gilli2.png">
             <div class="package-thumb">
               <span class="offer">12% off</span>
-              <img src="images\packages_card3.png" alt="White Beach Land" />
+              <img src="assets/images/gilli.png" alt="White Beach Land" />
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Gili Trawangan, Indonesia</p>
             <h4>The White Beach Land</h4>
-            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (136)</span></p>
-            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">6 Days</span></span><span>From ₹75,000</span></div>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8
+                (136)</span></p>
+            <div class="meta"><span class="package-meta-duration"><i
+                  class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
+                  class="package-meta-days-text">6 Days</span></span><span>From ₹75,000</span></div>
           </article>
 
           <!-- Family packages -->
-          <article class="package-card" data-type="family">
+          <article class="package-card" data-type="family"
+            data-package-detail-images="images/semiyak81.png,images/semiyak82.png,images/semiyak83.png"
+            data-package-hover-images="images/semiyak81.png,images/semiyak82.png,images/semiyak83.png">
             <div class="package-thumb">
               <span class="offer">8% off</span>
-              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80"
-                alt="Family Beach Resort" />
+              <img src="assets/images/semiyak81.png" alt="Family Beach Resort" />
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Seminyak, Indonesia</p>
             <h4>Family Beach Resort Stay</h4>
-            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.7 (98)</span></p>
-            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">5 Days</span></span><span>From ₹1,20,000</span></div>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.7
+                (98)</span></p>
+            <div class="meta"><span class="package-meta-duration"><i
+                  class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
+                  class="package-meta-days-text">5 Days</span></span><span>From ₹1,20,000</span></div>
           </article>
-          <article class="package-card" data-type="family">
+          <article class="package-card" data-type="family"
+            data-package-detail-images="images/ubud51.png,images/ubud52.png,images/ubud53.png"
+            data-package-hover-images="images/ubud51.png,images/ubud52.png,images/ubud53.png">
             <div class="package-thumb">
               <span class="offer">10% off</span>
-              <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=900&q=80"
-                alt="Cultural Village Tour" />
+              <img src="assets/images/ubud51.png" alt="Cultural Village Tour" />
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Ubud, Indonesia</p>
             <h4>Cultural Village Explorer</h4>
-            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <span>4.6 (74)</span></p>
-            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">4 Days</span></span><span>From ₹95,000</span></div>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+              <span>4.6 (74)</span>
+            </p>
+            <div class="meta"><span class="package-meta-duration"><i
+                  class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
+                  class="package-meta-days-text">4 Days</span></span><span>From ₹95,000</span></div>
           </article>
-          <article class="package-card" data-type="family">
+          <article class="package-card" data-type="family"
+            data-package-detail-images="images/kuta61.png,images/kuta62.png,images/kuta63.png"
+            data-package-hover-images="images/kuta61.png,images/kuta62.png,images/kuta63.png">
             <div class="package-thumb">
               <span class="offer">18% off</span>
-              <img src="https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?auto=format&fit=crop&w=900&q=80"
-                alt="Waterpark and Temples" />
+              <img src="assets/images/kuta61.png" alt="Waterpark and Temples" />
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Kuta, Indonesia</p>
             <h4>Waterpark &amp; Temples Tour</h4>
-            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.9 (112)</span></p>
-            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">6 Days</span></span><span>From ₹1,10,000</span></div>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.9
+                (112)</span></p>
+            <div class="meta"><span class="package-meta-duration"><i
+                  class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
+                  class="package-meta-days-text">6 Days</span></span><span>From ₹1,10,000</span></div>
           </article>
 
           <!-- Friends packages -->
-          <article class="package-card" data-type="friends">
+          <article class="package-card" data-type="friends"
+            data-package-detail-images="images/conggu.png,images/conggu1.png,images/conggu2.png"
+            data-package-hover-images="images/conggu.png,images/conggu1.png,images/conggu2.png">
             <div class="package-thumb">
               <span class="offer">20% off</span>
-              <img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?auto=format&fit=crop&w=900&q=80"
-                alt="Adventure Surf Camp" />
+              <img src="assets/images/conggu.png" alt="Adventure Surf Camp" />
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Canggu, Indonesia</p>
             <h4>Adventure Surf Camp</h4>
-            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (162)</span></p>
-            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">5 Days</span></span><span>From ₹55,000</span></div>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8
+                (162)</span></p>
+            <div class="meta"><span class="package-meta-duration"><i
+                  class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
+                  class="package-meta-days-text">5 Days</span></span><span>From ₹55,000</span></div>
           </article>
-          <article class="package-card" data-type="friends">
+          <article class="package-card" data-type="friends"
+            data-package-detail-images="images/volcano.png,images/volcano1.png,images/volcano2.png"
+            data-package-hover-images="images/volcano.png,images/volcano1.png,images/volcano2.png">
             <div class="package-thumb">
               <span class="offer">5% off</span>
-              <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=80"
-                alt="Volcano Trekking" />
+              <img src="assets/images/volcano.png" alt="Volcano Trekking" />
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Mount Batur, Indonesia</p>
             <h4>Volcano Trekking Trip</h4>
-            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i> <span>4.5 (88)</span></p>
-            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">3 Days</span></span><span>From ₹40,000</span></div>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+              <span>4.5 (88)</span>
+            </p>
+            <div class="meta"><span class="package-meta-duration"><i
+                  class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
+                  class="package-meta-days-text">3 Days</span></span><span>From ₹40,000</span></div>
           </article>
-          <article class="package-card" data-type="friends">
+          <article class="package-card" data-type="friends"
+            data-package-detail-images="images/nusa61.png,images/nusa62.png,images/nusa63.png"
+            data-package-hover-images="images/nusa61.png,images/nusa62.png,images/nusa63.png">
             <div class="package-thumb">
               <span class="offer">13% off</span>
-              <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
-                alt="Island Hopping Tour" />
+              <img src="assets/images/nusa61.png" alt="Island Hopping Tour" />
             </div>
             <p class="location"><i class="fa-solid fa-location-dot"></i> Nusa Lembongan, Indonesia</p>
             <h4>Island Hopping Tour</h4>
-            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8 (140)</span></p>
-            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">4 Days</span></span><span>From ₹65,000</span></div>
+            <p class="rating"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i> <span>4.8
+                (140)</span></p>
+            <div class="meta"><span class="package-meta-duration"><i
+                  class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
+                  class="package-meta-days-text">4 Days</span></span><span>From ₹65,000</span></div>
           </article>
 
         </div>
@@ -444,9 +482,17 @@
         </p>
         <p class="testimonial-links">
           Check our
-          <span class="social-link instagram">Instagram</span>
+          <a class="social-link instagram" href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer"
+            aria-label="Tripon on Instagram">
+            <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+            <span class="social-link-label">Instagram</span>
+          </a>
           &amp;
-          <span class="social-link tripadvisor">Tripadvisor</span>
+          <a class="social-link tripadvisor" href="https://www.tripadvisor.com/" target="_blank"
+            rel="noopener noreferrer" aria-label="Tripadvisor — opens website or Tripadvisor app if installed">
+            <img class="social-tripadvisor-icon" src="assets/images/tripadvisor-icon.png" alt="" decoding="async" />
+            <span class="social-link-label">Tripadvisor</span>
+          </a>
           for More Reviews
         </p>
 
@@ -459,7 +505,8 @@
                 <p>@donjohn</p>
               </div>
             </div>
-            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">Our trip with Benua Travel Agency was memorable. They arranged everything perfectly
               and
               took us to dream destinations. What an experience!</p>
@@ -473,27 +520,37 @@
                 <p>@johnsmith</p>
               </div>
             </div>
-            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">Thank you Benua Travel Agency for an unforgettable trip. The selected destinations
               are
               simply amazing, and their services are very professional.</p>
           </article>
 
-          <article class="review-card muted">
-            <p class="review-text">during my trip with Benua Travel Agency, Their tour guides were very knowledgeable
-              and
-              helped us explore our destinations to the fullest.</p>
+          <article class="review-card">
+            <div class="review-head">
+              <img src="https://i.pravatar.cc/80?img=22" alt="Emma Clarke" />
+              <div>
+                <h4>Emma Clarke</h4>
+                <p>@emmaclarks</p>
+              </div>
+            </div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <p class="review-text">During my trip with Benua Travel Agency, their tour guides were very knowledgeable
+              and helped us explore our destinations to the fullest.</p>
           </article>
 
           <article class="review-card">
-            <div class="review-head center-head">
-              <span class="dot"></span>
+            <div class="review-head">
+              <img src="https://i.pravatar.cc/80?img=45" alt="Kang Anas" />
               <div>
                 <h4>Kang Anas</h4>
                 <p>@knganas</p>
               </div>
             </div>
-            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">The customized travel packages from Benua Travel Agency are perfectly suited to our
               preferences. They arrange all the details well, so we can have the perfect holiday.</p>
           </article>
@@ -506,7 +563,8 @@
                 <p>@raim</p>
               </div>
             </div>
-            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">Benua Travel Agency made our travel dreams come true. They provide an amazing choice
               of
               destinations and pay great attention to detail.</p>
@@ -520,7 +578,8 @@
                 <p>@johndoe</p>
               </div>
             </div>
-            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">The team of travel experts from Benua Travel Agency really understood our needs. They
               provided personalized recommendations for every day.</p>
           </article>
@@ -533,12 +592,22 @@
                 <p>@jonathan</p>
               </div>
             </div>
-            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">We are very pleased with the family travel packages provided by Benua Travel Agency.
               They accommodate the needs of our entire family and children.</p>
           </article>
 
-          <article class="review-card muted">
+          <article class="review-card">
+            <div class="review-head">
+              <img src="https://i.pravatar.cc/80?img=59" alt="Priya Sharma" />
+              <div>
+                <h4>Priya Sharma</h4>
+                <p>@priyatravels</p>
+              </div>
+            </div>
+            <div class="stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
+                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
             <p class="review-text">I am very satisfied with the service from Benua Travel Agency. They answered all my
               questions patiently and helped me plan my dream trip. Thank you very much!</p>
           </article>
@@ -546,15 +615,17 @@
       </section>
 
       <section class="video-banner">
-        <video class="banner-bg-video" autoplay muted loop playsinline preload="metadata" aria-label="Bali background video">
+        <video class="banner-bg-video" autoplay muted loop playsinline preload="metadata"
+          aria-label="Bali background video">
           <source src="https://res.cloudinary.com/degpcrfxi/video/upload/video4_bmqyc6.mp4" type="video/mp4" />
         </video>
         <div class="overlay"></div>
         <div class="banner-content">
-          <img class="indo-map" src="images/map.png" alt="Indonesia map outline" />
+          <img class="indo-map" src="assets/images/map.png" alt="Indonesia map outline" />
           <p class="spotlight-kicker">EXPLORE THE WONDERFULL OF</p>
           <h2>Bali, Indonesia</h2>
-          <button class="spotlight-btn" type="button">View in<span>3D</span></button>
+          <button class="spotlight-btn" type="button" id="spotlight3dOpen" aria-haspopup="dialog"
+            aria-controls="spotlight3dModal">View in<span>3D</span></button>
         </div>
       </section>
 
@@ -567,37 +638,36 @@
             <p class="family-tour-desc">Whatever Your Summer Looks Like, Bring Yourown Heat With Up To 35% Off Lium
               Brand.
             </p>
-            <button class="family-tour-btn" type="button">Book A Trip</button>
+            <button class="family-tour-btn" type="button" id="familyTourBookingTrigger" aria-haspopup="dialog"
+              aria-controls="mobilePrefModal">Book A Trip</button>
             <span class="plane plane-top">✈</span>
             <span class="plane plane-bottom">✈</span>
           </div>
 
-          <div class="family-tour-portrait frame-white">
-            <img src="https://images.unsplash.com/photo-1516589091380-5d8e87df6999?auto=format&fit=crop&w=700&q=80"
-              alt="Couple on a family trip" />
-          </div>
-
-          <div class="family-tour-collage">
-            <div class="tile tile-top frame-thin">
-              <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80"
-                alt="Family in a travel lounge" />
-            </div>
-            <div class="tile tile-middle frame-white">
-              <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80"
+          <div class="family-tour-bento" aria-label="Family tour photo gallery">
+            <article class="bento-cell bento-cell--camper">
+              <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80"
+                alt="Travelers beside a camper under the stars" fetchpriority="high" />
+            </article>
+            <article class="bento-cell bento-cell--couple">
+              <img src="https://images.unsplash.com/photo-1516589091380-5d8e87df6999?auto=format&fit=crop&w=720&q=80"
+                alt="Couple on a scenic night trip" />
+            </article>
+            <article class="bento-cell bento-cell--dive">
+              <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=920&q=80"
                 alt="Scuba diving adventure" />
-            </div>
-            <div class="tile tile-right frame-white tall">
-              <img src="https://images.unsplash.com/photo-1539650116574-75c0c6d73f4e?auto=format&fit=crop&w=700&q=80"
-                alt="Statue of Liberty" />
-            </div>
-            <div class="tile tile-small frame-thin">
-              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=700&q=80"
-                alt="Traveler on a boat" />
-            </div>
-            <div class="tile tile-wide frame-thin">
-              <img src="https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&w=900&q=80"
-                alt="Colorful fish underwater" />
-            </div>
+            </article>
+            <article class="bento-cell bento-cell--kayak">
+              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=840&q=80"
+                alt="Kayaking on turquoise water" />
+            </article>
+            <article class="bento-cell bento-cell--landmark">
+              <img src="assets/images/travel1.png" alt="Family travel adventure" loading="lazy" decoding="async" />
+            </article>
+            <article class="bento-cell bento-cell--reef">
+              <img src="https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&w=920&q=80"
+                alt="Underwater coral and tropical fish" />
+            </article>
           </div>
         </div>
       </section>
@@ -605,30 +675,38 @@
       <section class="why-choose-section">
         <p class="why-choose-label">WHY CHOOSE US</p>
         <div class="why-choose-intro">
-          <h2>Finding your dream destination is our priority</h2>
-          <p>With a collection of destinations that include stunning natural landscapes, vibrant cosmopolitan cities and
-            enchanting tropical islands, we take you to the world's most stunning places.</p>
+          <h2>Finding your dream destination<br>is our priority</h2>
+          <p>With a collection of destinations that include stunning natural landscapes, vibrant<br> cosmopolitan cities
+            and enchanting tropical islands, we take you to the world&apos;s most<br> stunning places.</p>
         </div>
         <div class="why-choose-grid">
-          <article class="why-card">
-            <div class="why-icon globe">🌍</div>
+          <article class="why-card why-card--icon-lg">
+            <div class="why-icon">
+              <img src="assets/images/why_choose3.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
+            </div>
             <h3>Lots of choices</h3>
-            <p>Thousands of the best destinations are ready to spoil your eyes.</p>
+            <p>Thousands of the best<br> destinations are ready to <br>spoil your eyes.</p>
           </article>
-          <article class="why-card">
-            <div class="why-icon ticket">🎟</div>
+          <article class="why-card why-card--icon-lg">
+            <div class="why-icon">
+              <img src="assets/images/why_choose2.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
+            </div>
             <h3>Easy Booking</h3>
-            <p>No need to be complicated in ordering tickets, order now with a few taps.</p>
+            <p>No need to be<br> complicated in ordering<br> tickets, order now with a<br> few taps.</p>
           </article>
-          <article class="why-card">
-            <div class="why-icon hotel">🏨</div>
+          <article class="why-card why-card--icon-lg">
+            <div class="why-icon">
+              <img src="assets/images/why_chosse1.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
+            </div>
             <h3>Accomodation</h3>
-            <p>There are many choices of interesting destinations to make stories on your trip.</p>
+            <p>There are many choices of<br> interesting destinations to<br> make stories on your trip.</p>
           </article>
-          <article class="why-card">
-            <div class="why-icon guide">🤝</div>
+          <article class="why-card why-card--icon-lg">
+            <div class="why-icon">
+              <img src="assets/images/why_choose.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
+            </div>
             <h3>Best Tour Guide</h3>
-            <p>Don't worry about traveling anywhere, our tour guide is ready to guide you anytime.</p>
+            <p>Don't worry about traveling<br> anywhere, our tour guide is<br> ready to guide you<br> anytime.</p>
           </article>
         </div>
       </section>
@@ -684,6 +762,42 @@
               embassy for your specific country requirements.</p>
           </article>
 
+          <article class="faq-item" data-category="general">
+            <div class="faq-row">
+              <span class="faq-number">04</span>
+              <p class="faq-question">Is Bali safe for tourists?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">Bali is widely considered safe for travellers. Use common sense: watch belongings on
+              busy beaches and in scooters, negotiate prices clearly before services, swim only where lifeguards or
+              local
+              advice suggest, and ride only licensed transport. Respect local customs and dress modestly at temples.</p>
+          </article>
+
+          <article class="faq-item" data-category="general">
+            <div class="faq-row">
+              <span class="faq-number">05</span>
+              <p class="faq-question">What currency is used and can I pay by card?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">Indonesia uses the Indonesian Rupiah (IDR). Cash is still common at warungs and small
+              shops; upscale hotels and many restaurants accept major cards. ATMs are available in tourist areas—use
+              bank
+              machines in secure locations and notify your bank before travel to avoid declined transactions.</p>
+          </article>
+
+          <article class="faq-item" data-category="general">
+            <div class="faq-row">
+              <span class="faq-number">06</span>
+              <p class="faq-question">Do people speak English? What phrases help?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">English is widely spoken in tourist areas alongside Bahasa Indonesia and Balinese.
+              Learning a few phrases—<em>terima kasih</em> (thank you), <em>tolong</em> (please), <em>pagi</em> (good
+              morning)—goes a long way. Download an offline translator for remote villages where English is less common.
+            </p>
+          </article>
+
           <!-- STAY questions -->
           <article class="faq-item" data-category="stay">
             <div class="faq-row">
@@ -720,6 +834,44 @@
               resorts from $150-500+. Villas offer great value and privacy. Prices vary by location and season—popular
               areas like Seminyak are pricier than Ubud or Sanur. Booking in advance or visiting during low season can
               save 20-30% on accommodation costs.</p>
+          </article>
+
+          <article class="faq-item" data-category="stay">
+            <div class="faq-row">
+              <span class="faq-number">04</span>
+              <p class="faq-question">What is usual check-in and check-out time in Bali?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">Most hotels and villas follow check-in around 2:00 p.m. and check-out around 11:00
+              a.m.
+              to noon. Early check-in or late check-out depends on availability and may cost extra—ask when you book.
+              Villas often offer flexible timings if they have no same-day turnovers.</p>
+          </article>
+
+          <article class="faq-item" data-category="stay">
+            <div class="faq-row">
+              <span class="faq-number">05</span>
+              <p class="faq-question">Should I choose a villa with a pool or a hotel resort?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">Private pool villas suit groups, honeymooners, and longer stays needing space and
+              quiet.
+              Larger resorts shine for families needing kids&apos; clubs, buffet breakfast, and on-site spas. Compare
+              total cost (cleaning fees, breakfast, airport transfer) and read reviews for maintenance and mosquito
+              control.</p>
+          </article>
+
+          <article class="faq-item" data-category="stay">
+            <div class="faq-row">
+              <span class="faq-number">06</span>
+              <p class="faq-question">Any tips for booking accommodation in Bali?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">Book refundable rates when seasons are uncertain. Pick areas that match your
+              goals—surf
+              in Canggu, culture in Ubud, calmer swims in Sanur. Confirm pickup and road access if the property is down
+              small lanes (<em>gang</em>), and screenshot your host&apos;s WhatsApp confirmation for arrivals after
+              dark.</p>
           </article>
 
           <!-- TRAVELING questions -->
@@ -762,6 +914,41 @@
               days gives a solid overview of the island's highlights.</p>
           </article>
 
+          <article class="faq-item" data-category="traveling">
+            <div class="faq-row">
+              <span class="faq-number">04</span>
+              <p class="faq-question">How do I get a local SIM card or mobile data?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">Prepaid SIMs from Telkomsel, XL, or Indosat are sold at the airport kiosks and street
+              shops—bring your passport for registration. Tourist data packages often cover one week to one month. eSIMs
+              are available online before departure if your phone supports them.</p>
+          </article>
+
+          <article class="faq-item" data-category="traveling">
+            <div class="faq-row">
+              <span class="faq-number">05</span>
+              <p class="faq-question">What is the best way to arrange airport pickup?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">Pre-book a meet-and-greet driver through your villa, hotel, or a trusted taxi company—
+              you&apos;ll skip haggling after a long flight. Official airport taxis also operate at fixed desks. Confirm
+              the driver&apos;s plate and name on WhatsApp to avoid unauthorised touts inside the terminal.</p>
+          </article>
+
+          <article class="faq-item" data-category="traveling">
+            <div class="faq-row">
+              <span class="faq-number">06</span>
+              <p class="faq-question">Can foreigners rent a scooter legally in Bali?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">You normally need an international driving permit endorsed for motorcycles plus a
+              helmet
+              for everyone on board; police checkpoints can issue fines otherwise. Roads are crowded and rules differ—if
+              you
+              are not experienced, hiring a driver for day tours is simpler and insured through many operators.</p>
+          </article>
+
           <!-- EXPERIENCE questions -->
           <article class="faq-item" data-category="experience">
             <div class="faq-row">
@@ -800,6 +987,41 @@
               local warungs (small restaurants) for authentic flavors. Take a cooking class in Ubud to learn traditional
               recipes. Don't miss Bali coffee, fresh tropical fruits, and Bintang beer.</p>
           </article>
+
+          <article class="faq-item" data-category="experience">
+            <div class="faq-row">
+              <span class="faq-number">04</span>
+              <p class="faq-question">How do I book popular tours like dolphin watching or snorkelling?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">Book through licensed operators with clear cancellation policies—early morning Lovina
+              dolphin trips and snorkel charters to Menjangan often sell out in peak season. Check what is included
+              (gear, lunch, park fees) and whether hotel pickup is part of the package.</p>
+          </article>
+
+          <article class="faq-item" data-category="experience">
+            <div class="faq-row">
+              <span class="faq-number">05</span>
+              <p class="faq-question">Are Balinese spas and wellness retreats worth it?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">Bali is known for affordable high-quality spas—massages, flower baths, and traditional
+              treatments. Day spas suit short visits; multi-day yoga or detox retreats work well in Ubud or quiet north
+              coast areas. Read hygiene reviews and avoid pushy street touts—book directly or through your hotel.</p>
+          </article>
+
+          <article class="faq-item" data-category="experience">
+            <div class="faq-row">
+              <span class="faq-number">06</span>
+              <p class="faq-question">What etiquette should I follow at temples and ceremonies?</p>
+              <i class="fa-solid fa-chevron-down faq-toggle" aria-hidden="true"></i>
+            </div>
+            <p class="faq-answer">Wear a sarong and sash where required, cover shoulders, and don&apos;t climb sacred
+              structures. Ask before photographing worshippers. Women who are menstruating are traditionally asked not
+              to
+              enter inner temple areas—respect posted rules and your guide&apos;s advice. Speak quietly and walk around
+              offerings on the ground.</p>
+          </article>
         </div>
       </section>
 
@@ -809,10 +1031,10 @@
         <div class="bali-blogs-grid">
 
           <!-- Featured card: image left, content right -->
-          <article class="bali-card bali-card--featured" data-blog-link="blog_details.html">
+          <article class="bali-card bali-card--featured" data-blog-slug="bali-tropical-journey">
             <div class="bali-card-media">
               <span class="blog-tag">Vlogger</span>
-              <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80"
+              <img src="assets/images/blog_card.png"
                 alt="Exploring Bali" />
               <div class="blog-video-bar">
                 <span class="blog-play">&#9654;</span>
@@ -841,8 +1063,8 @@
           </article>
 
           <!-- Top-right card -->
-          <article class="bali-card bali-card--img-only">
-            <img src="https://images.unsplash.com/photo-1555400038-63f5ba517a47?auto=format&fit=crop&w=600&q=80"
+          <article class="bali-card bali-card--img-only" data-blog-slug="bali-tech-nomad">
+            <img src="assets/images/blog_card1.png"
               alt="Tech Nomad" class="bali-card-img" />
             <div class="bali-card-body">
               <h3>Tech Nomad's Guide to Bali Templates</h3>
@@ -858,8 +1080,8 @@
           </article>
 
           <!-- Bottom-left card -->
-          <article class="bali-card bali-card--img-only">
-            <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=400&q=80"
+          <article class="bali-card bali-card--img-only" data-blog-slug="bali-ubud-secrets">
+            <img src="assets/images/blog_card2.png"
               alt="Secrets of Ubud" class="bali-card-img" />
             <div class="bali-card-body">
               <h3>Secrets of Ubud: Culture and Nature</h3>
@@ -875,10 +1097,10 @@
           </article>
 
           <!-- Bottom-middle + bottom-right combined card -->
-          <article class="bali-card bali-card--featured">
+          <article class="bali-card bali-card--featured" data-blog-slug="bali-beyond-beach">
             <div class="bali-card-media">
               <span class="blog-tag">Vlogger</span>
-              <img src="https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=crop&w=600&q=80"
+              <img src="assets/images/blog_card3.png"
                 alt="Bali adventure" />
               <div class="blog-video-bar">
                 <span class="blog-play">&#9654;</span>
@@ -923,67 +1145,35 @@
           </form>
         </div>
         <div class="subscribe-showcase-art">
-          <img src="images/group.png" alt="Travel planning app preview" />
+          <img src="assets/images/group.png" alt="Travel planning app preview" />
         </div>
       </section>
 
       <section class="instagram-showcase">
         <div class="instagram-head">
           <h2>Instagram</h2>
-          <p>Follow Us On @tripon</p>
+          <p>Follow Us On <a href="https://www.instagram.com/tripon/" class="instagram-handle" target="_blank"
+              rel="noopener noreferrer">@tripon</a></p>
         </div>
         <div class="instagram-strip">
-          <img src="images/insta_pic1.png" alt="Ocean cliffs" />
-          <img src="images/insta_pic2.png" alt="Tropical beach" />
-          <img src="images/insta_pic3.png" alt="Balinese dancer" />
-          <img src="images/insta_pic4.png" alt="Sunset beach" />
-          <img src="images/insta_pic5.png" alt="Temple statue" />
-          <img src="images/insta_pic6.png" alt="Bali temple lake" />
-          <img src="images/insta_pic7.png" alt="Rice field walk" />
+          <img src="assets/images/insta_pic1.png" alt="Ocean cliffs" />
+          <img src="assets/images/insta_pic2.png" alt="Tropical beach" />
+          <img src="assets/images/insta_pic3.png" alt="Balinese dancer" />
+          <img src="assets/images/insta_pic4.png" alt="Sunset beach" />
+          <img src="assets/images/insta_pic5.png" alt="Temple statue" />
+          <img src="assets/images/insta_pic6.png" alt="Bali temple lake" />
+          <img src="assets/images/insta_pic7.png" alt="Rice field walk" />
         </div>
       </section>
 
-      <footer class="tripon-footer">
-        <div class="tripon-footer-top">
-          <div class="tripon-brand">tripon</div>
-
-          <nav class="tripon-links" aria-label="Footer links">
-            <a href="#">About</a>
-            <a href="#">Locations</a>
-            <a href="#">Careers</a>
-            <a href="#">Blogs</a>
-            <a href="#">Packages</a>
-            <a href="#">Contact Us</a>
-          </nav>
-
-          <div class="tripon-social-block">
-            <p>FOLLOW OUR TRAVELER COMMUNITY <span>&#128293;</span></p>
-            <div class="tripon-socials">
-              <a href="#" aria-label="X"><i class="fa-brands fa-x-twitter"></i></a>
-              <a href="#" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
-              <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
-              <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-            </div>
-          </div>
-        </div>
-
-        <div class="tripon-footer-bottom">
-          <p>Copyright @ 2026 TRIPON All rights reserved</p>
-        </div>
-      </footer>
+      <div id="tripon-footer-zone" class="tripon-include-mount" style="display:contents"></div>
     </main>
   </div>
-  <div class="submit-popup-overlay" id="submitPopup" aria-hidden="true">
-    <div class="submit-popup-box submit-popup-box-success" role="dialog" aria-modal="true" aria-labelledby="submitPopupMessage">
-      <button type="button" class="submit-popup-icon-close" id="submitPopupIconClose" aria-label="Close popup">✕</button>
-      <p class="submit-popup-message" id="submitPopupMessage">Thanks for filling the form.</p>
-      <p class="submit-popup-subtext">Our travel expert will contact you shortly.</p>
-      <div class="submit-popup-actions">
-        <button class="submit-popup-close" type="button" id="submitPopupClose">Close</button>
-      </div>
-    </div>
-  </div>
-  <script src="script1.js"></script>
+  <div id="tripon-popups-zone" class="tripon-include-mount" style="display:contents"></div>
+  <script src="assets/js/includes.js"></script>
+  <script>
+    window.triponBootMain();
+  </script>
 </body>
 
 </html>
