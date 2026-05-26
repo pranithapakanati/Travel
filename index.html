@@ -47,10 +47,12 @@
     rel="stylesheet" />
   <link rel="stylesheet" href="assets/css/main.css" />
   <link rel="stylesheet" href="assets/css/responsive.css" />
+  <link rel="stylesheet" href="assets/css/site-ambient.css" />
+  <link rel="stylesheet" href="assets/css/package-details.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-<body data-tripon-nav="people-reviews">
+<body data-tripon-nav="home" class="has-tripon-site-ambient">
   <div class="page">
     <div id="tripon-navbar-zone" class="tripon-include-mount" style="display:contents"></div>
 
@@ -61,30 +63,39 @@
         <div class="overlay"></div>
         <div class="hero-content">
           <p class="seek">Seek Out</p>
-          <h1>Plan A Trip To<br />Bali !</h1>
+          <h1>
+            <span class="hero-t-line"><span class="hero-t-line__inner">Plan A Trip To</span></span>
+            <span class="hero-t-line" data-hero-dest-line><span class="hero-t-line__inner hero-t-line__text--accent">Bali !</span></span>
+          </h1>
           <p class="hero-subtext">
             Experience the Great culture in the world..
           </p>
-          <a class="whatsapp-btn"
-            href="https://wa.me/918919805038?text=Hi%2C%20I'm%20interested%20in%20a%20Bali%20tour%20package!"
-            target="_blank" rel="noopener noreferrer" aria-label="Chat us on WhatsApp">✆ Chat Us On WhatsApp</a>
+          <div class="hero-actions">
+            <a class="whatsapp-btn"
+              href="https://wa.me/918919805038?text=Hi%2C%20I'm%20interested%20in%20a%20Bali%20tour%20package!"
+              target="_blank" rel="noopener noreferrer" aria-label="Chat us on WhatsApp">
+              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Chat Us On WhatsApp
+            </a>
+            <a href="packages/" class="hero-explore-btn">Explore Packages <i class="fa-solid fa-arrow-right"
+                aria-hidden="true"></i></a>
+          </div>
         </div>
         <form class="search-box" novalidate>
           <div class="field">
-            <label><span class="field-icon"><i class="fa-regular fa-user"></i></span>Name</label>
+            <label><span class="field-icon"><i class="fa-regular fa-user"></i></span><span class="field-label-text">Name</span></label>
             <input type="text" placeholder="Enter Your Name" aria-label="Enter your name" minlength="2" required />
           </div>
           <div class="field">
-            <label><span class="field-icon"><i class="fa-solid fa-phone"></i></span>Phone Number</label>
+            <label><span class="field-icon"><i class="fa-solid fa-phone"></i></span><span class="field-label-text">Phone Number</span></label>
             <input type="tel" placeholder="Enter Your Phone Number" aria-label="Enter your phone number"
               inputmode="numeric" maxlength="10" minlength="10" pattern="[0-9]{10}" required />
           </div>
           <div class="field">
-            <label><span class="field-icon"><i class="fa-regular fa-calendar"></i></span>Travel On</label>
-            <input type="date" aria-label="Select travel date" required />
+            <label><span class="field-icon"><i class="fa-regular fa-calendar"></i></span><span class="field-label-text">Travel On</span></label>
+            <input type="date" placeholder="dd-mm-yyyy" aria-label="Select travel date" required />
           </div>
           <div class="field">
-            <label><span class="field-icon"><i class="fa-solid fa-users"></i></span>Travelers</label>
+            <label><span class="field-icon"><i class="fa-solid fa-users"></i></span><span class="field-label-text">Travelers</span></label>
             <input type="number" min="1" max="20" placeholder="No. of Guests" aria-label="Number of guests" required />
           </div>
           <button class="send-btn" type="button">➤</button>
@@ -95,210 +106,262 @@
         </button>
       </section>
 
-      <div class="mobile-pref-modal-overlay" id="mobilePrefModal" aria-hidden="true">
-        <div class="mobile-pref-modal" role="dialog" aria-modal="true" aria-labelledby="mobilePrefTitle">
-          <button class="mobile-pref-close" type="button" id="mobilePrefClose" aria-label="Close popup">✕</button>
-          <p class="mobile-pref-brand">Bali <span>INDONESIA</span></p>
-          <div class="mobile-pref-step active" data-step="1">
-            <h3 class="mobile-pref-title" id="mobilePrefTitle">How many nights are you planning to stay in Bali?</h3>
-            <form class="mobile-pref-form">
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="3n4d" /><span>3 Nights 4
-                  Days</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="4n5d" /><span>4 Nights 5
-                  Days</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="5n6d" /><span>5 Nights 6
-                  Days</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="6n7d" /><span>6 Nights 7
-                  Days</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="7n8d" /><span>7 Nights 8
-                  Days</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="stayDuration"
-                  value="suggest_days" /><span>Suggest Me How Many Days To Stay</span></label>
-            </form>
-          </div>
-          <div class="mobile-pref-step" data-step="2">
-            <h3 class="mobile-pref-title">How many travelers will be joining you on this trip?</h3>
-            <form class="mobile-pref-form">
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="2" /><span>2
-                  People</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="3" /><span>3
-                  People</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="4" /><span>4
-                  People</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="5plus" /><span>5+
-                  People</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount"
-                  value="family" /><span>Traveling with Family</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="solo" /><span>Solo
-                  Trip</span></label>
-            </form>
-          </div>
-          <div class="mobile-pref-step" data-step="3">
-            <h3 class="mobile-pref-title">Share us your travel specific preferences</h3>
-            <form class="mobile-pref-form">
-              <label class="mobile-pref-option"><input type="radio" name="travelPreference"
-                  value="started_planning" /><span>I just started planning for trip</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelPreference"
-                  value="booked_flight" /><span>I have booked my flight tickets</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelPreference"
-                  value="booking_this_week" /><span>I will book flight tickets this week</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelPreference"
-                  value="recommendations" /><span>I need personalised Bali recommendations</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="travelPreference"
-                  value="priority_contact" /><span>Please contact me in priority</span></label>
-            </form>
-          </div>
-          <div class="mobile-pref-step" data-step="4">
-            <h3 class="mobile-pref-title">May I ask for your name, please?</h3>
-            <form class="mobile-pref-form">
-              <input class="mobile-pref-input" type="text" name="travelerName" placeholder="Enter Your Name" />
-            </form>
-          </div>
-          <div class="mobile-pref-step" data-step="5">
-            <h3 class="mobile-pref-title">📞 Get a Call Back, Share Contact Details.</h3>
-            <form class="mobile-pref-form">
-              <input class="mobile-pref-input" type="tel" name="travelerPhone" placeholder="Enter Phone Number*"
-                inputmode="numeric" pattern="[0-9]{10,11}" maxlength="11" minlength="10"
-                title="Enter your phone number" />
-              <input class="mobile-pref-input" type="email" name="travelerEmail" placeholder="Enter Email ID" />
-            </form>
-          </div>
-          <div class="mobile-pref-step" data-step="6">
-            <h3 class="mobile-pref-title">When would you like to secure your trip reservation?</h3>
-            <form class="mobile-pref-form">
-              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_week" /><span>Within
-                  This Week</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_month" /><span>Within
-                  This Month</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="next_month" /><span>Within
-                  Next Month</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="bookingTime"
-                  value="upcoming_month" /><span>Within Upcoming Month</span></label>
-              <label class="mobile-pref-option"><input type="radio" name="bookingTime"
-                  value="suggest_time" /><span>Suggest Me The Best Time To Travel</span></label>
-            </form>
-          </div>
-          <div class="mobile-pref-step mobile-pref-step-final" data-step="7">
-            <p class="mobile-pref-thanks-bubble">Thank you for filling the form.</p>
-            <div class="mobile-pref-avatar" aria-hidden="true">🙏</div>
-            <p class="mobile-pref-thanks-text">Our Travel Expert Will Reach Out To You Soon.</p>
-            <a class="mobile-pref-whatsapp"
-              href="https://wa.me/918919805038?text=Hi%2C%20I'm%20interested%20in%20a%20Bali%20tour%20package!"
-              target="_blank" rel="noopener noreferrer">Reach us on WhatsApp <span>(For Faster Approach)</span></a>
-          </div>
-          <div class="mobile-pref-actions" id="mobilePrefActions">
-            <button class="mobile-pref-next" type="button" id="mobilePrefNext">Next (1/6)</button>
-            <button class="mobile-pref-prev" type="button" id="mobilePrefPrev">← Previous</button>
-          </div>
+      <section class="adventure adventure--3d" data-tripon-adventure-3d aria-label="Adventure destinations in Bali">
+        <div class="adventure__ambient" aria-hidden="true">
+          <span class="adventure__foliage adventure__foliage--l"></span>
+          <span class="adventure__foliage adventure__foliage--r"></span>
+          <span class="adventure__ember"></span>
+          <span class="adventure__ember"></span>
+          <span class="adventure__ember"></span>
+          <span class="adventure__ember"></span>
+          <span class="adventure__ember"></span>
+          <span class="adventure__ember"></span>
         </div>
-      </div>
 
-      <section class="adventure">
-        <h2>Let’s go on an adventure</h2>
-        <p class="adventure-sub">See What you can do in Bali</p>
-        <div class="place-row">
-          <article class="place-item" data-location-link="/locations/ubud.html">
-            <div class="place-icon">
-              <img src="assets/images/location1.png" alt="Ubud" />
+        <header class="adventure__head">
+          <h2>Let’s go on an adventure</h2>
+          <p class="adventure-sub">See What you can do in Bali</p>
+        </header>
+
+        <div class="adventure__stage">
+          <button class="adventure__nav adventure__nav--prev" type="button" data-adventure-prev
+            aria-label="Previous location">
+            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          </button>
+
+          <div class="adventure__ring-wrap">
+            <div class="adventure__platform" aria-hidden="true">
+              <div class="adventure__ring adventure__ring--outer"></div>
+              <div class="adventure__ring adventure__ring--inner"></div>
+              <div class="adventure__platform-shine"></div>
             </div>
-            <div class="place-content">
-              <h3>Ubud</h3>
-              <span>20+ Activities, 18 Sight Seeing</span>
+
+            <div class="adventure__carousel place-row" data-adventure-carousel>
+              <article class="place-item place-item--3d place-item-see-all" data-location-link="/locations/bali/">
+                <div class="place-item__panel place-item__panel--see-all">
+                  <div class="place-see-hero">
+                    <img class="place-see-hero__img" src="assets/images/location2.png" alt="" />
+                    <div class="place-see-badge" aria-hidden="true">
+                      <span class="place-see-badge__flower"></span>
+                      <span class="place-see-badge__ring">
+                        <span class="place-see-badge__text">Bali</span>
+                      </span>
+                    </div>
+                  </div>
+                  <svg class="place-see-wave" viewBox="0 0 320 28" preserveAspectRatio="none" aria-hidden="true">
+                    <path d="M0,28 C60,6 140,22 200,10 S280,4 320,18 L320,28 Z" fill="currentColor" />
+                  </svg>
+                  <div class="place-see-body">
+                    <div class="place-see-body__mesh" aria-hidden="true"></div>
+                    <h3 class="place-see-title">
+                      <span class="place-see-title__line">See All The</span>
+                      <span class="place-see-title__accent">Locations</span>
+                    </h3>
+                    <p class="place-see-sub">Explore complete Bali destination list</p>
+                    <ul class="place-see-features" aria-label="Explore categories">
+                      <li><i class="fa-solid fa-location-dot" aria-hidden="true"></i><span>Top Spots</span></li>
+                      <li><i class="fa-solid fa-umbrella-beach" aria-hidden="true"></i><span>Best Trips</span></li>
+                      <li><i class="fa-solid fa-camera" aria-hidden="true"></i><span>Must See</span></li>
+                      <li><i class="fa-solid fa-compass" aria-hidden="true"></i><span>Travel Guide</span></li>
+                    </ul>
+                    <div class="place-see-footer">
+                      <div class="place-see-trust">
+                        <div class="place-see-avatars" aria-hidden="true">
+                          <img src="assets/images/insta_pic1.png" alt="" />
+                          <img src="assets/images/insta_pic2.png" alt="" />
+                          <img src="assets/images/insta_pic3.png" alt="" />
+                        </div>
+                        <p class="place-see-trust__text"><strong>180K+</strong> Travelers<br />Exploring Bali</p>
+                      </div>
+                      <span class="place-see-cta" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+              <article class="place-item place-item--3d" data-location-link="/locations/bali/ubud.html">
+                <div class="place-item__panel">
+                  <img class="place-item__img" src="assets/images/location1.png" alt="" />
+                  <div class="place-item__overlay" aria-hidden="true"></div>
+                  <div class="place-item__glow" aria-hidden="true"></div>
+                  <div class="place-content">
+                    <div class="place-content__pill">
+                      <h3 class="place-content__title"><span class="place-content__line">Ubud</span></h3>
+                    </div>
+                    <p class="place-content__meta">
+                      <span class="place-meta__line">20+ Activities</span>
+                      <span class="place-meta__line">18 Sight Seeing</span>
+                    </p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="place-item place-item--3d is-active" data-location-link="/locations/bali/kuta.html"
+                data-adventure-start>
+                <div class="place-item__panel">
+                  <img class="place-item__img" src="assets/images/location2.png" alt="" />
+                  <div class="place-item__overlay" aria-hidden="true"></div>
+                  <div class="place-item__glow" aria-hidden="true"></div>
+                  <div class="place-content">
+                    <div class="place-content__pill">
+                      <h3 class="place-content__title">
+                        <span class="place-content__line">Kuta,</span>
+                        <span class="place-content__line">Bali</span>
+                      </h3>
+                    </div>
+                    <p class="place-content__meta">
+                      <span class="place-meta__line">15+ Activities</span>
+                      <span class="place-meta__line">20 Sight Seeing</span>
+                    </p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="place-item place-item--3d" data-location-link="/locations/bali/lombok.html">
+                <div class="place-item__panel">
+                  <img class="place-item__img" src="assets/images/location3.png" alt="" />
+                  <div class="place-item__overlay" aria-hidden="true"></div>
+                  <div class="place-item__glow" aria-hidden="true"></div>
+                  <div class="place-content">
+                    <div class="place-content__pill">
+                      <h3 class="place-content__title"><span class="place-content__line">Lombok</span></h3>
+                    </div>
+                    <p class="place-content__meta">
+                      <span class="place-meta__line">15+ Activities</span>
+                      <span class="place-meta__line">10 Sight Seeing</span>
+                    </p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="place-item place-item--3d" data-location-link="/locations/bali/seminyak.html">
+                <div class="place-item__panel">
+                  <img class="place-item__img" src="assets/images/location4.png" alt="" />
+                  <div class="place-item__overlay" aria-hidden="true"></div>
+                  <div class="place-item__glow" aria-hidden="true"></div>
+                  <div class="place-content">
+                    <div class="place-content__pill">
+                      <h3 class="place-content__title"><span class="place-content__line">Seminyak</span></h3>
+                    </div>
+                    <p class="place-content__meta">
+                      <span class="place-meta__line">18+ Activities</span>
+                      <span class="place-meta__line">14 Sight Seeing</span>
+                    </p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="place-item place-item--3d" data-location-link="/locations/bali/nusa-penida.html">
+                <div class="place-item__panel">
+                  <img class="place-item__img" src="assets/images/location5.png" alt="" />
+                  <div class="place-item__overlay" aria-hidden="true"></div>
+                  <div class="place-item__glow" aria-hidden="true"></div>
+                  <div class="place-content">
+                    <div class="place-content__pill">
+                      <h3 class="place-content__title">
+                        <span class="place-content__line">Nusa</span>
+                        <span class="place-content__line">Penida</span>
+                      </h3>
+                    </div>
+                    <p class="place-content__meta">
+                      <span class="place-meta__line">14+ Activities</span>
+                      <span class="place-meta__line">12 Sight Seeing</span>
+                    </p>
+                  </div>
+                </div>
+              </article>
+
+              <article class="place-item place-item--3d" data-location-link="/locations/bali/uluwatu.html">
+                <div class="place-item__panel">
+                  <img class="place-item__img" src="assets/images/location6.png" alt="" />
+                  <div class="place-item__overlay" aria-hidden="true"></div>
+                  <div class="place-item__glow" aria-hidden="true"></div>
+                  <div class="place-content">
+                    <div class="place-content__pill">
+                      <h3 class="place-content__title"><span class="place-content__line">Uluwatu</span></h3>
+                    </div>
+                    <p class="place-content__meta">
+                      <span class="place-meta__line">12+ Activities</span>
+                      <span class="place-meta__line">9 Sight Seeing</span>
+                    </p>
+                  </div>
+                </div>
+              </article>
             </div>
-          </article>
-          <article class="place-item" data-location-link="/locations/kuta.html">
-            <div class="place-icon">
-              <img src="assets/images/location2.png" alt="Kuta" />
-            </div>
-            <div class="place-content">
-              <h3>Kuta, Gali</h3>
-              <span>16+ Activities, 20 Sight Seeing</span>
-            </div>
-          </article>
-          <article class="place-item" data-location-link="/locations/lombok.html">
-            <div class="place-icon">
-              <img src="assets/images/location3.png" alt="Lombok" />
-            </div>
-            <div class="place-content">
-              <h3>Lombok</h3>
-              <span>15+ Activities, 10 Sight Seeing</span>
-            </div>
-          </article>
-          <article class="place-item" data-location-link="/locations/seminyak.html">
-            <div class="place-icon">
-              <img src="assets/images/location4.png" alt="Seminyak" />
-            </div>
-            <div class="place-content">
-              <h3>Seminyak</h3>
-              <span>18+ Activities, 14 Sight Seeing</span>
-            </div>
-          </article>
-          <article class="place-item" data-location-link="/locations/nusa-penida.html">
-            <div class="place-icon">
-              <img src="assets/images/location5.png" alt="Nusa Penida" />
-            </div>
-            <div class="place-content">
-              <h3>Nusa Penida</h3>
-              <span>14+ Activities, 12 Sight Seeing</span>
-            </div>
-          </article>
-          <article class="place-item" data-location-link="/locations/uluwatu.html">
-            <div class="place-icon">
-              <img src="assets/images/location6.png" alt="Uluwatu" />
-            </div>
-            <div class="place-content">
-              <h3>Uluwatu</h3>
-              <span>12+ Activities, 9 Sight Seeing</span>
-            </div>
-          </article>
-          <article class="place-item place-item-see-all" data-location-link="/locations/">
-            <div class="place-icon place-icon-see-all">Bali</div>
-            <div class="place-content">
-              <h3>See All The Locations</h3>
-              <span>Explore complete Bali destination list</span>
-            </div>
-          </article>
-        </div>
-        <div class="arrow-controls">
-          <button type="button" aria-label="Previous">←</button>
-          <button type="button" aria-label="Next">→</button>
+          </div>
+
+          <button class="adventure__nav adventure__nav--next" type="button" data-adventure-next
+            aria-label="Next location">
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </button>
         </div>
       </section>
 
-      <section class="trip-days">
-        <h3>How many days you<br />planning to travel?</h3>
-        <div class="day-row">
-          <button class="day-card day-4" type="button">4Days</button>
-          <button class="day-card day-5" type="button">5Days</button>
-          <button class="day-card day-custom" type="button">Custom</button>
+      <section class="trip-days trip-days--motion" data-tripon-trip-days>
+        <div class="trip-days__ambient" aria-hidden="true">
+          <canvas class="trip-days__canvas"></canvas>
+          <div class="trip-days__mesh">
+            <span class="trip-days__orb trip-days__orb--1"></span>
+            <span class="trip-days__orb trip-days__orb--2"></span>
+            <span class="trip-days__orb trip-days__orb--3"></span>
+          </div>
+          <svg class="trip-days__routes" viewBox="0 0 520 200" preserveAspectRatio="none">
+            <path class="trip-days__route" d="M20,120 C120,40 200,160 320,80 S480,140 500,60" />
+            <path class="trip-days__route trip-days__route--delay" d="M40,160 C160,100 280,180 400,100 S500,30 510,90" />
+          </svg>
+          <div class="trip-days__spotlight"></div>
+          <div class="trip-days__ripple" hidden></div>
         </div>
-        <div class="arrow-controls side">
-          <button type="button" aria-label="Previous">←</button>
-          <button type="button" aria-label="Next">→</button>
+        <div class="trip-days__title-wrap">
+          <h3>
+            <span class="trip-days__title-line"><span>How many days you</span></span>
+            <span class="trip-days__title-line"><span>planning to travel?</span></span>
+          </h3>
+        </div>
+        <div class="trip-days__stage">
+          <div class="day-row">
+            <button class="day-card day-4" type="button">4Days</button>
+            <button class="day-card day-5" type="button">5Days</button>
+            <button class="day-card day-custom" type="button">Custom</button>
+          </div>
+          <div class="arrow-controls side">
+            <button type="button" aria-label="Previous">←</button>
+            <button type="button" aria-label="Next">→</button>
+          </div>
         </div>
       </section>
 
-      <section class="reasons">
-        <h2>5 Reasons Why You Should<br />Visit <span>Bali</span></h2>
+      <section class="reasons reasons--gsap" data-tripon-reasons-gsap aria-label="5 Reasons to visit Bali">
+        <h2 class="reasons__title">
+          <span class="reasons__title-line"><span class="reasons__title-line-inner">5 Reasons Why You Should</span></span>
+          <span class="reasons__title-line"><span class="reasons__title-line-inner">Visit <span class="reasons__accent">Bali</span></span></span>
+        </h2>
         <div class="reasons-layout">
-          <img src="assets/images/reason.png" alt="Bali culture dance" />
+          <div class="reasons__media">
+            <div class="reasons__media-glow" aria-hidden="true"></div>
+            <div class="reasons__media-inner">
+              <img src="assets/images/reason.png" alt="Bali culture dance" />
+            </div>
+          </div>
           <div class="reason-text">
             <div class="reason-marker"></div>
-            <h4 class="active">Festivals</h4>
-            <article>
-              <h3>The Culture</h3>
-              <p>
+            <h4 class="active reasons__topic">Festivals</h4>
+            <article class="reasons__article">
+              <h3 class="reasons__article-title">
+                <span class="reasons__article-line"><span class="reasons__article-line-inner">The Culture</span></span>
+              </h3>
+              <p class="reasons__article-copy">
                 This is a mixture of Hindu, Muslim and Buddhist culture. These
                 people love together very harmoniously. You can also visit the
                 temples and mosques for a deeper understanding of their religions.
               </p>
             </article>
-            <h4>Peace and Quiet</h4>
-            <h4>Romantic Ambience</h4>
-            <h4>Ease of Travel</h4>
+            <h4 class="reasons__topic">Peace and Quiet</h4>
+            <h4 class="reasons__topic">Romantic Ambience</h4>
+            <h4 class="reasons__topic">Ease of Travel</h4>
           </div>
         </div>
-        <button class="more-blogs-btn" type="button">More Blogs</button>
+        <button class="more-blogs-btn reasons__cta tripon-neon-btn" type="button">More Blogs</button>
       </section>
 
       <section class="popular-packages">
@@ -313,8 +376,8 @@
         <div class="package-grid-new">
 
           <!-- Couple packages -->
-          <article class="package-card" data-type="couple"
-            data-package-places="Tanah Lot Temple,Ubud Rice Terraces,Campuhan Ridge,Tirta Empul"
+          <article class="package-card" data-package-place="ubud" data-package-slug="honey-moon-package-in-bali"
+            data-type="couple" data-package-places="Tanah Lot Temple,Ubud Rice Terraces,Campuhan Ridge,Tirta Empul"
             data-package-activities="Balinese cooking class,Couple spa,Rice terrace walk,Traditional dance evening"
             data-package-detail-images="images/couple.png,images/couple1.png,images/couple2.png"
             data-package-hover-images="images/couple.png,images/couple1.png,images/couple2.png">
@@ -331,7 +394,8 @@
                   class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
                   class="package-meta-days-text">4 Days</span></span><span>From ₹45,000</span></div>
           </article>
-          <article class="package-card" data-type="couple"
+          <article class="package-card" data-package-place="nusa-penida" data-package-slug="isolated-mountains-retreat"
+            data-type="couple"
             data-package-places="Kelingking Beach,Diamond Beach,Broken Beach,Angel Billabong,Crystal Bay"
             data-package-activities="Snorkel with manta rays,Island coastal drive,Cliff viewpoint hike,Sunset at the beach"
             data-package-detail-images="images/isolated.png,images/isolated1.png,images/isolated2.png"
@@ -349,7 +413,8 @@
                   class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
                   class="package-meta-days-text">5 Days</span></span><span>From ₹50,000</span></div>
           </article>
-          <article class="package-card" data-type="couple"
+          <article class="package-card" data-package-place="gili-trawangan" data-package-slug="the-white-beach-land"
+            data-type="couple"
             data-package-places="Gili Trawangan beaches,Gili Meno sandbar,Gili Air village,Turtle snorkeling point"
             data-package-activities="Beach cycling,Snorkeling day trip,Sunset swing photo stop,Island café crawl"
             data-package-detail-images="images/gilli.png,images/gilli1.png,images/gilli2.png"
@@ -369,7 +434,8 @@
           </article>
 
           <!-- Family packages -->
-          <article class="package-card" data-type="family"
+          <article class="package-card" data-package-place="seminyak" data-package-slug="family-beach-resort-stay"
+            data-type="family"
             data-package-detail-images="images/semiyak81.png,images/semiyak82.png,images/semiyak83.png"
             data-package-hover-images="images/semiyak81.png,images/semiyak82.png,images/semiyak83.png">
             <div class="package-thumb">
@@ -385,8 +451,8 @@
                   class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
                   class="package-meta-days-text">5 Days</span></span><span>From ₹1,20,000</span></div>
           </article>
-          <article class="package-card" data-type="family"
-            data-package-detail-images="images/ubud51.png,images/ubud52.png,images/ubud53.png"
+          <article class="package-card" data-package-place="ubud" data-package-slug="cultural-village-explorer"
+            data-type="family" data-package-detail-images="images/ubud51.png,images/ubud52.png,images/ubud53.png"
             data-package-hover-images="images/ubud51.png,images/ubud52.png,images/ubud53.png">
             <div class="package-thumb">
               <span class="offer">10% off</span>
@@ -402,8 +468,8 @@
                   class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
                   class="package-meta-days-text">4 Days</span></span><span>From ₹95,000</span></div>
           </article>
-          <article class="package-card" data-type="family"
-            data-package-detail-images="images/kuta61.png,images/kuta62.png,images/kuta63.png"
+          <article class="package-card" data-package-place="kuta" data-package-slug="waterpark-temples-tour"
+            data-type="family" data-package-detail-images="images/kuta61.png,images/kuta62.png,images/kuta63.png"
             data-package-hover-images="images/kuta61.png,images/kuta62.png,images/kuta63.png">
             <div class="package-thumb">
               <span class="offer">18% off</span>
@@ -420,8 +486,8 @@
           </article>
 
           <!-- Friends packages -->
-          <article class="package-card" data-type="friends"
-            data-package-detail-images="images/conggu.png,images/conggu1.png,images/conggu2.png"
+          <article class="package-card" data-package-place="canggu" data-package-slug="adventure-surf-camp"
+            data-type="friends" data-package-detail-images="images/conggu.png,images/conggu1.png,images/conggu2.png"
             data-package-hover-images="images/conggu.png,images/conggu1.png,images/conggu2.png">
             <div class="package-thumb">
               <span class="offer">20% off</span>
@@ -436,8 +502,8 @@
                   class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
                   class="package-meta-days-text">5 Days</span></span><span>From ₹55,000</span></div>
           </article>
-          <article class="package-card" data-type="friends"
-            data-package-detail-images="images/volcano.png,images/volcano1.png,images/volcano2.png"
+          <article class="package-card" data-package-place="mount-batur" data-package-slug="volcano-trekking-trip"
+            data-type="friends" data-package-detail-images="images/volcano.png,images/volcano1.png,images/volcano2.png"
             data-package-hover-images="images/volcano.png,images/volcano1.png,images/volcano2.png">
             <div class="package-thumb">
               <span class="offer">5% off</span>
@@ -453,8 +519,8 @@
                   class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span
                   class="package-meta-days-text">3 Days</span></span><span>From ₹40,000</span></div>
           </article>
-          <article class="package-card" data-type="friends"
-            data-package-detail-images="images/nusa61.png,images/nusa62.png,images/nusa63.png"
+          <article class="package-card" data-package-place="nusa-lembongan" data-package-slug="island-hopping-tour"
+            data-type="friends" data-package-detail-images="images/nusa61.png,images/nusa62.png,images/nusa63.png"
             data-package-hover-images="images/nusa61.png,images/nusa62.png,images/nusa63.png">
             <div class="package-thumb">
               <span class="offer">13% off</span>
@@ -629,79 +695,154 @@
         </div>
       </section>
 
-      <section class="family-tour-section">
+      <section class="family-tour-section family-tour-section--premium" data-tripon-family-tour-gsap
+        aria-label="Family tour promotion">
         <div class="family-tour-card">
-          <div class="family-tour-copy">
-            <p class="family-tour-kicker">Let&apos;s Travel</p>
-            <h2>Family Tour</h2>
-            <p class="family-tour-offer">35% Off</p>
-            <p class="family-tour-desc">Whatever Your Summer Looks Like, Bring Yourown Heat With Up To 35% Off Lium
-              Brand.
-            </p>
-            <button class="family-tour-btn" type="button" id="familyTourBookingTrigger" aria-haspopup="dialog"
-              aria-controls="mobilePrefModal">Book A Trip</button>
-            <span class="plane plane-top">✈</span>
-            <span class="plane plane-bottom">✈</span>
+          <div class="family-tour-ambient" aria-hidden="true">
+            <span class="family-tour-ambient__orb family-tour-ambient__orb--1"></span>
+            <span class="family-tour-ambient__orb family-tour-ambient__orb--2"></span>
+            <span class="family-tour-ambient__orb family-tour-ambient__orb--3"></span>
+            <canvas class="family-tour-particles" data-family-tour-particles width="1200" height="600"></canvas>
           </div>
 
-          <div class="family-tour-bento" aria-label="Family tour photo gallery">
-            <article class="bento-cell bento-cell--camper">
-              <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80"
-                alt="Travelers beside a camper under the stars" fetchpriority="high" />
+          <svg class="family-tour-plane-path" viewBox="0 0 520 280" aria-hidden="true" focusable="false">
+            <defs>
+              <linearGradient id="familyTourTrailGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="rgba(52, 211, 153, 0)" />
+                <stop offset="45%" stop-color="rgba(52, 211, 153, 0.55)" />
+                <stop offset="100%" stop-color="rgba(16, 185, 129, 0.15)" />
+              </linearGradient>
+            </defs>
+            <path class="family-tour-plane-path__line" data-family-tour-plane-path
+              d="M 18 210 C 90 120, 160 80, 250 95 S 420 140, 502 48" fill="none" stroke="url(#familyTourTrailGrad)"
+              stroke-width="2" stroke-dasharray="6 10" stroke-linecap="round" />
+            <g class="family-tour-plane-path__craft" data-family-tour-plane>
+              <path d="M0 0 L14 7 L0 14 L4 7 Z" fill="#a7f3d0" />
+            </g>
+          </svg>
+
+          <div class="family-tour-copy" data-family-tour-parallax="copy">
+            <p class="family-tour-kicker" data-ft-reveal>Let&apos;s Travel</p>
+            <h2 data-ft-reveal>Family Tour</h2>
+            <p class="family-tour-offer" data-ft-reveal>35% Off</p>
+            <p class="family-tour-desc" data-ft-reveal>Whatever Your Summer Looks Like, Bring Your Own Heat With Up To
+              35% Off On Premium Family Packages.</p>
+            <div class="family-tour-btn-wrap" data-ft-magnetic>
+              <span class="family-tour-btn-glow" aria-hidden="true"></span>
+              <button class="family-tour-btn tripon-neon-btn" type="button" id="familyTourBookingTrigger"
+                aria-haspopup="dialog" aria-controls="mobilePrefModal">Book A Trip</button>
+            </div>
+          </div>
+
+          <div class="family-tour-bento" aria-label="Family tour photo gallery" data-family-tour-parallax="gallery">
+            <article class="bento-cell bento-cell--camper" data-ft-bento data-ft-enter="top">
+              <span class="bento-cell__glow" aria-hidden="true"></span>
+              <div class="bento-cell__media">
+                <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80"
+                  alt="Travelers beside a camper under the stars" fetchpriority="high" />
+              </div>
             </article>
-            <article class="bento-cell bento-cell--couple">
-              <img src="https://images.unsplash.com/photo-1516589091380-5d8e87df6999?auto=format&fit=crop&w=720&q=80"
-                alt="Couple on a scenic night trip" />
+            <article class="bento-cell bento-cell--couple" data-ft-bento data-ft-enter="left">
+              <div class="bento-cell__media">
+                <img src="https://images.unsplash.com/photo-1516589091380-5d8e87df6999?auto=format&fit=crop&w=720&q=80"
+                  alt="Couple on a scenic night trip" />
+              </div>
             </article>
-            <article class="bento-cell bento-cell--dive">
-              <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=920&q=80"
-                alt="Scuba diving adventure" />
+            <article class="bento-cell bento-cell--dive" data-ft-bento data-ft-enter="center">
+              <div class="bento-cell__media">
+                <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=920&q=80"
+                  alt="Scuba diving adventure" />
+              </div>
             </article>
-            <article class="bento-cell bento-cell--kayak">
-              <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=840&q=80"
-                alt="Kayaking on turquoise water" />
+            <article class="bento-cell bento-cell--kayak" data-ft-bento data-ft-enter="bottom">
+              <div class="bento-cell__media">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=840&q=80"
+                  alt="Kayaking on turquoise water" />
+              </div>
             </article>
-            <article class="bento-cell bento-cell--landmark">
-              <img src="assets/images/travel1.png" alt="Family travel adventure" loading="lazy" decoding="async" />
+            <article class="bento-cell bento-cell--landmark" data-ft-bento data-ft-enter="right">
+              <div class="bento-cell__media">
+                <img src="assets/images/travel1.png" alt="Family travel adventure" loading="lazy" decoding="async" />
+              </div>
             </article>
-            <article class="bento-cell bento-cell--reef">
-              <img src="https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&w=920&q=80"
-                alt="Underwater coral and tropical fish" />
+            <article class="bento-cell bento-cell--reef" data-ft-bento data-ft-enter="bottom">
+              <div class="bento-cell__media">
+                <img src="https://images.unsplash.com/photo-1546026423-cc4642628d2b?auto=format&fit=crop&w=920&q=80"
+                  alt="Underwater coral and tropical fish" />
+              </div>
             </article>
           </div>
         </div>
       </section>
 
-      <section class="why-choose-section">
-        <p class="why-choose-label">WHY CHOOSE US</p>
-        <div class="why-choose-intro">
-          <h2>Finding your dream destination<br>is our priority</h2>
-          <p>With a collection of destinations that include stunning natural landscapes, vibrant<br> cosmopolitan cities
-            and enchanting tropical islands, we take you to the world&apos;s most<br> stunning places.</p>
+      <section class="why-choose-section" data-tripon-why-choose-gsap aria-label="Why choose us">
+        <div class="why-choose-header">
+          <div class="why-choose-slot" data-wc-slot>
+            <div class="why-choose-stage" data-wc-stage>
+              <div class="why-choose-hero-stack" data-wc-hero-stack>
+                <p class="why-choose-hero why-choose-hero--ghost" data-wc-hero aria-hidden="true">
+                  <span class="why-choose-hero-line" data-wc-hero-line>WHY</span>
+                  <span class="why-choose-hero-line" data-wc-hero-line>CHOOSE</span>
+                  <span class="why-choose-hero-line" data-wc-hero-line>US</span>
+                </p>
+                <p class="why-choose-hero why-choose-hero--reveal" data-wc-hero-reveal aria-hidden="true">
+                  <span class="why-choose-hero-line">WHY</span>
+                  <span class="why-choose-hero-line">CHOOSE</span>
+                  <span class="why-choose-hero-line">US</span>
+                </p>
+              </div>
+              <span class="why-choose-magnifier" data-wc-magnifier aria-hidden="true">
+                <svg class="why-choose-mag-unit" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true" focusable="false">
+                  <circle class="why-choose-mag-lens" data-wc-lens-ring cx="102" cy="102" r="84" fill="none"
+                    stroke="#0a7a52" stroke-width="9" />
+                  <path class="why-choose-mag-handle" d="M162 162 L248 248" fill="none" stroke="#0a7a52"
+                    stroke-width="13" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </span>
+            </div>
+            <div class="why-choose-settled" data-wc-settled>
+              <div class="why-choose-pill-wrap" data-wc-pill-wrap>
+                <p class="why-choose-label" data-wc-pill>WHY CHOOSE US</p>
+              </div>
+              <div class="why-choose-intro" data-wc-intro>
+                <h2 data-wc-headline>
+                  <span class="wc-word" data-wc-word>Finding</span>
+                  <span class="wc-word" data-wc-word>your</span>
+                  <span class="wc-word" data-wc-word>dream</span>
+                  <span class="wc-word" data-wc-word>destination</span>
+                  <span class="wc-word" data-wc-word>is</span>
+                  <span class="wc-word" data-wc-word>our</span>
+                  <span class="wc-word wc-word--priority" data-wc-word data-wc-priority>priority</span>
+                </h2>
+                <p data-wc-subtext>With a collection of destinations that include stunning natural landscapes,<br>vibrant cosmopolitan cities and enchanting tropical islands, we take you to the world&apos;s most stunning places.</p>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="why-choose-grid">
-          <article class="why-card why-card--icon-lg">
+        <div class="why-choose-grid" data-wc-grid>
+          <article class="why-card why-card--icon-lg" data-wc-card>
             <div class="why-icon">
               <img src="assets/images/why_choose3.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
             </div>
             <h3>Lots of choices</h3>
             <p>Thousands of the best<br> destinations are ready to <br>spoil your eyes.</p>
           </article>
-          <article class="why-card why-card--icon-lg">
+          <article class="why-card why-card--icon-lg" data-wc-card>
             <div class="why-icon">
               <img src="assets/images/why_choose2.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
             </div>
             <h3>Easy Booking</h3>
             <p>No need to be<br> complicated in ordering<br> tickets, order now with a<br> few taps.</p>
           </article>
-          <article class="why-card why-card--icon-lg">
+          <article class="why-card why-card--icon-lg" data-wc-card>
             <div class="why-icon">
               <img src="assets/images/why_chosse1.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
             </div>
             <h3>Accomodation</h3>
             <p>There are many choices of<br> interesting destinations to<br> make stories on your trip.</p>
           </article>
-          <article class="why-card why-card--icon-lg">
+          <article class="why-card why-card--icon-lg" data-wc-card>
             <div class="why-icon">
               <img src="assets/images/why_choose.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
             </div>
@@ -1025,110 +1166,115 @@
         </div>
       </section>
 
-      <!-- Blogs All About Bali -->
-      <section class="bali-blogs">
-        <h2>Blogs All About Bali</h2>
-        <div class="bali-blogs-grid">
+      <!-- Blogs All About Bali — 3D carousel -->
+      <section class="bali-blogs bali-blogs--3d" data-tripon-blogs-gsap aria-label="Blogs All About Bali">
+        <header class="bali-blogs-head">
+          <h2 data-blog-title>Blogs All About <span class="bali-blogs-accent">Bali</span></h2>
+          <p class="bali-blogs-sub" data-blog-sub>Stories, travel tips, and hidden gems from the Island of Gods.</p>
+        </header>
 
-          <!-- Featured card: image left, content right -->
-          <article class="bali-card bali-card--featured" data-blog-slug="bali-tropical-journey">
-            <div class="bali-card-media">
-              <span class="blog-tag">Vlogger</span>
-              <img src="assets/images/blog_card.png"
-                alt="Exploring Bali" />
-              <div class="blog-video-bar">
-                <span class="blog-play">&#9654;</span>
-                <div class="blog-progress">
-                  <div class="blog-progress-fill"></div>
-                </div>
-              </div>
-            </div>
-            <div class="bali-card-body">
-              <h3>Exploring Bali A Tropical Journey</h3>
-              <p>Dive deep into the heart of Bali with our captivating travel tales. From the majestic temples and lush
-                rice terraces to the vibrant cultural festivals and stunning beaches, we share our journey through
-                Bali's
-                enchanting landscapes. Discover the island's rich heritage, exquisite cuisine, and the warm hospitality
-                of
-                its people through our detailed travel experiences.</p>
-              <div class="blog-author">
-                <img src="https://i.pravatar.cc/40?img=5" alt="Janna Auniman" class="author-avatar" />
-                <div class="author-info">
-                  <strong>Janna Auniman</strong>
-                  <span>I'm A World Traveller</span>
-                </div>
-                <button class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
-              </div>
-            </div>
-          </article>
+        <div class="bali-blogs-stage" data-blog-stage>
+          <div class="bali-blogs-deco" aria-hidden="true">
+            <span class="bali-blogs-leaf bali-blogs-leaf--tl"></span>
+            <span class="bali-blogs-leaf bali-blogs-leaf--tr"></span>
+          </div>
 
-          <!-- Top-right card -->
-          <article class="bali-card bali-card--img-only" data-blog-slug="bali-tech-nomad">
-            <img src="assets/images/blog_card1.png"
-              alt="Tech Nomad" class="bali-card-img" />
-            <div class="bali-card-body">
-              <h3>Tech Nomad's Guide to Bali Templates</h3>
-              <div class="blog-author">
-                <img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram" class="author-avatar" />
-                <div class="author-info">
-                  <strong>Leo Vikram</strong>
-                  <span>Software Engineer</span>
-                </div>
-                <button class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+          <div class="bali-blogs-carousel" data-blog-carousel>
+            <article class="bali-card-3d" data-blog-card data-blog-enter="left" data-blog-tilt="wing-right"
+              data-blog-slug="bali-ubud-secrets">
+              <div class="bali-card-3d__media">
+                <img src="assets/images/blog_card2.png" alt="Secrets of Ubud" />
+                <span class="blog-tag-pill">Culture</span>
               </div>
-            </div>
-          </article>
+              <div class="bali-card-3d__body">
+                <h3>Secrets of Ubud: Culture and Nature</h3>
+                <p>Explore the heart of Bali where traditions, art, and nature come together.</p>
+                <div class="blog-author">
+                  <img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram" class="author-avatar" />
+                  <div class="author-info">
+                    <strong>Leo Vikram</strong>
+                    <span>Software Engineer</span>
+                  </div>
+                  <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
+                      class="fa-solid fa-share-nodes"></i></button>
+                </div>
+              </div>
+            </article>
 
-          <!-- Bottom-left card -->
-          <article class="bali-card bali-card--img-only" data-blog-slug="bali-ubud-secrets">
-            <img src="assets/images/blog_card2.png"
-              alt="Secrets of Ubud" class="bali-card-img" />
-            <div class="bali-card-body">
-              <h3>Secrets of Ubud: Culture and Nature</h3>
-              <div class="blog-author">
-                <img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram" class="author-avatar" />
-                <div class="author-info">
-                  <strong>Leo Vikram</strong>
-                  <span>Software Engineer</span>
-                </div>
-                <button class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+            <article class="bali-card-3d bali-card-3d--featured" data-blog-card data-blog-enter="top"
+              data-blog-tilt="center" data-blog-slug="bali-tropical-journey">
+              <div class="bali-card-3d__media">
+                <img src="assets/images/blog_card.png" alt="Exploring Bali" />
+                <span class="blog-tag-pill blog-tag-pill--featured">Featured</span>
+                <div class="bali-card-3d__shade"></div>
               </div>
-            </div>
-          </article>
+              <div class="bali-card-3d__body bali-card-3d__body--featured">
+                <h3>Exploring Bali: A Tropical Journey</h3>
+                <p>From majestic temples to vibrant beaches, discover the real magic of Bali with our travel stories.</p>
+                <div class="blog-author blog-author--light">
+                  <img src="https://i.pravatar.cc/40?img=5" alt="Janna Auniman" class="author-avatar" />
+                  <div class="author-info">
+                    <strong>Janna Auniman</strong>
+                    <span>I'm A World Traveller</span>
+                  </div>
+                  <button class="blog-share-btn blog-share-btn--light tripon-no-neon" type="button" aria-label="Share"><i
+                      class="fa-solid fa-share-nodes"></i></button>
+                </div>
+                <a class="bali-card-3d__read" href="blogs/">Read More <i class="fa-solid fa-arrow-right"
+                    aria-hidden="true"></i></a>
+              </div>
+            </article>
 
-          <!-- Bottom-middle + bottom-right combined card -->
-          <article class="bali-card bali-card--featured" data-blog-slug="bali-beyond-beach">
-            <div class="bali-card-media">
-              <span class="blog-tag">Vlogger</span>
-              <img src="assets/images/blog_card3.png"
-                alt="Bali adventure" />
-              <div class="blog-video-bar">
-                <span class="blog-play">&#9654;</span>
-                <div class="blog-progress">
-                  <div class="blog-progress-fill"></div>
+            <article class="bali-card-3d" data-blog-card data-blog-enter="bottom" data-blog-tilt="wing-left"
+              data-blog-slug="bali-tech-nomad">
+              <div class="bali-card-3d__media">
+                <img src="assets/images/blog_card1.png" alt="Tech Nomad" />
+                <span class="blog-tag-pill">Travel Guide</span>
+              </div>
+              <div class="bali-card-3d__body">
+                <h3>Tech Nomad's Guide to Bali Templates</h3>
+                <p>The ultimate guide for remote workers travelling and working in Bali.</p>
+                <div class="blog-author">
+                  <img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram" class="author-avatar" />
+                  <div class="author-info">
+                    <strong>Leo Vikram</strong>
+                    <span>Software Engineer</span>
+                  </div>
+                  <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
+                      class="fa-solid fa-share-nodes"></i></button>
                 </div>
               </div>
-            </div>
-            <div class="bali-card-body">
-              <h3>Adventures in Bali: Beyond the Beach</h3>
-              <p>Join us as we venture beyond Bali's renowned beaches to uncover its lesser-known treasures. From the
-                mystical Mount Batur at sunrise to the serene beauty of the Jatiluwih Rice Terraces and the spiritual
-                ambiance of ancient temples, our adventures in Bali reveal the island's diverse landscapes and rich
-                cultural tapestry.</p>
-              <div class="blog-author">
-                <img src="https://i.pravatar.cc/40?img=47" alt="Sara Kumari" class="author-avatar" />
-                <div class="author-info">
-                  <strong>Sara Kumari</strong>
-                  <span>Adventure Traveller</span>
-                </div>
-                <button class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
-              </div>
-            </div>
-          </article>
+            </article>
 
+            <article class="bali-card-3d" data-blog-card data-blog-enter="right" data-blog-tilt="wing-far"
+              data-blog-slug="bali-beyond-beach">
+              <div class="bali-card-3d__media">
+                <img src="assets/images/blog_card3.png" alt="Beyond the Beach" />
+                <span class="blog-tag-pill">Adventure</span>
+              </div>
+              <div class="bali-card-3d__body">
+                <h3>Adventures in Bali: Beyond the Beach</h3>
+                <p>Uncover hidden waterfalls, volcano treks and secret islands in Bali.</p>
+                <div class="blog-author">
+                  <img src="https://i.pravatar.cc/40?img=47" alt="Sara Kumari" class="author-avatar" />
+                  <div class="author-info">
+                    <strong>Sara Kumari</strong>
+                    <span>Adventure Traveller</span>
+                  </div>
+                  <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
+                      class="fa-solid fa-share-nodes"></i></button>
+                </div>
+              </div>
+            </article>
+          </div>
         </div>
+
+        <div class="bali-blogs-dots" aria-hidden="true">
+          <span></span><span class="is-active"></span><span></span>
+        </div>
+
         <div class="bali-blogs-footer">
-          <button class="want-more-btn" type="button">Want to know more!</button>
+          <button class="want-more-btn tripon-neon-btn" type="button">Want to know more!</button>
         </div>
       </section>
 
@@ -1139,7 +1285,7 @@
           <p class="subscribe-showcase-text">We Send you offers and share most interesting facts on travelling</p>
           <form class="subscribe-showcase-form">
             <input type="email" placeholder="Enter your Email ID" aria-label="Enter your Email ID" />
-            <button type="button" aria-label="Submit email subscription">
+            <button type="button" class="tripon-no-neon" aria-label="Submit email subscription">
               <i class="fa-solid fa-arrow-right"></i>
             </button>
           </form>
@@ -1169,8 +1315,111 @@
       <div id="tripon-footer-zone" class="tripon-include-mount" style="display:contents"></div>
     </main>
   </div>
+
+  <div class="mobile-pref-modal-overlay" id="mobilePrefModal" aria-hidden="true" data-disable-auto-open="true">
+    <div class="mobile-pref-modal" role="dialog" aria-modal="true" aria-labelledby="mobilePrefTitle">
+      <button class="mobile-pref-close" type="button" id="mobilePrefClose" aria-label="Close popup">✕</button>
+      <p class="mobile-pref-brand">Bali <span>INDONESIA</span></p>
+      <div class="mobile-pref-step active" data-step="1">
+        <h3 class="mobile-pref-title" id="mobilePrefTitle">How many nights are you planning to stay in Bali?</h3>
+        <form class="mobile-pref-form">
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="3n4d" /><span>3 Nights 4
+              Days</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="4n5d" /><span>4 Nights 5
+              Days</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="5n6d" /><span>5 Nights 6
+              Days</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="6n7d" /><span>6 Nights 7
+              Days</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration" value="7n8d" /><span>7 Nights 8
+              Days</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="stayDuration"
+              value="suggest_days" /><span>Suggest Me How Many Days To Stay</span></label>
+        </form>
+      </div>
+      <div class="mobile-pref-step" data-step="2">
+        <h3 class="mobile-pref-title">How many travelers will be joining you on this trip?</h3>
+        <form class="mobile-pref-form">
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="2" /><span>2
+              People</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="3" /><span>3
+              People</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="4" /><span>4
+              People</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="5plus" /><span>5+
+              People</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount"
+              value="family" /><span>Traveling with Family</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelerCount" value="solo" /><span>Solo
+              Trip</span></label>
+        </form>
+      </div>
+      <div class="mobile-pref-step" data-step="3">
+        <h3 class="mobile-pref-title">Share us your travel specific preferences</h3>
+        <form class="mobile-pref-form">
+          <label class="mobile-pref-option"><input type="radio" name="travelPreference"
+              value="started_planning" /><span>I just started planning for trip</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelPreference"
+              value="booked_flight" /><span>I have booked my flight tickets</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelPreference"
+              value="booking_this_week" /><span>I will book flight tickets this week</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelPreference"
+              value="recommendations" /><span>I need personalised Bali recommendations</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="travelPreference"
+              value="priority_contact" /><span>Please contact me in priority</span></label>
+        </form>
+      </div>
+      <div class="mobile-pref-step" data-step="4">
+        <h3 class="mobile-pref-title">May I ask for your name, please?</h3>
+        <form class="mobile-pref-form">
+          <input class="mobile-pref-input" type="text" name="travelerName" placeholder="Enter Your Name" />
+        </form>
+      </div>
+      <div class="mobile-pref-step" data-step="5">
+        <h3 class="mobile-pref-title">📞 Get a Call Back, Share Contact Details.</h3>
+        <form class="mobile-pref-form">
+          <input class="mobile-pref-input" type="tel" name="travelerPhone" placeholder="Enter Phone Number*"
+            inputmode="numeric" pattern="[0-9]{10,11}" maxlength="11" minlength="10"
+            title="Enter your phone number" />
+          <input class="mobile-pref-input" type="email" name="travelerEmail" placeholder="Enter Email ID" />
+        </form>
+      </div>
+      <div class="mobile-pref-step" data-step="6">
+        <h3 class="mobile-pref-title">When would you like to secure your trip reservation?</h3>
+        <form class="mobile-pref-form">
+          <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_week" /><span>Within
+              This Week</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="this_month" /><span>Within
+              This Month</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="bookingTime" value="next_month" /><span>Within
+              Next Month</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="bookingTime"
+              value="upcoming_month" /><span>Within Upcoming Month</span></label>
+          <label class="mobile-pref-option"><input type="radio" name="bookingTime"
+              value="suggest_time" /><span>Suggest Me The Best Time To Travel</span></label>
+        </form>
+      </div>
+      <div class="mobile-pref-step mobile-pref-step-final" data-step="7">
+        <p class="mobile-pref-thanks-bubble">Thank you for filling the form.</p>
+        <div class="mobile-pref-avatar" aria-hidden="true"><img src="assets/images/thanks1.png" alt=""
+            width="160" height="160" decoding="async" /></div>
+        <p class="mobile-pref-thanks-text">Our Travel Expert Will Reach Out To You Soon.</p>
+        <a class="mobile-pref-whatsapp"
+          href="https://wa.me/918919805038?text=Hi%2C%20I'm%20interested%20in%20a%20Bali%20tour%20package!"
+          target="_blank" rel="noopener noreferrer">Reach us on WhatsApp <span>(For Faster Approach)</span></a>
+      </div>
+      <div class="mobile-pref-actions" id="mobilePrefActions">
+        <button class="mobile-pref-next" type="button" id="mobilePrefNext">Next (1/6)</button>
+        <button class="mobile-pref-prev" type="button" id="mobilePrefPrev">← Previous</button>
+      </div>
+    </div>
+  </div>
+
   <div id="tripon-popups-zone" class="tripon-include-mount" style="display:contents"></div>
   <script src="assets/js/includes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/MotionPathPlugin.min.js" defer></script>
   <script>
     window.triponBootMain();
   </script>

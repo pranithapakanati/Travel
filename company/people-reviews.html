@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="icon" type="image/png" href="assets/images/fav_icon.png" />
+  <link rel="icon" type="image/png" href="../assets/images/fav_icon.png" />
   <meta name="description" content="Company reviews and ratings — what travelers say about Tripon and Bali travel." />
   <title>Tripon — Company Reviews</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -12,12 +12,13 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/main.css" />
-  <link rel="stylesheet" href="assets/css/responsive.css" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <link rel="stylesheet" href="../assets/css/site-ambient.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-<body class="reviews-page" data-tripon-nav="people-reviews" data-tripon-footer-class="reviews-tripon-footer">
+<body class="reviews-page has-tripon-site-ambient" data-tripon-nav="people-reviews" data-tripon-footer-class="reviews-tripon-footer">
   <div class="page reviews-active" id="pageRoot">
     <div id="tripon-navbar-zone" class="tripon-include-mount" style="display:contents"></div>
 
@@ -174,84 +175,116 @@
 
       </div>
 
-      <section class="bali-blogs reviews-bali-blogs">
-        <h2>Blogs All About Bali</h2>
-        <div class="bali-blogs-grid">
-          <article class="bali-card bali-card--featured" data-blog-slug="bali-tropical-journey">
-            <div class="bali-card-media">
-              <span class="blog-tag">Vlogger</span>
-              <img src="assets/images/blog_card.png"
-                alt="Exploring Bali" />
-              <div class="blog-video-bar"><span class="blog-play">&#9654;</span>
-                <div class="blog-progress">
-                  <div class="blog-progress-fill"></div>
+            <section class="bali-blogs bali-blogs--3d reviews-bali-blogs" data-tripon-blogs-gsap aria-label="Blogs All About Bali">
+              <header class="bali-blogs-head">
+                <h2 data-blog-title>Blogs All About <span class="bali-blogs-accent">Bali</span></h2>
+                <p class="bali-blogs-sub" data-blog-sub>Stories, travel tips, and hidden gems from the Island of Gods.</p>
+              </header>
+
+              <div class="bali-blogs-stage" data-blog-stage>
+                <div class="bali-blogs-deco" aria-hidden="true">
+                  <span class="bali-blogs-leaf bali-blogs-leaf--tl"></span>
+                  <span class="bali-blogs-leaf bali-blogs-leaf--tr"></span>
+                </div>
+
+                <div class="bali-blogs-carousel" data-blog-carousel>
+                  <article class="bali-card-3d" data-blog-card data-blog-enter="left" data-blog-tilt="wing-right"
+                    data-blog-slug="bali-ubud-secrets">
+                    <div class="bali-card-3d__media">
+                      <img src="../assets/images/blog_card2.png" alt="Secrets of Ubud" />
+                      <span class="blog-tag-pill">Culture</span>
+                    </div>
+                    <div class="bali-card-3d__body">
+                      <h3>Secrets of Ubud: Culture and Nature</h3>
+                      <p>Explore the heart of Bali where traditions, art, and nature come together.</p>
+                      <div class="blog-author">
+                        <img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram" class="author-avatar" />
+                        <div class="author-info">
+                          <strong>Leo Vikram</strong>
+                          <span>Software Engineer</span>
+                        </div>
+                        <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
+                            class="fa-solid fa-share-nodes"></i></button>
+                      </div>
+                    </div>
+                  </article>
+
+                  <article class="bali-card-3d bali-card-3d--featured" data-blog-card data-blog-enter="top"
+                    data-blog-tilt="center" data-blog-slug="bali-tropical-journey">
+                    <div class="bali-card-3d__media">
+                      <img src="../assets/images/blog_card.png" alt="Exploring Bali" />
+                      <span class="blog-tag-pill blog-tag-pill--featured">Featured</span>
+                      <div class="bali-card-3d__shade"></div>
+                    </div>
+                    <div class="bali-card-3d__body bali-card-3d__body--featured">
+                      <h3>Exploring Bali: A Tropical Journey</h3>
+                      <p>From majestic temples to vibrant beaches, discover the real magic of Bali with our travel stories.</p>
+                      <div class="blog-author blog-author--light">
+                        <img src="https://i.pravatar.cc/40?img=5" alt="Janna Auniman" class="author-avatar" />
+                        <div class="author-info">
+                          <strong>Janna Auniman</strong>
+                          <span>I'm A World Traveller</span>
+                        </div>
+                        <button class="blog-share-btn blog-share-btn--light tripon-no-neon" type="button" aria-label="Share"><i
+                            class="fa-solid fa-share-nodes"></i></button>
+                      </div>
+                      <a class="bali-card-3d__read" href="/blogs/">Read More <i class="fa-solid fa-arrow-right"
+                          aria-hidden="true"></i></a>
+                    </div>
+                  </article>
+
+                  <article class="bali-card-3d" data-blog-card data-blog-enter="bottom" data-blog-tilt="wing-left"
+                    data-blog-slug="bali-tech-nomad">
+                    <div class="bali-card-3d__media">
+                      <img src="../assets/images/blog_card1.png" alt="Tech Nomad" />
+                      <span class="blog-tag-pill">Travel Guide</span>
+                    </div>
+                    <div class="bali-card-3d__body">
+                      <h3>Tech Nomad's Guide to Bali Templates</h3>
+                      <p>The ultimate guide for remote workers travelling and working in Bali.</p>
+                      <div class="blog-author">
+                        <img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram" class="author-avatar" />
+                        <div class="author-info">
+                          <strong>Leo Vikram</strong>
+                          <span>Software Engineer</span>
+                        </div>
+                        <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
+                            class="fa-solid fa-share-nodes"></i></button>
+                      </div>
+                    </div>
+                  </article>
+
+                  <article class="bali-card-3d" data-blog-card data-blog-enter="right" data-blog-tilt="wing-far"
+                    data-blog-slug="bali-beyond-beach">
+                    <div class="bali-card-3d__media">
+                      <img src="../assets/images/blog_card3.png" alt="Beyond the Beach" />
+                      <span class="blog-tag-pill">Adventure</span>
+                    </div>
+                    <div class="bali-card-3d__body">
+                      <h3>Adventures in Bali: Beyond the Beach</h3>
+                      <p>Uncover hidden waterfalls, volcano treks and secret islands in Bali.</p>
+                      <div class="blog-author">
+                        <img src="https://i.pravatar.cc/40?img=47" alt="Sara Kumari" class="author-avatar" />
+                        <div class="author-info">
+                          <strong>Sara Kumari</strong>
+                          <span>Adventure Traveller</span>
+                        </div>
+                        <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
+                            class="fa-solid fa-share-nodes"></i></button>
+                      </div>
+                    </div>
+                  </article>
                 </div>
               </div>
-            </div>
-            <div class="bali-card-body">
-              <h3>Exploring Bali A Tropical Journey</h3>
-              <p>Dive deep into the heart of Bali with our captivating travel tales. From the majestic temples and lush
-                rice terraces to the vibrant cultural festivals and stunning beaches, we share our journey through
-                Bali's enchanting landscapes. Discover the island's rich heritage, exquisite cuisine, and the warm
-                hospitality of its people through our detailed travel experiences.</p>
-              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=5" alt="Janna Auniman"
-                  class="author-avatar" />
-                <div class="author-info"><strong>Janna Auniman</strong><span>I'm A World Traveller</span></div><button
-                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+
+              <div class="bali-blogs-dots" aria-hidden="true">
+                <span></span><span class="is-active"></span><span></span>
               </div>
-            </div>
-          </article>
-          <article class="bali-card bali-card--img-only" data-blog-slug="bali-tech-nomad">
-            <img src="assets/images/blog_card1.png"
-              alt="Tech Nomad" class="bali-card-img" />
-            <div class="bali-card-body">
-              <h3>Tech Nomad's Guide to Bali Templates</h3>
-              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram"
-                  class="author-avatar" />
-                <div class="author-info"><strong>Leo Vikram</strong><span>Software Engineer</span></div><button
-                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
+
+              <div class="bali-blogs-footer">
+                <button class="want-more-btn tripon-neon-btn" type="button">Want to know more!</button>
               </div>
-            </div>
-          </article>
-          <article class="bali-card bali-card--img-only" data-blog-slug="bali-ubud-secrets">
-            <img src="assets/images/blog_card2.png"
-              alt="Secrets of Ubud" class="bali-card-img" />
-            <div class="bali-card-body">
-              <h3>Secrets of Ubud: Culture and Nature</h3>
-              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram"
-                  class="author-avatar" />
-                <div class="author-info"><strong>Leo Vikram</strong><span>Software Engineer</span></div><button
-                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
-              </div>
-            </div>
-          </article>
-          <article class="bali-card bali-card--featured" data-blog-slug="bali-beyond-beach">
-            <div class="bali-card-media">
-              <span class="blog-tag">Vlogger</span>
-              <img src="assets/images/blog_card3.png"
-                alt="Bali adventure" />
-              <div class="blog-video-bar"><span class="blog-play">&#9654;</span>
-                <div class="blog-progress">
-                  <div class="blog-progress-fill"></div>
-                </div>
-              </div>
-            </div>
-            <div class="bali-card-body">
-              <h3>Adventures in Bali: Beyond the Beach</h3>
-              <p>Join us as we venture beyond Bali's renowned beaches to uncover its lesser-known treasures. From the
-                mystical Mount Batur at sunrise to the serene beauty of the Jatiluwih Rice Terraces and the spiritual
-                ambiance of ancient temples, our adventures in Bali reveal the island's diverse landscapes and rich
-                cultural tapestry.</p>
-              <div class="blog-author"><img src="https://i.pravatar.cc/40?img=47" alt="Sara Kumari"
-                  class="author-avatar" />
-                <div class="author-info"><strong>Sara Kumari</strong><span>Adventure Traveller</span></div><button
-                  class="blog-share-btn" type="button"><i class="fa-solid fa-share-nodes"></i></button>
-              </div>
-            </div>
-          </article>
-        </div>
-        <div class="bali-blogs-footer"><button class="want-more-btn" type="button">Want to know more!</button></div>
-      </section>
+            </section>
 
       <section class="instagram-showcase reviews-instagram-showcase">
         <div class="instagram-head">
@@ -260,13 +293,13 @@
               rel="noopener noreferrer">@tripon</a></p>
         </div>
         <div class="instagram-strip">
-          <img src="assets/images/insta_pic1.png" alt="Ocean cliffs" />
-          <img src="assets/images/insta_pic2.png" alt="Tropical beach" />
-          <img src="assets/images/insta_pic3.png" alt="Balinese dancer" />
-          <img src="assets/images/insta_pic4.png" alt="Sunset beach" />
-          <img src="assets/images/insta_pic5.png" alt="Temple statue" />
-          <img src="assets/images/insta_pic6.png" alt="Bali temple lake" />
-          <img src="assets/images/insta_pic7.png" alt="Rice field walk" />
+          <img src="../assets/images/insta_pic1.png" alt="Ocean cliffs" />
+          <img src="../assets/images/insta_pic2.png" alt="Tropical beach" />
+          <img src="../assets/images/insta_pic3.png" alt="Balinese dancer" />
+          <img src="../assets/images/insta_pic4.png" alt="Sunset beach" />
+          <img src="../assets/images/insta_pic5.png" alt="Temple statue" />
+          <img src="../assets/images/insta_pic6.png" alt="Bali temple lake" />
+          <img src="../assets/images/insta_pic7.png" alt="Rice field walk" />
         </div>
       </section>
 
@@ -368,7 +401,8 @@
       </div>
       <div class="mobile-pref-step mobile-pref-step-final" data-step="7">
         <p class="mobile-pref-thanks-bubble">Thank you for filling the form.</p>
-        <div class="mobile-pref-avatar" aria-hidden="true">🙏</div>
+        <div class="mobile-pref-avatar" aria-hidden="true"><img src="../assets/images/thanks1.png" alt=""
+            width="160" height="160" decoding="async" /></div>
         <p class="mobile-pref-thanks-text">Our Travel Expert Will Reach Out To You Soon.</p>
         <a class="mobile-pref-whatsapp"
           href="https://wa.me/918919805038?text=Hi%2C%20I'm%20interested%20in%20a%20Bali%20tour%20package!"
@@ -381,7 +415,7 @@
     </div>
   </div>
   <div id="tripon-popups-zone" class="tripon-include-mount" style="display:contents"></div>
-  <script src="assets/js/includes.js"></script>
+  <script src="../assets/js/includes.js"></script>
   <script>
     window.triponBootMain();
   </script>

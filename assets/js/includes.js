@@ -1,7 +1,21 @@
 (function (g) {
   function triponRelPrefix() {
     const path = (g.location.pathname || "").replace(/\\/g, "/");
-    if (/\/blogs\//i.test(path) || /\/locations\//i.test(path) || /\/packages\//i.test(path)) {
+    if (/\/packages\/bali\/[^/]+\/[^/]+\.html?$/i.test(path)) {
+      return "../../../";
+    }
+    if (
+      /\/packages\/[^/]+\/[^/]+\.html?$/i.test(path) ||
+      /\/locations\/bali\/[^/]+\.html?$/i.test(path)
+    ) {
+      return "../../";
+    }
+    if (
+      /\/blogs\//i.test(path) ||
+      /\/locations\//i.test(path) ||
+      /\/packages\//i.test(path) ||
+      /\/company\//i.test(path)
+    ) {
       return "../";
     }
     return "";
@@ -11,35 +25,126 @@
     return html.split("__TRIPON_REL__").join(triponRelPrefix());
   }
 
-  function triponPaintNavActive() {
-    const key = document.body && document.body.dataset ? document.body.dataset.triponNav : "";
+  /** Inject navbar.css once per page */
+  function triponEnsureNavbarStyles() {
+    const id = "tripon-navbar-stylesheet";
+    if (document.getElementById(id)) {
+      return;
+    }
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = `${triponRelPrefix()}assets/css/navbar.css`;
+    document.head.appendChild(link);
+  }
+
+  /** Contact-style ambient background on every page */
+  function triponEnsureSiteAmbientStyles() {
+    const id = "tripon-site-ambient-stylesheet";
+    if (document.getElementById(id)) {
+      return;
+    }
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = `${triponRelPrefix()}assets/css/site-ambient.css`;
+    document.head.appendChild(link);
+  }
+
+  function triponInjectSiteAmbient() {
+    if (document.getElementById("triponSiteAmbient")) {
+      document.body?.classList.add("has-tripon-site-ambient");
+      return Promise.resolve();
+    }
+
+    const prefix = triponRelPrefix();
+    return fetch(`${prefix}components/site-ambient.html`)
+      .then((r) => {
+        if (!r.ok) {
+          throw new Error(`site-ambient ${r.status}`);
+        }
+        return r.text();
+      })
+      .then((html) => {
+        if (!document.body || document.getElementById("triponSiteAmbient")) {
+          return;
+        }
+        document.body.insertAdjacentHTML("afterbegin", html.trim());
+        document.body.classList.add("has-tripon-site-ambient");
+      })
+      .catch(() => {
+        /* Fallback if fetch fails (file://) */
+        if (!document.body || document.getElementById("triponSiteAmbient")) {
+          return;
+        }
+        const wrap = document.createElement("div");
+        wrap.className = "tripon-site-ambient";
+        wrap.id = "triponSiteAmbient";
+        wrap.setAttribute("aria-hidden", "true");
+        wrap.innerHTML =
+          '<div class="tripon-site-ambient__photo"></div>' +
+          '<span class="tripon-site-ambient__orb tripon-site-ambient__orb--1"></span>' +
+          '<span class="tripon-site-ambient__orb tripon-site-ambient__orb--2"></span>' +
+          '<span class="tripon-site-ambient__orb tripon-site-ambient__orb--3"></span>' +
+          '<span class="tripon-site-ambient__leaf tripon-site-ambient__leaf--tl"></span>' +
+          '<span class="tripon-site-ambient__leaf tripon-site-ambient__leaf--br"></span>' +
+          '<span class="tripon-site-ambient__balloon">🎈</span>' +
+          '<svg class="tripon-site-ambient__plane-path" viewBox="0 0 220 80" aria-hidden="true"><line x1="10" y1="60" x2="200" y2="20" /></svg>' +
+          '<span class="tripon-site-ambient__plane" aria-hidden="true"><i class="fa-solid fa-paper-plane"></i></span>';
+        document.body.insertBefore(wrap, document.body.firstChild);
+        document.body.classList.add("has-tripon-site-ambient");
+      });
+  }
+
+  function triponLoadNavbarScript() {
+    return new Promise((resolve, reject) => {
+      if (typeof g.triponInitNavbar === "function") {
+        resolve();
+        return;
+      }
+      const src = `${triponRelPrefix()}assets/js/navbar.js`;
+      const existing = document.querySelector(`script[src="${src}"]`);
+      if (existing) {
+        existing.addEventListener("load", () => resolve(), { once: true });
+        existing.addEventListener("error", () => reject(new Error("navbar.js failed")), { once: true });
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = src;
+      script.defer = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error("Failed to load navbar.js"));
+      document.body.appendChild(script);
+    });
+  }
+
+  function triponPaintNavActiveFallback() {
+    if (typeof g.triponPaintNavActive === "function") {
+      g.triponPaintNavActive();
+      return;
+    }
+    const key = document.body?.dataset?.triponNav || "";
     if (!key) {
       return;
     }
-    document.querySelectorAll(".main-nav a.is-active").forEach((el) => el.classList.remove("is-active"));
-    document.querySelectorAll(".home-mobile-drawer-nav a.is-active").forEach((el) => el.classList.remove("is-active"));
-    document.querySelectorAll(".contact-btn.is-active").forEach((el) => el.classList.remove("is-active"));
-    document.querySelectorAll(".main-nav a[data-nav-key]").forEach((el) => {
-      if (el.getAttribute("data-nav-key") === key) {
-        el.classList.add("is-active");
-      }
+    document
+      .querySelectorAll(
+        ".tripon-header__link, .tripon-header__panel a, .tripon-nav__link, .main-nav a, .tripon-mobile-nav__item, .home-mobile-drawer-nav a, .tripon-footer-nav__link, .tripon-links a"
+      )
+      .forEach((el) => el.classList.remove("is-active"));
+    document.querySelectorAll(`[data-nav-key="${key}"]`).forEach((el) => {
+      el.classList.add("is-active");
     });
-    document.querySelectorAll(".home-mobile-drawer-nav a[data-nav-key]").forEach((el) => {
-      if (el.getAttribute("data-nav-key") === key) {
-        el.classList.add("is-active");
-      }
-    });
-    if (key === "contact") {
-      document.querySelector(".contact-btn")?.classList.add("is-active");
+    if (key === "contact" || key === "people-reviews") {
+      document.querySelector('[data-nav-key="company"]')?.classList.add("is-active");
     }
-    const baliLink = document.querySelector("#homeMobileLocationList a[href$='index.html'], #homeMobileLocationList a[href*='index.html']");
-    if (baliLink && /bali/i.test(baliLink.textContent || "")) {
-      baliLink.classList.add("is-active");
+    if (key === "people-reviews") {
+      document.querySelector('[data-nav-key="home"]')?.classList.add("is-active");
     }
   }
 
   function triponApplyFooterExtraClass() {
-    const extra = document.body && document.body.dataset ? document.body.dataset.triponFooterClass : "";
+    const extra = document.body?.dataset?.triponFooterClass || "";
     if (!extra) {
       return;
     }
@@ -51,36 +156,46 @@
   }
 
   function triponInjectIncludes() {
-    const base = triponRelPrefix() + "components/";
+    const base = `${triponRelPrefix()}components/`;
+    triponEnsureNavbarStyles();
+
     return Promise.all([
-      fetch(base + "navbar.html").then((r) => {
+      fetch(`${base}navbar.html`).then((r) => {
         if (!r.ok) {
-          throw new Error("navbar " + r.status);
+          throw new Error(`navbar ${r.status}`);
         }
         return r.text();
       }),
-      fetch(base + "footer.html").then((r) => {
+      fetch(`${base}mobile-menu.html`).then((r) => {
         if (!r.ok) {
-          throw new Error("footer " + r.status);
+          throw new Error(`mobile-menu ${r.status}`);
         }
         return r.text();
       }),
-      fetch(base + "popups.html").then((r) => {
+      fetch(`${base}footer.html`).then((r) => {
         if (!r.ok) {
-          throw new Error("popups " + r.status);
+          throw new Error(`footer ${r.status}`);
+        }
+        return r.text();
+      }),
+      fetch(`${base}popups.html`).then((r) => {
+        if (!r.ok) {
+          throw new Error(`popups ${r.status}`);
         }
         return r.text();
       }),
     ])
-      .then(([navT, footT, popT]) => {
+      .then(([navT, mobileT, footT, popT]) => {
         const navHtml = applyComponentUrls(navT);
+        const mobileHtml = applyComponentUrls(mobileT);
         const footHtml = applyComponentUrls(footT);
         const popHtml = applyComponentUrls(popT);
         const navZone = document.getElementById("tripon-navbar-zone");
         const footZone = document.getElementById("tripon-footer-zone");
         const popZone = document.getElementById("tripon-popups-zone");
+
         if (navZone) {
-          navZone.innerHTML = navHtml;
+          navZone.innerHTML = `${navHtml}${mobileHtml}`;
         }
         if (footZone) {
           footZone.innerHTML = footHtml;
@@ -88,8 +203,15 @@
         if (popZone) {
           popZone.innerHTML = popHtml;
         }
+
         triponApplyFooterExtraClass();
-        triponPaintNavActive();
+        return triponLoadNavbarScript().then(() => {
+          if (typeof g.triponInitNavbar === "function") {
+            g.triponInitNavbar();
+          } else {
+            triponPaintNavActiveFallback();
+          }
+        });
       })
       .catch((e) => {
         console.warn(
@@ -99,14 +221,54 @@
       });
   }
 
+  function triponLoadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (document.querySelector(`script[src="${src}"]`)) {
+        resolve();
+        return;
+      }
+      const s = document.createElement("script");
+      s.src = src;
+      s.onload = () => resolve();
+      s.onerror = () => reject(new Error(`Failed to load ${src}`));
+      document.body.appendChild(s);
+    });
+  }
+
+  function triponPageNeedsGsap() {
+    return !!document.querySelector(
+      "[data-tripon-blogs-gsap], [data-tripon-why-choose-gsap], [data-tripon-family-tour-gsap], [data-tripon-trip-days], [data-tripon-reasons-gsap]"
+    );
+  }
+
+  function triponEnsureGsapBundle() {
+    if (g.gsap && g.ScrollTrigger) {
+      return Promise.resolve();
+    }
+    if (!triponPageNeedsGsap()) {
+      return Promise.resolve();
+    }
+    const gsapSrc = "https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js";
+    const stSrc = "https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js";
+    return triponLoadScript(gsapSrc).then(() => triponLoadScript(stSrc));
+  }
+
   function triponBootMain() {
-    return triponInjectIncludes().then(() => {
-      return new Promise((resolve, reject) => {
-        const s = document.createElement("script");
-        s.src = triponRelPrefix() + "assets/js/main.js";
-        s.onload = () => resolve();
-        s.onerror = () => reject(new Error("Failed to load main.js"));
-        document.body.appendChild(s);
+    const prefix = triponRelPrefix();
+    const loadLuxuryPickers = () => {
+      if (g.TriponLuxuryCalendar) {
+        return Promise.resolve();
+      }
+      return triponLoadScript(`${prefix}assets/js/package-details.js`);
+    };
+
+    return triponInjectSiteAmbient().then(() => triponInjectIncludes()).then(() => {
+      return triponEnsureGsapBundle().then(() => {
+        return loadLuxuryPickers().then(() => {
+          return triponLoadScript(`${prefix}assets/js/packages-catalog.js`).then(() => {
+            return triponLoadScript(`${prefix}assets/js/main.js`);
+          });
+        });
       });
     });
   }
@@ -114,4 +276,65 @@
   g.triponRelPrefix = triponRelPrefix;
   g.triponInjectIncludes = triponInjectIncludes;
   g.triponBootMain = triponBootMain;
+  g.triponEnsureNavbarStyles = triponEnsureNavbarStyles;
+
+  function triponMarkNavbarLayoutEarly() {
+    if (!document.getElementById("tripon-navbar-zone")) {
+      return;
+    }
+    document.body?.classList.add("has-tripon-navbar");
+    const navKey = (document.body?.dataset?.triponNav || "").toLowerCase();
+    const path = (g.location.pathname || "").replace(/\\/g, "/").toLowerCase();
+    const innerRoute =
+      navKey && navKey !== "home" ||
+      /\/(packages|locations|blogs|company|offers)(\/|$)/.test(path);
+    if (innerRoute) {
+      document.body?.classList.remove("tripon-home-page");
+    }
+  }
+
+  function triponEnsurePackageDetailsStylesEarly() {
+    if (!document.body?.classList.contains("package-details-page")) {
+      return;
+    }
+    const id = "tripon-package-details-css";
+    if (document.getElementById(id)) {
+      return;
+    }
+    const prefix = triponRelPrefix();
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = `${prefix}assets/css/package-details.css`;
+    document.head.appendChild(link);
+  }
+
+  /* Load navbar.css + layout class as early as possible */
+  function triponBootstrapNavbarAssets() {
+    triponMarkNavbarLayoutEarly();
+    triponEnsureNavbarStyles();
+    triponEnsureSiteAmbientStyles();
+    triponEnsurePackageDetailsStylesEarly();
+  }
+
+  function triponBootstrapSiteAmbient() {
+    triponEnsureSiteAmbientStyles();
+    if (document.body) {
+      triponInjectSiteAmbient();
+    } else {
+      document.addEventListener("DOMContentLoaded", () => triponInjectSiteAmbient(), { once: true });
+    }
+  }
+
+  if (document.head) {
+    triponBootstrapNavbarAssets();
+  } else {
+    document.addEventListener("DOMContentLoaded", triponBootstrapNavbarAssets, { once: true });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", triponBootstrapSiteAmbient, { once: true });
+  } else {
+    triponBootstrapSiteAmbient();
+  }
 })(typeof window !== "undefined" ? window : globalThis);

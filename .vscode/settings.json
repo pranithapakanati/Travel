@@ -1,3 +1,10 @@
 {
-  "liveServer.settings.port": 5508
+  "liveServer.settings.port": 5508,
+  "explorer.sortOrder": "filesFirst",
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": true,
+  "explorer.fileNesting.patterns": {
+    "packages": "bali",
+    "company": "cancellation-policy.html"
+  }
 }

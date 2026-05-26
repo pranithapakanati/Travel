@@ -5,12 +5,11 @@
     </div>
 
     <nav class="tripon-links" aria-label="Footer links">
-      <a href="#">About</a>
-      <a href="__TRIPON_REL__locations/">Locations</a>
-      <a href="#">Careers</a>
-      <a href="__TRIPON_REL__blogs.html">Blogs</a>
-      <a href="__TRIPON_REL__packages.html">Packages</a>
-      <a href="__TRIPON_REL__contact-us.html">Contact Us</a>
+      <a href="__TRIPON_REL__index.html" data-nav-key="home">Home</a>
+      <a href="__TRIPON_REL__locations/" data-nav-key="locations">Locations</a>
+      <a href="__TRIPON_REL__packages/" data-nav-key="packages">Packages</a>
+      <a href="__TRIPON_REL__company/contact-us.html" data-nav-key="contact">Contact</a>
+      <a href="__TRIPON_REL__company/people-reviews.html" data-nav-key="people-reviews">People Reviews</a>
     </nav>
 
     <div class="tripon-social-block">
@@ -28,3 +27,33 @@
     <p>Copyright @ 2026 TRIPON All rights reserved</p>
   </div>
 </footer>
+
+<!-- Mobile bottom navigation -->
+<nav class="tripon-footer-nav" aria-label="Quick navigation">
+  <ul class="tripon-footer-nav__list">
+    <li>
+      <a href="__TRIPON_REL__index.html" class="tripon-footer-nav__link" data-nav-key="home">
+        <i class="fa-solid fa-house" aria-hidden="true"></i>
+        <span>Home</span>
+      </a>
+    </li>
+    <li>
+      <a href="__TRIPON_REL__locations/" class="tripon-footer-nav__link" data-nav-key="locations">
+        <i class="fa-solid fa-map-location-dot" aria-hidden="true"></i>
+        <span>Locations</span>
+      </a>
+    </li>
+    <li>
+      <a href="__TRIPON_REL__packages/" class="tripon-footer-nav__link" data-nav-key="packages">
+        <i class="fa-solid fa-suitcase-rolling" aria-hidden="true"></i>
+        <span>Packages</span>
+      </a>
+    </li>
+    <li>
+      <a href="__TRIPON_REL__company/contact-us.html" class="tripon-footer-nav__link" data-nav-key="contact">
+        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+        <span>Contact</span>
+      </a>
+    </li>
+  </ul>
+</nav>

@@ -1,0 +1,62 @@
+<!-- Tripon MobileMenu — slide-in drawer with blur overlay -->
+<div class="tripon-mobile-menu home-mobile-menu-overlay" id="homeMobileMenuOverlay" aria-hidden="true">
+  <div class="tripon-mobile-menu__backdrop" data-tripon-menu-close aria-hidden="true"></div>
+
+  <aside class="tripon-mobile-menu__panel home-mobile-drawer" id="homeMobileDrawer" aria-label="Mobile navigation">
+    <div class="tripon-mobile-menu__header home-mobile-drawer-header">
+      <img src="__TRIPON_REL__assets/images/vector.png" alt="Tripon" class="home-mobile-drawer-logo tripon-mobile-menu__logo" width="130" decoding="async" />
+      <button class="tripon-mobile-menu__close home-mobile-drawer-close" id="homeMobileDrawerClose" type="button" aria-label="Close menu">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <div class="tripon-mobile-menu__locations home-mobile-drawer-location">
+      <button class="home-mobile-location-toggle" id="homeMobileLocationToggle" type="button" aria-expanded="true" aria-controls="homeMobileLocationList">
+        <span>Destinations</span>
+        <span class="home-mobile-location-icon" aria-hidden="true">−</span>
+      </button>
+      <div class="home-mobile-location-list active tripon-mobile-menu__location-list" id="homeMobileLocationList">
+        <a href="__TRIPON_REL__locations/bali/" data-tripon-dest-label="Bali">Bali</a>
+        <a href="__TRIPON_REL__locations/#thailand" data-tripon-dest-label="Thailand">Thailand</a>
+        <a href="__TRIPON_REL__locations/#maldives" data-tripon-dest-label="Maldives">Maldives</a>
+        <a href="__TRIPON_REL__locations/#dubai" data-tripon-dest-label="Dubai">Dubai</a>
+        <a href="__TRIPON_REL__locations/" data-tripon-dest-label="Indonesia">Indonesia</a>
+        <a href="__TRIPON_REL__locations/#singapore" data-tripon-dest-label="Singapore">Singapore</a>
+      </div>
+    </div>
+
+    <nav class="tripon-mobile-nav home-mobile-drawer-nav" aria-label="Mobile primary">
+      <a href="__TRIPON_REL__index.html" class="tripon-mobile-nav__item" data-nav-key="home" style="--tripon-stagger: 0">
+        <span class="tripon-mobile-nav__icon"><i class="fa-solid fa-house" aria-hidden="true"></i></span>
+        <span class="tripon-mobile-nav__label">Home</span>
+        <i class="fa-solid fa-chevron-right tripon-mobile-nav__arrow" aria-hidden="true"></i>
+      </a>
+      <a href="__TRIPON_REL__locations/" class="tripon-mobile-nav__item" data-nav-key="locations" style="--tripon-stagger: 1">
+        <span class="tripon-mobile-nav__icon"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i></span>
+        <span class="tripon-mobile-nav__label">Locations</span>
+        <i class="fa-solid fa-chevron-right tripon-mobile-nav__arrow" aria-hidden="true"></i>
+      </a>
+      <a href="__TRIPON_REL__packages/" class="tripon-mobile-nav__item" data-nav-key="packages" style="--tripon-stagger: 2">
+        <span class="tripon-mobile-nav__icon"><i class="fa-solid fa-suitcase-rolling" aria-hidden="true"></i></span>
+        <span class="tripon-mobile-nav__label">Packages</span>
+        <i class="fa-solid fa-chevron-right tripon-mobile-nav__arrow" aria-hidden="true"></i>
+      </a>
+      <a href="__TRIPON_REL__company/contact-us.html" class="tripon-mobile-nav__item" data-nav-key="contact" style="--tripon-stagger: 3">
+        <span class="tripon-mobile-nav__icon"><i class="fa-solid fa-envelope" aria-hidden="true"></i></span>
+        <span class="tripon-mobile-nav__label">Contact Us</span>
+        <i class="fa-solid fa-chevron-right tripon-mobile-nav__arrow" aria-hidden="true"></i>
+      </a>
+      <a href="__TRIPON_REL__company/people-reviews.html" class="tripon-mobile-nav__item" data-nav-key="people-reviews" style="--tripon-stagger: 4">
+        <span class="tripon-mobile-nav__icon"><i class="fa-solid fa-star" aria-hidden="true"></i></span>
+        <span class="tripon-mobile-nav__label">People Reviews</span>
+        <i class="fa-solid fa-chevron-right tripon-mobile-nav__arrow" aria-hidden="true"></i>
+      </a>
+    </nav>
+
+    <div class="tripon-mobile-menu__footer home-mobile-drawer-contact">
+      <p class="tripon-mobile-menu__footer-label">Plan your luxury escape</p>
+      <a href="tel:+917685487647" class="tripon-mobile-menu__phone">+91 7685487647</a>
+      <a href="__TRIPON_REL__company/contact-us.html" class="tripon-mobile-menu__cta">Get in touch</a>
+    </div>
+  </aside>
+</div>

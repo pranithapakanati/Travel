@@ -1,63 +1,154 @@
-<header class="topbar">
-  <div class="topbar-left">
-    <a href="__TRIPON_REL__index.html" aria-label="Tripon home">
-      <img src="__TRIPON_REL__assets/images/vector.png" alt="Tripon logo" class="logo" />
+<!-- TRIPON Header — glass pill navbar -->
+<header class="tripon-header" id="triponNavbar" role="banner">
+  <div class="tripon-header__bar">
+    <a href="__TRIPON_REL__index.html" class="tripon-header__logo" aria-label="Tripon home">
+      <img src="__TRIPON_REL__assets/images/vector.png" alt="tripon" class="tripon-header__logo-img" width="120" height="32" decoding="async" />
     </a>
-    <span class="topbar-divider" aria-hidden="true"></span>
-    <div class="location-dropdown-wrapper">
-      <button class="location-pill" type="button">Bali <i class="fa-solid fa-chevron-down location-chevron"
-          aria-hidden="true"></i></button>
-      <ul class="location-dropdown" role="listbox">
-        <li role="option"><a href="#" data-location="bali">Bali</a></li>
-        <li role="option"><a href="#" data-location="thailand">Thailand</a></li>
-        <li role="option"><a href="#" data-location="maldives">Maldives</a></li>
-        <li role="option"><a href="#" data-location="dubai">Dubai</a></li>
-        <li role="option"><a href="#" data-location="indonesia">Indonesia</a></li>
-        <li role="option"><a href="#" data-location="singapore">Singapore</a></li>
+
+    <nav class="tripon-header__nav" aria-label="Main navigation">
+      <ul class="tripon-header__menu">
+        <li class="tripon-header__item tripon-header__item--dropdown" data-tripon-dest-picker>
+          <button type="button" class="tripon-header__link tripon-header__link--trigger" id="triponDestPickerTrigger" aria-expanded="false" aria-haspopup="true" aria-label="Selected destination, Bali">
+            <span id="triponDestPickerLabel">Bali</span>
+            <i class="fa-solid fa-chevron-down tripon-header__arrow" aria-hidden="true"></i>
+          </button>
+          <div class="tripon-header__flyout" hidden>
+            <div class="tripon-mega-single">
+              <h3 class="tripon-mega-single__title">Popular Destinations</h3>
+              <ul class="tripon-mega-single__list">
+                <li>
+                  <a href="__TRIPON_REL__locations/bali/" class="tripon-mega-single__row" data-tripon-dest-label="Bali">
+                    <img src="__TRIPON_REL__assets/images/location.png" alt="" width="48" height="48" loading="lazy" />
+                    <span class="tripon-mega-single__text">
+                      <strong>Bali</strong>
+                      <small>Indonesia · Island of Gods</small>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="__TRIPON_REL__locations/#thailand" class="tripon-mega-single__row" data-tripon-dest-label="Thailand">
+                    <img src="__TRIPON_REL__assets/images/travel.png" alt="" width="48" height="48" loading="lazy" />
+                    <span class="tripon-mega-single__text">
+                      <strong>Thailand</strong>
+                      <small>Temples, beaches &amp; street food</small>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="__TRIPON_REL__locations/#maldives" class="tripon-mega-single__row" data-tripon-dest-label="Maldives">
+                    <img src="__TRIPON_REL__assets/images/location5.png" alt="" width="48" height="48" loading="lazy" />
+                    <span class="tripon-mega-single__text">
+                      <strong>Maldives</strong>
+                      <small>Overwater villas &amp; reefs</small>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="__TRIPON_REL__locations/#dubai" class="tripon-mega-single__row" data-tripon-dest-label="Dubai">
+                    <img src="__TRIPON_REL__assets/images/luxury.png" alt="" width="48" height="48" loading="lazy" />
+                    <span class="tripon-mega-single__text">
+                      <strong>Dubai</strong>
+                      <small>Skyline &amp; desert escapes</small>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="__TRIPON_REL__locations/" class="tripon-mega-single__row" data-tripon-dest-label="Indonesia">
+                    <img src="__TRIPON_REL__assets/images/location1.png" alt="" width="48" height="48" loading="lazy" />
+                    <span class="tripon-mega-single__text">
+                      <strong>Indonesia</strong>
+                      <small>Archipelago &amp; culture</small>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="__TRIPON_REL__locations/#singapore" class="tripon-mega-single__row" data-tripon-dest-label="Singapore">
+                    <img src="__TRIPON_REL__assets/images/travel1.png" alt="" width="48" height="48" loading="lazy" />
+                    <span class="tripon-mega-single__text">
+                      <strong>Singapore</strong>
+                      <small>City breaks &amp; gardens</small>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </li>
+        <li class="tripon-header__item">
+          <a href="__TRIPON_REL__index.html" class="tripon-header__link" data-nav-key="home"><span>Home</span></a>
+        </li>
+        <li class="tripon-header__item">
+          <a href="__TRIPON_REL__locations/" class="tripon-header__link" data-nav-key="locations"><span>Locations</span></a>
+        </li>
+        <li class="tripon-header__item tripon-header__item--dropdown">
+          <button type="button" class="tripon-header__link tripon-header__link--trigger" data-nav-key="packages" aria-expanded="false" aria-haspopup="true">
+            <span>Packages</span>
+            <i class="fa-solid fa-chevron-down tripon-header__arrow" aria-hidden="true"></i>
+          </button>
+          <div class="tripon-header__flyout" hidden>
+            <div class="tripon-mega-single">
+              <h3 class="tripon-mega-single__title">Popular Packages</h3>
+              <ul class="tripon-mega-single__list">
+                <li>
+                  <a href="__TRIPON_REL__packages/#family" class="tripon-mega-single__row" data-tripon-package-type="family">
+                    <img src="__TRIPON_REL__assets/images/friends1.png" alt="" width="48" height="48" loading="lazy" />
+                    <span class="tripon-mega-single__text">
+                      <strong>Family</strong>
+                      <small>Family-friendly getaways</small>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="__TRIPON_REL__packages/#couple" class="tripon-mega-single__row" data-tripon-package-type="couple">
+                    <img src="__TRIPON_REL__assets/images/couple.png" alt="" width="48" height="48" loading="lazy" />
+                    <span class="tripon-mega-single__text">
+                      <strong>Couple</strong>
+                      <small>Romantic escapes &amp; honeymoons</small>
+                    </span>
+                  </a>
+                </li>
+                <li>
+                  <a href="__TRIPON_REL__packages/#friends" class="tripon-mega-single__row" data-tripon-package-type="friends">
+                    <img src="__TRIPON_REL__assets/images/friends.png" alt="" width="48" height="48" loading="lazy" />
+                    <span class="tripon-mega-single__text">
+                      <strong>Friends</strong>
+                      <small>Adventure with your crew</small>
+                    </span>
+                  </a>
+                </li>
+              </ul>
+              <a href="__TRIPON_REL__packages/" class="tripon-mega-single__footer-link">View all packages <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+          </div>
+        </li>
+        <li class="tripon-header__item tripon-header__item--dropdown">
+          <button type="button" class="tripon-header__link tripon-header__link--trigger" data-nav-key="company" aria-expanded="false" aria-haspopup="true">
+            <span>Company</span>
+            <i class="fa-solid fa-chevron-down tripon-header__arrow" aria-hidden="true"></i>
+          </button>
+          <div class="tripon-header__panel" hidden>
+            <a href="__TRIPON_REL__company/contact-us.html" data-nav-key="contact">Contact Us</a>
+            <a href="__TRIPON_REL__company/people-reviews.html" data-nav-key="people-reviews">People Reviews</a>
+          </div>
+        </li>
       </ul>
-    </div>
-  </div>
-  <div class="right-actions">
-    <nav class="main-nav">
-      <a href="__TRIPON_REL__people-reviews.html" data-nav-key="people-reviews">People Reviews</a>
-      <a href="__TRIPON_REL__packages.html" data-nav-key="packages">Packages</a>
     </nav>
-    <a class="contact-btn" href="__TRIPON_REL__contact-us.html" data-nav-key="contact">Contact Us</a>
-  </div>
-  <button class="home-mobile-menu-toggle" id="homeMobileMenuToggle" type="button" aria-label="Open menu"
-    aria-expanded="false" aria-controls="homeMobileDrawer">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-</header>
-<div class="home-mobile-menu-overlay" id="homeMobileMenuOverlay" aria-hidden="true">
-  <aside class="home-mobile-drawer" id="homeMobileDrawer" aria-label="Mobile navigation">
-    <div class="home-mobile-drawer-header">
-      <img src="__TRIPON_REL__assets/images/vector.png" alt="Tripon logo" class="home-mobile-drawer-logo" />
-      <button class="home-mobile-drawer-close" id="homeMobileDrawerClose" type="button"
-        aria-label="Close menu">✕</button>
-    </div>
-    <div class="home-mobile-drawer-location">
-      <button class="home-mobile-location-toggle" id="homeMobileLocationToggle" type="button" aria-expanded="true"
-        aria-controls="homeMobileLocationList">
-        <span>BALI</span>
-        <span class="home-mobile-location-icon" aria-hidden="true">−</span>
+
+    <div class="tripon-header__actions">
+      <button type="button" class="tripon-header__cta" id="triponPlanMyTripBtn" data-tripon-open-booking
+        aria-label="Plan my trip — open booking form">
+        <span>Plan My Trip</span>
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
       </button>
-      <div class="home-mobile-location-list active" id="homeMobileLocationList">
-        <a href="__TRIPON_REL__index.html">BALI</a>
-        <a href="#">ANDAMAN</a>
-        <span>More Adding Soon...</span>
-      </div>
+      <button
+        type="button"
+        class="tripon-header__burger home-mobile-menu-toggle"
+        id="homeMobileMenuToggle"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="homeMobileDrawer">
+        <span></span><span></span><span></span>
+      </button>
     </div>
-    <nav class="home-mobile-drawer-nav">
-      <a href="__TRIPON_REL__people-reviews.html" data-nav-key="people-reviews">People Reviews</a>
-      <a href="__TRIPON_REL__packages.html" data-nav-key="packages">Packages</a>
-      <a href="__TRIPON_REL__contact-us.html" data-nav-key="contact">Contact Us</a>
-    </nav>
-    <div class="home-mobile-drawer-contact">
-      <p>For More Inquiry</p>
-      <a href="tel:+917685487647">+91 7685487647</a>
-    </div>
-  </aside>
-</div>
+  </div>
+</header>

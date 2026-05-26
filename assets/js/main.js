@@ -1,4 +1,2353 @@
+/** Scrambled decode reveal for hero headlines (respects prefers-reduced-motion). */
+const triponScrambleHeroHeadline = (heading) => {
+  if (!heading || heading.dataset.scrambleReady === "1") {
+    return;
+  }
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const originalHtml = heading.innerHTML;
+  const parseSegments = (root) => {
+    const segments = [];
+    const walk = (node) => {
+      node.childNodes.forEach((child) => {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const value = child.textContent || "";
+          if (value) {
+            segments.push({ type: "text", value });
+          }
+        } else if (child.nodeName === "BR") {
+          segments.push({ type: "br" });
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          walk(child);
+        }
+      });
+    };
+    if (root.nodeType === Node.DOCUMENT_FRAGMENT_NODE || root.nodeType === Node.ELEMENT_NODE) {
+      walk(root);
+    } else {
+      const tmp = document.createElement("div");
+      tmp.innerHTML = typeof root === "string" ? root : root.innerHTML;
+      walk(tmp);
+    }
+    return segments;
+  };
+
+  heading.dataset.scrambleReady = "1";
+  if (reduceMotion) {
+    return;
+  }
+
+  const segments = parseSegments(heading);
+  const pool = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!?";
+  const letters = [];
+  segments.forEach((seg) => {
+    if (seg.type !== "text") {
+      return;
+    }
+    for (let i = 0; i < seg.value.length; i += 1) {
+      letters.push({ ch: seg.value[i], resolved: seg.value[i] === " " });
+    }
+  });
+
+  const scrambleCount = letters.filter((l) => !l.resolved).length;
+  if (!scrambleCount) {
+    return;
+  }
+
+  const plainLabel = heading.textContent.replace(/\s+/g, " ").trim();
+  if (plainLabel) {
+    heading.setAttribute("aria-label", plainLabel);
+  }
+
+  let resolvedCount = 0;
+  const durationMs = 1500;
+  let startTime = 0;
+
+  const randomGlyph = () => pool[Math.floor(Math.random() * pool.length)];
+
+  const render = () => {
+    let letterIndex = 0;
+    heading.innerHTML = segments
+      .map((seg) => {
+        if (seg.type === "br") {
+          return "<br />";
+        }
+        let out = "";
+        for (let i = 0; i < seg.value.length; i += 1) {
+          const letter = letters[letterIndex++];
+          out += letter.resolved ? letter.ch : randomGlyph();
+        }
+        return out;
+      })
+      .join("");
+  };
+
+  heading.classList.add("is-scrambling");
+
+  const tick = (now) => {
+    if (!startTime) {
+      startTime = now;
+    }
+    const progress = Math.min(1, (now - startTime) / durationMs);
+    const targetResolved = Math.floor(scrambleCount * progress);
+    while (resolvedCount < targetResolved) {
+      const next = letters.find((l) => !l.resolved);
+      if (!next) {
+        break;
+      }
+      next.resolved = true;
+      resolvedCount += 1;
+    }
+    render();
+    if (progress < 1) {
+      window.requestAnimationFrame(tick);
+    } else {
+      letters.forEach((l) => {
+        l.resolved = true;
+      });
+      heading.innerHTML = originalHtml;
+      heading.classList.remove("is-scrambling");
+    }
+  };
+
+  render();
+  window.requestAnimationFrame(tick);
+};
+
+/** Split text nodes into per-character spans for 2D hero animations. */
+const triponWrapHeroTextChars = (root, className = "hero-t-char") => {
+  if (!root || root.dataset.heroCharsWrapped === "1") {
+    return;
+  }
+
+  const walk = (node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const text = node.textContent || "";
+      if (!text) {
+        return;
+      }
+      const frag = document.createDocumentFragment();
+      let charIndex = 0;
+      for (const ch of text) {
+        const span = document.createElement("span");
+        span.className = className;
+        span.style.setProperty("--hero-t-i", String(charIndex));
+        span.textContent = ch === " " ? "\u00a0" : ch;
+        frag.appendChild(span);
+        charIndex += 1;
+      }
+      node.parentNode?.replaceChild(frag, node);
+      return;
+    }
+    if (node.nodeType === Node.ELEMENT_NODE && node.nodeName !== "BR") {
+      Array.from(node.childNodes).forEach(walk);
+    }
+  };
+
+  walk(root);
+  root.dataset.heroCharsWrapped = "1";
+};
+
+const triponWrapHeroSubtextWords = (el) => {
+  if (!el || el.dataset.heroWordsWrapped === "1") {
+    return;
+  }
+  const text = (el.textContent || "").trim();
+  el.textContent = "";
+  text.split(/\s+/).forEach((word, index) => {
+    const span = document.createElement("span");
+    span.className = "hero-t-word";
+    span.style.setProperty("--hero-t-i", String(index));
+    span.textContent = word;
+    el.appendChild(span);
+  });
+  el.dataset.heroWordsWrapped = "1";
+};
+
+/** 2D staggered entrance for hero copy (seek, headline lines, subtext, CTAs). */
+const triponInitHeroText2D = (heroSection) => {
+  const content = heroSection?.querySelector(".hero-content");
+  if (!content || content.dataset.heroText2dReady === "1") {
+    return;
+  }
+  content.dataset.heroText2dReady = "1";
+  content.classList.add("hero-content--text-2d");
+
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) {
+    content.classList.add("is-text-ready");
+    return;
+  }
+
+  const seek = content.querySelector(".seek");
+  const subtext = content.querySelector(".hero-subtext");
+  const lines = content.querySelectorAll(".hero-t-line__inner");
+
+  if (seek) {
+    triponWrapHeroTextChars(seek);
+  }
+  lines.forEach((line) => triponWrapHeroTextChars(line));
+  if (subtext) {
+    triponWrapHeroSubtextWords(subtext);
+  }
+
+  window.requestAnimationFrame(() => {
+    content.classList.add("is-text-ready");
+  });
+
+  const destLine = content.querySelector("[data-hero-dest-line] .hero-t-line__inner");
+  if (destLine) {
+    window.setTimeout(() => {
+      if (!destLine.classList.contains("is-scrambling")) {
+        triponScrambleHeroHeadline(destLine);
+      }
+    }, 1200);
+  }
+};
+
+/** Re-animate destination line in hero headline (2D flip). */
+const triponAnimateHeroDestinationLine = (destination) => {
+  const line = document.querySelector("[data-hero-dest-line] .hero-t-line__inner");
+  const lineWrap = document.querySelector("[data-hero-dest-line]");
+  if (!line || !destination) {
+    return;
+  }
+
+  const label = `${destination} !`;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (reduceMotion) {
+    line.textContent = label;
+    return;
+  }
+
+  lineWrap?.classList.remove("is-dest-flip");
+  line.dataset.heroCharsWrapped = "0";
+  line.textContent = label;
+  triponWrapHeroTextChars(line);
+  void lineWrap?.offsetWidth;
+  lineWrap?.classList.add("is-dest-flip");
+};
+
+window.triponInitHeroText2D = triponInitHeroText2D;
+window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
+
+
+
+/* ========== Homepage section scripts (trip-days, ambient, reasons GSAP) ========== */
+/**
+ * Trip-days section — interactive ambient bg + scroll card entrance.
+ */
+(function (g) {
+  "use strict";
+
+  function triponInitTripDaysAmbient(section) {
+    const ambient = section.querySelector(".trip-days__ambient");
+    const canvas = section.querySelector(".trip-days__canvas");
+    const ripple = section.querySelector(".trip-days__ripple");
+    const controller = { start() {}, stop() {} };
+    if (!ambient) {
+      return controller;
+    }
+
+    const reduceMotion = g.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const updatePointer = (clientX, clientY) => {
+      const rect = ambient.getBoundingClientRect();
+      if (!rect.width || !rect.height) {
+        return;
+      }
+      const x = ((clientX - rect.left) / rect.width) * 100;
+      const y = ((clientY - rect.top) / rect.height) * 100;
+      section.style.setProperty("--td-mx", `${x}%`);
+      section.style.setProperty("--td-my", `${y}%`);
+    };
+
+    section.addEventListener(
+      "pointermove",
+      (event) => {
+        if (!section.classList.contains("is-visible")) {
+          return;
+        }
+        updatePointer(event.clientX, event.clientY);
+      },
+      { passive: true }
+    );
+
+    section.addEventListener("pointerleave", () => {
+      section.style.setProperty("--td-mx", "55%");
+      section.style.setProperty("--td-my", "48%");
+    });
+
+    const spawnRipple = (x, y) => {
+      if (!ripple || reduceMotion) {
+        return;
+      }
+      const rect = ambient.getBoundingClientRect();
+      ripple.hidden = false;
+      ripple.style.setProperty("--td-ripple-x", `${x - rect.left}px`);
+      ripple.style.setProperty("--td-ripple-y", `${y - rect.top}px`);
+      ripple.style.animation = "none";
+      void ripple.offsetWidth;
+      ripple.style.animation = "";
+      g.setTimeout(() => {
+        ripple.hidden = true;
+      }, 900);
+    };
+
+    section.querySelectorAll(".day-card").forEach((card) => {
+      card.addEventListener("mouseenter", (event) => spawnRipple(event.clientX, event.clientY));
+      card.addEventListener("focus", () => {
+        const rect = card.getBoundingClientRect();
+        spawnRipple(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      });
+    });
+
+    if (!canvas || reduceMotion) {
+      return controller;
+    }
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return;
+    }
+
+    const dots = [];
+    const dotCount = 36;
+    let width = 0;
+    let height = 0;
+    let mouseX = 0.5;
+    let mouseY = 0.5;
+    let rafId = 0;
+    let running = false;
+
+    const resize = () => {
+      const rect = ambient.getBoundingClientRect();
+      const dpr = Math.min(g.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    for (let i = 0; i < dotCount; i += 1) {
+      dots.push({
+        x: Math.random(),
+        y: Math.random(),
+        vx: (Math.random() - 0.5) * 0.0004,
+        vy: (Math.random() - 0.5) * 0.0004,
+        r: 1 + Math.random() * 2.2,
+      });
+    }
+
+    section.addEventListener(
+      "pointermove",
+      (event) => {
+        const rect = ambient.getBoundingClientRect();
+        mouseX = (event.clientX - rect.left) / rect.width;
+        mouseY = (event.clientY - rect.top) / rect.height;
+      },
+      { passive: true }
+    );
+
+    const tick = () => {
+      if (!running) {
+        rafId = 0;
+        return;
+      }
+      ctx.clearRect(0, 0, width, height);
+      dots.forEach((dot) => {
+        const dx = mouseX - dot.x;
+        const dy = mouseY - dot.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const pull = Math.max(0, 1 - dist * 2.2) * 0.0008;
+        dot.vx += dx * pull;
+        dot.vy += dy * pull;
+        dot.vx *= 0.98;
+        dot.vy *= 0.98;
+        dot.x += dot.vx;
+        dot.y += dot.vy;
+        if (dot.x < 0 || dot.x > 1) {
+          dot.vx *= -1;
+        }
+        if (dot.y < 0 || dot.y > 1) {
+          dot.vy *= -1;
+        }
+
+        const px = dot.x * width;
+        const py = dot.y * height;
+        const alpha = 0.2 + Math.max(0, 1 - dist * 1.5) * 0.5;
+        ctx.beginPath();
+        ctx.arc(px, py, dot.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(13, 122, 79, ${alpha})`;
+        ctx.fill();
+
+        if (dist < 0.22) {
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(mouseX * width, mouseY * height);
+          ctx.strokeStyle = `rgba(13, 122, 79, ${0.08 * (1 - dist / 0.22)})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      });
+      rafId = g.requestAnimationFrame(tick);
+    };
+
+    controller.start = () => {
+      if (running) {
+        return;
+      }
+      running = true;
+      resize();
+      if (!rafId) {
+        tick();
+      }
+    };
+
+    controller.stop = () => {
+      running = false;
+      if (rafId) {
+        g.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      ctx.clearRect(0, 0, width, height);
+    };
+
+    g.addEventListener("resize", resize, { passive: true });
+
+    return controller;
+  }
+
+  function triponInitTripDaysMotion() {
+    const section = document.querySelector("[data-tripon-trip-days], .trip-days--motion");
+    if (!section || section.dataset.tripDaysMotionReady === "1") {
+      return;
+    }
+    section.dataset.tripDaysMotionReady = "1";
+    section.classList.add("trip-days--motion");
+    section.style.setProperty("--td-mx", "55%");
+    section.style.setProperty("--td-my", "48%");
+
+    const reduceMotion = g.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const ambientController = triponInitTripDaysAmbient(section);
+    let inView = false;
+
+    const showSection = () => {
+      if (inView) {
+        return;
+      }
+      inView = true;
+      section.classList.remove("is-visible");
+      void section.offsetWidth;
+      section.classList.add("is-visible");
+      ambientController.start();
+      section.dispatchEvent(
+        new CustomEvent("tripon:trip-days-visibility", { detail: { visible: true } })
+      );
+    };
+
+    const hideSection = () => {
+      if (!inView) {
+        return;
+      }
+      inView = false;
+      section.classList.remove("is-visible");
+      ambientController.stop();
+      section.querySelectorAll(".day-card").forEach((card) => {
+        card.style.removeProperty("transform");
+      });
+      section.dispatchEvent(
+        new CustomEvent("tripon:trip-days-visibility", { detail: { visible: false } })
+      );
+    };
+
+    if (reduceMotion) {
+      section.classList.add("is-visible");
+      return;
+    }
+
+    if (!("IntersectionObserver" in g)) {
+      showSection();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const ratio = entry.intersectionRatio;
+          if (entry.isIntersecting && ratio >= 0.18) {
+            showSection();
+          } else if (!entry.isIntersecting || ratio < 0.08) {
+            hideSection();
+          }
+        });
+      },
+      { threshold: [0, 0.08, 0.18, 0.35, 0.55] }
+    );
+
+    observer.observe(section);
+
+    const cards = section.querySelectorAll(".day-card");
+    cards.forEach((card) => {
+      card.addEventListener(
+        "mousemove",
+        (event) => {
+          if (!section.classList.contains("is-visible")) {
+            return;
+          }
+          const rect = card.getBoundingClientRect();
+          const px = (event.clientX - rect.left) / rect.width - 0.5;
+          const py = (event.clientY - rect.top) / rect.height - 0.5;
+          card.style.transform = `translate3d(0, -6px, 20px) rotateX(${py * -10}deg) rotateY(${px * 14}deg) scale(1.04)`;
+        },
+        { passive: true }
+      );
+      card.addEventListener("mouseleave", () => {
+        card.style.removeProperty("transform");
+      });
+    });
+  }
+
+  g.triponInitTripDaysMotion = triponInitTripDaysMotion;
+})(window);
+
+/**
+ * Premium homepage ambient — aurora, particles, sparkles, routes, card polish.
+ */
+(function (g) {
+  "use strict";
+
+  const SKIP_CLASSES = ["hero", "trip-days--motion", "video-banner"];
+  const SPARKLE_COUNT = 14;
+  let activeCanvasSection = null;
+  let activeController = null;
+
+  const ROUTE_SETS = [
+    {
+      paths: [
+        "M20,120 C120,40 200,160 320,80 S480,140 500,60",
+        "M40,160 C160,100 280,180 400,100 S500,30 510,90",
+      ],
+      nodes: [
+        [120, 72, false],
+        [320, 88, true],
+        [480, 58, false],
+      ],
+    },
+    {
+      paths: [
+        "M10,90 C90,30 180,140 290,60 S420,120 510,40",
+        "M30,170 C140,110 250,190 360,95 S480,20 500,110",
+      ],
+      nodes: [
+        [90, 48, false],
+        [290, 68, true],
+        [420, 98, false],
+      ],
+    },
+    {
+      paths: [
+        "M15,130 C110,50 220,170 330,85 S460,150 505,70",
+        "M50,60 C150,120 260,40 370,110 S490,180 515,100",
+      ],
+      nodes: [
+        [110, 58, true],
+        [260, 118, false],
+        [460, 88, true],
+      ],
+    },
+  ];
+
+  function buildRoutesSvg(variant) {
+    const set = ROUTE_SETS[variant % ROUTE_SETS.length];
+    const paths = set.paths
+      .map(
+        (d, i) =>
+          `<path class="home-ambient__route${i ? " home-ambient__route--alt" : ""}" d="${d}" />`
+      )
+      .join("");
+    const nodes = set.nodes
+      .map(
+        ([cx, cy, alt]) =>
+          `<circle class="home-ambient__node${alt ? " home-ambient__node--alt" : ""}" cx="${cx}" cy="${cy}" r="4" />`
+      )
+      .join("");
+    return (
+      `<svg class="home-ambient__routes" viewBox="0 0 520 200" preserveAspectRatio="none" aria-hidden="true">` +
+      paths +
+      nodes +
+      "</svg>"
+    );
+  }
+
+  function buildSparkles(container) {
+    const wrap = document.createElement("div");
+    wrap.className = "home-ambient__sparkles";
+    for (let i = 0; i < SPARKLE_COUNT; i += 1) {
+      const sparkle = document.createElement("span");
+      sparkle.className = "home-ambient__sparkle";
+      sparkle.style.left = `${8 + Math.random() * 84}%`;
+      sparkle.style.top = `${6 + Math.random() * 88}%`;
+      sparkle.style.setProperty("--ha-sparkle-dur", `${2.2 + Math.random() * 2.8}s`);
+      sparkle.style.setProperty("--ha-sparkle-delay", `${Math.random() * 2.5}s`);
+      wrap.appendChild(sparkle);
+    }
+    container.appendChild(wrap);
+  }
+
+  function createParticleController(section, canvas) {
+    const controller = { start() {}, stop() {} };
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return controller;
+    }
+
+    const dots = [];
+    const dotCount = 28;
+    let width = 0;
+    let height = 0;
+    let mouseX = 0.55;
+    let mouseY = 0.48;
+    let rafId = 0;
+    let running = false;
+
+    for (let i = 0; i < dotCount; i += 1) {
+      dots.push({
+        x: Math.random(),
+        y: Math.random(),
+        vx: (Math.random() - 0.5) * 0.00035,
+        vy: (Math.random() - 0.5) * 0.00035,
+        r: 1 + Math.random() * 2,
+      });
+    }
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.min(g.devicePixelRatio || 1, 2);
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const tick = () => {
+      if (!running) {
+        rafId = 0;
+        return;
+      }
+      ctx.clearRect(0, 0, width, height);
+      dots.forEach((dot) => {
+        const dx = mouseX - dot.x;
+        const dy = mouseY - dot.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const pull = Math.max(0, 1 - dist * 2.4) * 0.0007;
+        dot.vx += dx * pull;
+        dot.vy += dy * pull;
+        dot.vx *= 0.985;
+        dot.vy *= 0.985;
+        dot.x += dot.vx;
+        dot.y += dot.vy;
+        if (dot.x < 0 || dot.x > 1) dot.vx *= -1;
+        if (dot.y < 0 || dot.y > 1) dot.vy *= -1;
+
+        const px = dot.x * width;
+        const py = dot.y * height;
+        const alpha = 0.18 + Math.max(0, 1 - dist * 1.6) * 0.45;
+        ctx.beginPath();
+        ctx.arc(px, py, dot.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(13, 122, 79, ${alpha})`;
+        ctx.fill();
+
+        if (dist < 0.2) {
+          ctx.beginPath();
+          ctx.moveTo(px, py);
+          ctx.lineTo(mouseX * width, mouseY * height);
+          ctx.strokeStyle = `rgba(56, 189, 248, ${0.07 * (1 - dist / 0.2)})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      });
+      rafId = g.requestAnimationFrame(tick);
+    };
+
+    controller.start = () => {
+      if (running) return;
+      running = true;
+      resize();
+      if (!rafId) tick();
+    };
+
+    controller.stop = () => {
+      running = false;
+      if (rafId) {
+        g.cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      ctx.clearRect(0, 0, width, height);
+    };
+
+    section.addEventListener(
+      "pointermove",
+      (event) => {
+        if (!section.classList.contains("is-ambient-visible")) return;
+        const rect = canvas.getBoundingClientRect();
+        if (!rect.width) return;
+        mouseX = (event.clientX - rect.left) / rect.width;
+        mouseY = (event.clientY - rect.top) / rect.height;
+      },
+      { passive: true }
+    );
+
+    g.addEventListener("resize", resize, { passive: true });
+    return controller;
+  }
+
+  function setActiveCanvas(section, controller) {
+    if (activeController && activeController !== controller) {
+      activeController.stop();
+    }
+    activeCanvasSection = section;
+    activeController = controller;
+    if (controller) {
+      controller.start();
+    }
+  }
+
+  function injectAmbient(section, variant, reduceMotion, isPageRoot) {
+    if (section.querySelector(":scope > .home-ambient")) {
+      return null;
+    }
+    if (isPageRoot) {
+      section.classList.add("home-screen--has-ambient");
+    } else {
+      section.classList.add("home-section--ambient");
+    }
+    section.dataset.homeAmbientVariant = String(variant % 3);
+
+    const ambient = document.createElement("div");
+    ambient.className = "home-ambient";
+    ambient.setAttribute("aria-hidden", "true");
+
+    /* Page-level ambient is CSS-only — canvas breaks wheel/touch scroll */
+    if (!isPageRoot && !reduceMotion) {
+      const canvas = document.createElement("canvas");
+      canvas.className = "home-ambient__canvas";
+      ambient.appendChild(canvas);
+    }
+
+    const aurora = document.createElement("div");
+    aurora.className = "home-ambient__aurora";
+    ambient.appendChild(aurora);
+
+    const grid = document.createElement("div");
+    grid.className = "home-ambient__grid";
+    ambient.appendChild(grid);
+
+    const mesh = document.createElement("div");
+    mesh.className = "home-ambient__mesh";
+    mesh.innerHTML =
+      '<span class="home-ambient__orb home-ambient__orb--1"></span>' +
+      '<span class="home-ambient__orb home-ambient__orb--2"></span>' +
+      '<span class="home-ambient__orb home-ambient__orb--3"></span>';
+    ambient.appendChild(mesh);
+
+    ambient.insertAdjacentHTML("beforeend", buildRoutesSvg(variant));
+
+    const spotlight = document.createElement("div");
+    spotlight.className = "home-ambient__spotlight";
+    ambient.appendChild(spotlight);
+
+    const bloom = document.createElement("div");
+    bloom.className = "home-ambient__bloom";
+    ambient.appendChild(bloom);
+
+    buildSparkles(ambient);
+    section.prepend(ambient);
+
+    const canvasEl = ambient.querySelector(".home-ambient__canvas");
+    return canvasEl ? createParticleController(section, canvasEl) : null;
+  }
+
+  function playEnterBloom(section) {
+    section.classList.remove("is-ambient-enter");
+    void section.offsetWidth;
+    section.classList.add("is-ambient-enter");
+  }
+
+  function bindPointer(section) {
+    if (section.classList.contains("home-screen--has-ambient")) {
+      return;
+    }
+
+    section.addEventListener(
+      "pointermove",
+      (event) => {
+        if (!section.classList.contains("is-ambient-visible")) return;
+        let x;
+        let y;
+        if (
+          section.classList.contains("home-screen--has-ambient") ||
+          section === document.body
+        ) {
+          x = (event.clientX / Math.max(window.innerWidth, 1)) * 100;
+          y = (event.clientY / Math.max(window.innerHeight, 1)) * 100;
+          if (section === document.body) {
+            const ambient = document.getElementById("triponSiteAmbient");
+            ambient?.style.setProperty("--tsa-mx", `${x}%`);
+            ambient?.style.setProperty("--tsa-my", `${y}%`);
+          }
+        } else {
+          const rect = section.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          x = ((event.clientX - rect.left) / rect.width) * 100;
+          y = ((event.clientY - rect.top) / rect.height) * 100;
+        }
+        section.style.setProperty("--ha-mx", `${x}%`);
+        section.style.setProperty("--ha-my", `${y}%`);
+      },
+      { passive: true }
+    );
+
+    section.addEventListener("pointerleave", () => {
+      if (section === document.body) {
+        const ambient = document.getElementById("triponSiteAmbient");
+        ambient?.style.setProperty("--tsa-mx", "50%");
+        ambient?.style.setProperty("--tsa-my", "42%");
+        return;
+      }
+      section.style.setProperty("--ha-mx", "58%");
+      section.style.setProperty("--ha-my", "46%");
+    });
+  }
+
+  function observeSection(section, reduceMotion, particleController) {
+    let wasVisible = false;
+
+    if (reduceMotion) {
+      section.classList.add("is-ambient-visible");
+      return;
+    }
+
+    if (!("IntersectionObserver" in g)) {
+      section.classList.add("is-ambient-visible");
+      if (particleController) setActiveCanvas(section, particleController);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const ratio = entry.intersectionRatio;
+          const visible = entry.isIntersecting && ratio >= 0.12;
+
+          if (visible) {
+            section.classList.add("is-ambient-visible");
+            if (!wasVisible) {
+              playEnterBloom(section);
+              wasVisible = true;
+            }
+            if (particleController && ratio >= 0.2) {
+              setActiveCanvas(section, particleController);
+            }
+          } else if (!entry.isIntersecting || ratio < 0.04) {
+            section.classList.remove("is-ambient-visible");
+            if (activeCanvasSection === section && particleController) {
+              particleController.stop();
+              if (activeCanvasSection === section) {
+                activeCanvasSection = null;
+                activeController = null;
+              }
+            }
+          }
+        });
+      },
+      { threshold: [0, 0.04, 0.12, 0.2, 0.35, 0.55] }
+    );
+
+    observer.observe(section);
+  }
+
+  function shouldSkip(section) {
+    return SKIP_CLASSES.some((cls) => section.classList.contains(cls));
+  }
+
+  function triponClearSectionAmbients(root) {
+    root.querySelectorAll(":scope > section.home-section--ambient").forEach((section) => {
+      section.querySelector(".home-ambient")?.remove();
+      section.classList.remove(
+        "home-section--ambient",
+        "is-ambient-visible",
+        "is-ambient-enter"
+      );
+      section.style.removeProperty("--ha-mx");
+      section.style.removeProperty("--ha-my");
+    });
+  }
+
+  function triponInitHomeAmbient() {
+    const root = document.querySelector(".home-screen, #homeScreen");
+    if (!root || root.dataset.homeAmbientReady === "1") {
+      return;
+    }
+    root.dataset.homeAmbientReady = "1";
+
+    triponClearSectionAmbients(root);
+
+    const reduceMotion = g.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* Homepage keeps its own fixed home-ambient layer (aurora, grid, orbs).
+       Global #triponSiteAmbient sits behind .page and is not visible on home. */
+    if (!root.querySelector(":scope > .home-ambient")) {
+      injectAmbient(root, 0, reduceMotion, true);
+    }
+    bindPointer(root);
+    if (document.getElementById("triponSiteAmbient")) {
+      bindPointer(document.body);
+    }
+    root.classList.add("home-screen--has-ambient", "is-ambient-visible");
+  }
+
+  g.triponInitHomeAmbient = triponInitHomeAmbient;
+})(window);
+
+/**
+ * Premium GSAP + ScrollTrigger for the Reasons section.
+ */
+(function (g) {
+  "use strict";
+
+  const EASE = "power3.out";
+
+  function splitTextNodesToChars(container, charClass) {
+    const chars = [];
+    const nodes = [...container.childNodes];
+
+    const appendChar = (parent, char) => {
+      const span = document.createElement("span");
+      span.className = charClass;
+      span.textContent = char === " " ? "\u00a0" : char;
+      parent.appendChild(span);
+      chars.push(span);
+    };
+
+    const processNode = (parent, node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        [...(node.textContent || "")].forEach((char) => appendChar(parent, char));
+        return;
+      }
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const el = document.createElement(node.tagName.toLowerCase());
+        [...node.attributes].forEach((attr) => el.setAttribute(attr.name, attr.value));
+        [...node.childNodes].forEach((child) => processNode(el, child));
+        parent.appendChild(el);
+      }
+    };
+
+    container.textContent = "";
+    nodes.forEach((node) => processNode(container, node));
+    return chars;
+  }
+
+  function splitWords(el, wordClass) {
+    const text = (el.textContent || "").trim();
+    el.textContent = "";
+    const words = text.split(/\s+/).filter(Boolean);
+    words.forEach((word, index) => {
+      const span = document.createElement("span");
+      span.className = wordClass;
+      span.textContent = word;
+      el.appendChild(span);
+      if (index < words.length - 1) {
+        el.appendChild(document.createTextNode(" "));
+      }
+    });
+    return el.querySelectorAll(`.${wordClass}`);
+  }
+
+  function rebuildArticleTitle(section, title) {
+    const titleEl = section.querySelector(".reasons__article-title");
+    if (!titleEl) {
+      return null;
+    }
+    titleEl.textContent = "";
+    const lineWrap = document.createElement("span");
+    lineWrap.className = "reasons__article-line";
+    const inner = document.createElement("span");
+    inner.className = "reasons__article-line-inner";
+    inner.textContent = title;
+    lineWrap.appendChild(inner);
+    titleEl.appendChild(lineWrap);
+    return splitTextNodesToChars(inner, "reasons__char");
+  }
+
+  function rebuildArticleCopy(section, body) {
+    const copyEl = section.querySelector(".reasons__article-copy");
+    if (!copyEl) {
+      return [];
+    }
+    copyEl.textContent = body;
+    return splitWords(copyEl, "reasons__word");
+  }
+
+  function triponInitReasonsGsap() {
+    const section = document.querySelector("[data-tripon-reasons-gsap], .reasons--gsap");
+    if (!section || section.dataset.reasonsGsapReady === "1") {
+      return;
+    }
+
+    const gsap = g.gsap;
+    const ScrollTrigger = g.ScrollTrigger;
+    if (!gsap || !ScrollTrigger) {
+      return;
+    }
+
+    section.dataset.reasonsGsapReady = "1";
+    gsap.registerPlugin(ScrollTrigger);
+
+    const reduceMotion = g.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const media = section.querySelector(".reasons__media");
+    const mediaInner = section.querySelector(".reasons__media-inner");
+    const mediaGlow = section.querySelector(".reasons__media-glow");
+    const festivalsTag = section.querySelector(".reasons__topic.active");
+    const bulletTopics = section.querySelectorAll(".reasons__topic:not(.active)");
+    const ctaBtn = section.querySelector(".reasons__cta");
+    const articleTitleEl = section.querySelector(".reasons__article-title");
+    const articleCopyEl = section.querySelector(".reasons__article-copy");
+
+    const titleLineInners = section.querySelectorAll(".reasons__title-line-inner");
+    const titleChars = [];
+    titleLineInners.forEach((line) => {
+      titleChars.push(...splitTextNodesToChars(line, "reasons__char"));
+    });
+
+    let articleTitleChars = [];
+    const articleLineInner = section.querySelector(".reasons__article-line-inner");
+    if (articleLineInner) {
+      articleTitleChars = [...splitTextNodesToChars(articleLineInner, "reasons__char")];
+    }
+
+    let copyWords = [];
+    if (articleCopyEl) {
+      copyWords = [...splitWords(articleCopyEl, "reasons__word")];
+    }
+
+    let floatTween = null;
+    let mouseQuickX = null;
+    let mouseQuickY = null;
+
+    const setReduced = () => {
+      section.classList.add("reasons--revealed", "reasons--active");
+      gsap.set(
+        [
+          titleChars,
+          mediaInner,
+          festivalsTag,
+          articleTitleEl,
+          articleCopyEl,
+          bulletTopics,
+          ctaBtn,
+        ].flat().filter(Boolean),
+        { clearProps: "all" }
+      );
+    };
+
+    if (reduceMotion) {
+      setReduced();
+      return;
+    }
+
+    gsap.set(titleChars, { yPercent: 115, opacity: 0, filter: "blur(10px)" });
+    gsap.set(mediaInner, { scale: 1.2, opacity: 0.28, filter: "blur(6px)" });
+    if (festivalsTag) {
+      gsap.set(festivalsTag, { x: -44, opacity: 0 });
+    }
+    gsap.set(articleTitleChars, { yPercent: 110, opacity: 0, filter: "blur(8px)" });
+    gsap.set(copyWords, { y: 28, opacity: 0 });
+    gsap.set(bulletTopics, { x: 40, opacity: 0 });
+    gsap.set(ctaBtn, { y: 20, opacity: 0 });
+
+    const startFloat = () => {
+      if (!mediaInner || floatTween) {
+        return;
+      }
+      floatTween = gsap.to(mediaInner, {
+        y: "+=12",
+        duration: 3.8,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+      });
+    };
+
+    const bindMouseParallax = () => {
+      if (!mediaInner) {
+        return;
+      }
+      gsap.set(mediaInner, { transformPerspective: 900, transformStyle: "preserve-3d" });
+      mouseQuickX = gsap.quickTo(mediaInner, "rotateY", { duration: 0.65, ease: EASE });
+      mouseQuickY = gsap.quickTo(mediaInner, "rotateX", { duration: 0.65, ease: EASE });
+
+      section.addEventListener(
+        "pointermove",
+        (event) => {
+          if (!section.classList.contains("reasons--active")) {
+            return;
+          }
+          const rect = section.getBoundingClientRect();
+          const px = (event.clientX - rect.left) / rect.width - 0.5;
+          const py = (event.clientY - rect.top) / rect.height - 0.5;
+          mouseQuickX(px * 7);
+          mouseQuickY(py * -5);
+          if (mediaGlow) {
+            const mx = ((event.clientX - rect.left) / rect.width) * 100;
+            const my = ((event.clientY - rect.top) / rect.height) * 100;
+            section.style.setProperty("--reasons-mx", `${mx}%`);
+            section.style.setProperty("--reasons-my", `${my}%`);
+          }
+        },
+        { passive: true }
+      );
+
+      section.addEventListener("pointerleave", () => {
+        mouseQuickX(0);
+        mouseQuickY(0);
+        section.style.setProperty("--reasons-mx", "50%");
+        section.style.setProperty("--reasons-my", "50%");
+      });
+    };
+
+    const bindTopicHover = () => {
+      section.querySelectorAll(".reasons__topic:not(.active)").forEach((topic) => {
+        topic.addEventListener("mouseenter", () => {
+          gsap.to(topic, { x: 8, duration: 0.38, ease: EASE });
+        });
+        topic.addEventListener("mouseleave", () => {
+          gsap.to(topic, { x: 0, duration: 0.45, ease: EASE });
+        });
+      });
+    };
+
+    const entranceTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 75%",
+        once: true,
+        invalidateOnRefresh: true,
+      },
+      onComplete: () => {
+        section.classList.add("reasons--revealed");
+        startFloat();
+        ScrollTrigger.refresh();
+      },
+    });
+
+    entranceTl
+      .to(titleChars, {
+        yPercent: 0,
+        opacity: 1,
+        filter: "blur(0px)",
+        duration: 1.15,
+        stagger: 0.022,
+        ease: EASE,
+      })
+      .to(
+        mediaInner,
+        {
+          scale: 1,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 1.45,
+          ease: EASE,
+        },
+        0.12
+      )
+
+    if (festivalsTag) {
+      entranceTl.to(
+        festivalsTag,
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.95,
+          ease: EASE,
+        },
+        0.42
+      );
+    }
+
+    entranceTl
+      .to(
+        articleTitleChars,
+        {
+          yPercent: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 1,
+          stagger: 0.028,
+          ease: EASE,
+        },
+        0.58
+      )
+      .to(
+        copyWords,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.9,
+          stagger: 0.035,
+          ease: EASE,
+        },
+        0.78
+      )
+      .to(
+        bulletTopics,
+        {
+          x: 0,
+          opacity: 1,
+          duration: 0.88,
+          stagger: 0.12,
+          ease: EASE,
+        },
+        1.05
+      )
+      .to(
+        ctaBtn,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.75,
+          ease: EASE,
+        },
+        1.35
+      );
+
+    if (media) {
+      gsap.fromTo(
+        media,
+        { y: 24 },
+        {
+          y: -24,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 0.35,
+            invalidateOnRefresh: true,
+          },
+        }
+      );
+    }
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top 72%",
+      end: "bottom 28%",
+      onEnter: () => section.classList.add("reasons--active"),
+      onEnterBack: () => section.classList.add("reasons--active"),
+      onLeave: () => section.classList.remove("reasons--active"),
+      onLeaveBack: () => section.classList.remove("reasons--active"),
+    });
+
+    bindMouseParallax();
+    bindTopicHover();
+
+    g.triponReasonsGsapUpdateArticle = (title, body, opts = {}) => {
+      if (!articleTitleEl || !articleCopyEl) {
+        return;
+      }
+
+      const instant = opts.instant === true;
+      const targets = [articleTitleEl, articleCopyEl];
+
+      const applyContent = () => {
+        articleTitleChars = [...rebuildArticleTitle(section, title)];
+        copyWords = [...rebuildArticleCopy(section, body)];
+      };
+
+      const showArticle = () => {
+        gsap.set([articleTitleEl, articleCopyEl], { opacity: 1, y: 0, visibility: "visible" });
+        gsap.set(articleTitleChars, { clearProps: "transform,filter" });
+        gsap.set(copyWords, { clearProps: "transform" });
+      };
+
+      if (instant || !section.classList.contains("reasons--revealed")) {
+        applyContent();
+        gsap.set(articleTitleChars, { opacity: 1, yPercent: 0, filter: "blur(0px)" });
+        gsap.set(copyWords, { opacity: 1, y: 0 });
+        showArticle();
+        return;
+      }
+
+      gsap.killTweensOf([...targets, ...articleTitleChars, ...copyWords]);
+
+      gsap
+        .timeline()
+        .to(targets, {
+          opacity: 0,
+          y: 14,
+          duration: 0.28,
+          ease: "power2.in",
+        })
+        .add(applyContent)
+        .add(showArticle)
+        .set(articleTitleChars, { yPercent: 105, opacity: 0, filter: "blur(6px)" })
+        .set(copyWords, { y: 18, opacity: 0 })
+        .to(articleTitleChars, {
+          yPercent: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 0.72,
+          stagger: 0.02,
+          ease: EASE,
+        })
+        .to(
+          copyWords,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.65,
+            stagger: 0.025,
+            ease: EASE,
+          },
+          "-=0.45"
+        )
+        .add(showArticle);
+    };
+
+    g.addEventListener("load", () => ScrollTrigger.refresh());
+  }
+
+  g.triponInitReasonsGsap = triponInitReasonsGsap;
+})(window);
+
+/**
+ * Premium GSAP + ScrollTrigger for Family Tour hero section.
+ */
+(function (g) {
+  "use strict";
+
+  const EASE = "power3.out";
+
+  function initFamilyTourParticles(canvas, reduceMotion) {
+    if (!canvas) {
+      return null;
+    }
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return null;
+    }
+
+    const resize = () => {
+      const rect = canvas.parentElement?.getBoundingClientRect();
+      if (!rect) {
+        return;
+      }
+      const dpr = Math.min(g.devicePixelRatio || 1, 2);
+      canvas.width = Math.floor(rect.width * dpr);
+      canvas.height = Math.floor(rect.height * dpr);
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    resize();
+    const count = reduceMotion ? 0 : 48;
+    const dots = Array.from({ length: count }, () => ({
+      x: Math.random() * (canvas.width / (g.devicePixelRatio || 1)),
+      y: Math.random() * (canvas.height / (g.devicePixelRatio || 1)),
+      r: 0.6 + Math.random() * 1.8,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.25,
+      a: 0.15 + Math.random() * 0.45,
+    }));
+
+    let raf = 0;
+    const draw = () => {
+      const w = canvas.width / Math.min(g.devicePixelRatio || 1, 2);
+      const h = canvas.height / Math.min(g.devicePixelRatio || 1, 2);
+      ctx.clearRect(0, 0, w, h);
+      dots.forEach((d) => {
+        d.x += d.vx;
+        d.y += d.vy;
+        if (d.x < 0 || d.x > w) d.vx *= -1;
+        if (d.y < 0 || d.y > h) d.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(110, 231, 183, ${d.a})`;
+        ctx.fill();
+      });
+      raf = g.requestAnimationFrame(draw);
+    };
+
+    if (count) {
+      draw();
+    }
+
+    const onResize = () => resize();
+    g.addEventListener("resize", onResize, { passive: true });
+    return () => {
+      g.cancelAnimationFrame(raf);
+      g.removeEventListener("resize", onResize);
+    };
+  }
+
+  function getFamilyTourBentoEnterFrom(direction) {
+    const offset = 80;
+    switch (direction) {
+      case "top":
+        return { opacity: 0, x: 0, y: -offset, scale: 1 };
+      case "bottom":
+        return { opacity: 0, x: 0, y: offset, scale: 1 };
+      case "left":
+        return { opacity: 0, x: -offset, y: 0, scale: 1 };
+      case "right":
+        return { opacity: 0, x: offset, y: 0, scale: 1 };
+      case "center":
+        return { opacity: 0, x: 0, y: 0, scale: 1.32 };
+      default:
+        return { opacity: 0, x: 0, y: 40, scale: 0.96 };
+    }
+  }
+
+  function triponInitFamilyTourGsap() {
+    const section = document.querySelector("[data-tripon-family-tour-gsap]");
+    if (!section || section.dataset.familyTourGsapReady === "1") {
+      return;
+    }
+
+    const gsap = g.gsap;
+    const ScrollTrigger = g.ScrollTrigger;
+    const MotionPathPlugin = g.MotionPathPlugin;
+    if (!gsap || !ScrollTrigger) {
+      return;
+    }
+
+    section.dataset.familyTourGsapReady = "1";
+    gsap.registerPlugin(ScrollTrigger);
+    if (MotionPathPlugin) {
+      gsap.registerPlugin(MotionPathPlugin);
+    }
+
+    const reduceMotion = g.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const card = section.querySelector(".family-tour-card");
+    const copy = section.querySelector("[data-family-tour-parallax='copy']");
+    const gallery = section.querySelector("[data-family-tour-parallax='gallery']");
+    const revealItems = section.querySelectorAll("[data-ft-reveal]");
+    const bentoCells = section.querySelectorAll("[data-ft-bento]");
+    const magneticWrap = section.querySelector("[data-ft-magnetic]");
+    const magneticBtn = magneticWrap?.querySelector(".family-tour-btn");
+    const planeCraft = section.querySelector("[data-family-tour-plane]");
+    const planePath = section.querySelector("[data-family-tour-plane-path]");
+    const particlesCanvas = section.querySelector("[data-family-tour-particles]");
+
+    const cleanupParticles = initFamilyTourParticles(particlesCanvas, reduceMotion);
+
+    const bentoMedias = [...bentoCells].map((cell) => cell.querySelector(".bento-cell__media")).filter(Boolean);
+
+    if (reduceMotion) {
+      section.classList.add("is-revealed");
+      gsap.set(revealItems, { opacity: 1, y: 0, filter: "none" });
+      gsap.set(bentoCells, { opacity: 1 });
+      gsap.set(bentoMedias, { opacity: 1, x: 0, y: 0, scale: 1 });
+      return;
+    }
+
+    gsap.set(revealItems, { opacity: 0, y: 36, filter: "blur(6px)" });
+    gsap.set(bentoCells, { opacity: 1 });
+    bentoCells.forEach((cell) => {
+      const media = cell.querySelector(".bento-cell__media");
+      if (!media) {
+        return;
+      }
+      gsap.set(media, getFamilyTourBentoEnterFrom(cell.dataset.ftEnter || ""));
+    });
+    gsap.set(card, { opacity: 0.85, y: 40 });
+
+    const entranceTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 78%",
+        toggleActions: "play none none reverse",
+        onEnter: () => section.classList.add("is-revealed"),
+        onLeaveBack: () => section.classList.remove("is-revealed"),
+      },
+      defaults: { ease: EASE },
+    });
+
+    entranceTl
+      .to(card, { opacity: 1, y: 0, duration: 0.9 })
+      .to(
+        revealItems,
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.75, stagger: 0.12 },
+        "-=0.55"
+      );
+
+    bentoCells.forEach((cell, index) => {
+      const media = cell.querySelector(".bento-cell__media");
+      if (!media) {
+        return;
+      }
+      const direction = cell.dataset.ftEnter || "";
+      const isCenter = direction === "center";
+      entranceTl.to(
+        media,
+        {
+          opacity: 1,
+          x: 0,
+          y: 0,
+          scale: 1,
+          duration: isCenter ? 1.05 : 0.88,
+          ease: isCenter ? "power2.inOut" : "power2.out",
+        },
+        index === 0 ? "-=0.48" : "-=0.48"
+      );
+    });
+
+    entranceTl.call(() => {
+      bentoMedias.forEach((media) => {
+        const cell = media.closest("[data-ft-bento]");
+        const isCenter = cell?.dataset.ftEnter === "center";
+        gsap.set(media, { clearProps: isCenter ? "x,y,opacity" : "transform,opacity" });
+      });
+    });
+
+    if (planeCraft && planePath && MotionPathPlugin) {
+      gsap.set(planeCraft, { transformOrigin: "50% 50%" });
+      gsap.to(planeCraft, {
+        motionPath: {
+          path: planePath,
+          align: planePath,
+          alignOrigin: [0.5, 0.5],
+          autoRotate: true,
+        },
+        duration: 10,
+        repeat: -1,
+        ease: "none",
+      });
+      gsap.fromTo(
+        planePath,
+        { strokeDashoffset: 120 },
+        { strokeDashoffset: 0, duration: 3, repeat: -1, ease: "none" }
+      );
+    }
+
+    const parallax = { x: 0, y: 0 };
+    const quickCopyX = copy ? gsap.quickTo(copy, "x", { duration: 0.7, ease: EASE }) : null;
+    const quickCopyY = copy ? gsap.quickTo(copy, "y", { duration: 0.7, ease: EASE }) : null;
+    const quickGalleryX = gallery ? gsap.quickTo(gallery, "x", { duration: 0.85, ease: EASE }) : null;
+    const quickGalleryY = gallery ? gsap.quickTo(gallery, "y", { duration: 0.85, ease: EASE }) : null;
+
+    const onPointerMove = (event) => {
+      const rect = card?.getBoundingClientRect();
+      if (!rect) {
+        return;
+      }
+      const relX = (event.clientX - rect.left) / rect.width - 0.5;
+      const relY = (event.clientY - rect.top) / rect.height - 0.5;
+      parallax.x = relX;
+      parallax.y = relY;
+      if (quickCopyX) quickCopyX(relX * -14);
+      if (quickCopyY) quickCopyY(relY * -10);
+      if (quickGalleryX) quickGalleryX(relX * 18);
+      if (quickGalleryY) quickGalleryY(relY * 12);
+    };
+
+    card?.addEventListener("mousemove", onPointerMove, { passive: true });
+    card?.addEventListener("mouseleave", () => {
+      if (quickCopyX) quickCopyX(0);
+      if (quickCopyY) quickCopyY(0);
+      if (quickGalleryX) quickGalleryX(0);
+      if (quickGalleryY) quickGalleryY(0);
+    });
+
+    if (magneticWrap && magneticBtn) {
+      magneticWrap.addEventListener("mousemove", (event) => {
+        const rect = magneticWrap.getBoundingClientRect();
+        const x = event.clientX - rect.left - rect.width / 2;
+        const y = event.clientY - rect.top - rect.height / 2;
+        gsap.to(magneticBtn, {
+          x: x * 0.35,
+          y: y * 0.35,
+          duration: 0.35,
+          ease: EASE,
+        });
+        magneticWrap.classList.add("is-magnetic-active");
+      });
+      magneticWrap.addEventListener("mouseleave", () => {
+        gsap.to(magneticBtn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.5)" });
+        magneticWrap.classList.remove("is-magnetic-active");
+      });
+    }
+
+    g.addEventListener("load", () => ScrollTrigger.refresh());
+
+    section._familyTourCleanup = cleanupParticles;
+  }
+
+  g.triponInitFamilyTourGsap = triponInitFamilyTourGsap;
+})(window);
+
+/**
+ * Blogs 3D — cards fan in with perspective.
+ */
+(function (g) {
+  "use strict";
+
+  const EASE = "power3.out";
+
+  const BLOG_TILT = {
+    "wing-right": { rotateY: 20, z: -36, y: 8, scale: 1 },
+    center: { rotateY: 0, z: 72, y: -12, scale: 1.04 },
+    "wing-left": { rotateY: -16, z: -28, y: 6, scale: 1 },
+    "wing-far": { rotateY: -24, z: -48, y: 10, scale: 1 },
+  };
+
+  function getBlogEnterFrom(type) {
+    const vw = g.innerWidth || 1200;
+    const map = {
+      left: { x: -vw * 0.42, y: 0, z: -120, rotateY: 0 },
+      right: { x: vw * 0.42, y: 0, z: -120, rotateY: 0 },
+      top: { x: 0, y: -110, z: 80, rotateY: 0 },
+      bottom: { x: 0, y: 110, z: -80, rotateY: 0 },
+    };
+    return map[type] || map.left;
+  }
+
+  function getBlogTilt(tiltKey) {
+    const narrow = g.matchMedia("(max-width: 620px)").matches;
+    if (narrow) {
+      return { rotateY: 0, z: 0, y: 0, scale: 1 };
+    }
+    const compact = g.matchMedia("(max-width: 900px)").matches;
+    const base = BLOG_TILT[tiltKey] || BLOG_TILT.center;
+    if (!compact) {
+      return base;
+    }
+    return {
+      rotateY: base.rotateY * 0.65,
+      z: base.z * 0.55,
+      y: base.y * 0.6,
+      scale: base.scale > 1 ? 1.02 : 1,
+    };
+  }
+
+  function triponIsHomeBlogSection(section) {
+    return !!section?.closest(".home-screen, #homeScreen");
+  }
+
+  function triponEnsureInnerBlogSectionsVisible() {
+    document.querySelectorAll("[data-tripon-blogs-gsap]").forEach((section) => {
+      if (triponIsHomeBlogSection(section)) {
+        return;
+      }
+      section.classList.add("is-blogs-revealed");
+      section.querySelectorAll("[data-blog-card]").forEach((card) => {
+        card.style.visibility = "visible";
+        card.style.opacity = "1";
+      });
+    });
+  }
+
+  function triponRevealBlogSectionStatic(section) {
+    if (!section) {
+      return;
+    }
+    section.dataset.blogsGsapReady = "1";
+    section.classList.add("is-blogs-revealed");
+    section.querySelectorAll("[data-blog-card]").forEach((card) => {
+      card.style.visibility = "visible";
+      card.style.opacity = "1";
+    });
+  }
+
+  function triponInitOneBlogSection(section) {
+    if (!section || section.dataset.blogsGsapReady === "1") {
+      return;
+    }
+
+    const gsap = g.gsap;
+    const ScrollTrigger = g.ScrollTrigger;
+    if (!gsap || !ScrollTrigger) {
+      triponRevealBlogSectionStatic(section);
+      return;
+    }
+
+    section.dataset.blogsGsapReady = "1";
+    gsap.registerPlugin(ScrollTrigger);
+
+    const reduceMotion = g.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isHomeBlogs = triponIsHomeBlogSection(section);
+    const title = section.querySelector("[data-blog-title]");
+    const sub = section.querySelector("[data-blog-sub]");
+    const carousel = section.querySelector("[data-blog-carousel]");
+    const cards = [...section.querySelectorAll("[data-blog-card]")];
+    let played = false;
+
+    const applyTilt = (card, tilt) => {
+      gsap.set(card, {
+        rotateY: tilt.rotateY,
+        z: tilt.z,
+        y: tilt.y,
+        scale: tilt.scale,
+        transformPerspective: 1400,
+        transformOrigin: "50% 50%",
+      });
+    };
+
+    const resetSection = () => {
+      played = false;
+      section.classList.remove("is-blogs-revealed");
+      gsap.killTweensOf([title, sub, carousel, ...cards]);
+      if (title) {
+        gsap.set(title, { opacity: 1, y: 0 });
+      }
+      if (sub) {
+        gsap.set(sub, { opacity: 1, y: 0 });
+      }
+      if (carousel) {
+        gsap.set(carousel, { transformStyle: "preserve-3d" });
+      }
+      cards.forEach((card) => {
+        const from = getBlogEnterFrom(card.dataset.blogEnter || "left");
+        gsap.set(card, {
+          opacity: 0,
+          x: from.x,
+          y: from.y,
+          z: from.z,
+          rotateY: from.rotateY,
+          scale: 0.88,
+          visibility: "hidden",
+          transformPerspective: 1400,
+          transformOrigin: "50% 50%",
+        });
+      });
+    };
+
+    const showAll = () => {
+      section.classList.add("is-blogs-revealed");
+      const headEls = [title, sub].filter(Boolean);
+      if (headEls.length) {
+        gsap.set(headEls, { opacity: 1, clearProps: "y" });
+      }
+      cards.forEach((card) => {
+        gsap.set(card, {
+          opacity: 1,
+          x: 0,
+          visibility: "visible",
+          transformPerspective: 1400,
+          transformOrigin: "50% 50%",
+        });
+        const tilt = getBlogTilt(card.dataset.blogTilt || "center");
+        applyTilt(card, tilt);
+      });
+    };
+
+    if (reduceMotion || !isHomeBlogs) {
+      try {
+        if (gsap) {
+          showAll();
+        } else {
+          triponRevealBlogSectionStatic(section);
+        }
+      } catch {
+        triponRevealBlogSectionStatic(section);
+      }
+      return;
+    }
+
+    resetSection();
+
+    const revealCard = (tl, card, at) => {
+      const from = getBlogEnterFrom(card.dataset.blogEnter || "left");
+      const tilt = getBlogTilt(card.dataset.blogTilt || "center");
+      tl.set(card, { visibility: "visible" }, at);
+      tl.fromTo(
+        card,
+        {
+          opacity: 0,
+          x: from.x,
+          y: from.y,
+          z: from.z,
+          rotateY: from.rotateY,
+          scale: 0.86,
+        },
+        {
+          opacity: 1,
+          x: 0,
+          y: tilt.y,
+          z: tilt.z,
+          rotateY: tilt.rotateY,
+          scale: tilt.scale,
+          duration: 0.95,
+          ease: "back.out(1.28)",
+          force3D: true,
+        },
+        at
+      );
+    };
+
+    const playSequence = () => {
+      if (played) {
+        return;
+      }
+      played = true;
+
+      const tl = gsap.timeline({
+        defaults: { ease: EASE },
+        onComplete: () => section.classList.add("is-blogs-revealed"),
+      });
+
+      if (title) {
+        gsap.set(title, { opacity: 0, y: 22 });
+        tl.to(title, { opacity: 1, y: 0, duration: 0.55 });
+      }
+      if (sub) {
+        gsap.set(sub, { opacity: 0, y: 14 });
+        tl.to(sub, { opacity: 1, y: 0, duration: 0.5 }, "-=0.35");
+      }
+
+      const c0 = cards[0];
+      const c1 = cards[1];
+      const c2 = cards[2];
+      const c3 = cards[3];
+
+      if (c0) {
+        revealCard(tl, c0, "+=0.1");
+      }
+      if (c3) {
+        revealCard(tl, c3, "+=0.12");
+      }
+      if (c1) {
+        revealCard(tl, c1, "+=0.12");
+      }
+      if (c2) {
+        revealCard(tl, c2, "+=0.12");
+      }
+    };
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top 80%",
+      onEnter: playSequence,
+      onLeaveBack: resetSection,
+    });
+
+    const maybePlayIfAlreadyVisible = () => {
+      ScrollTrigger.refresh();
+      const rect = section.getBoundingClientRect();
+      const vh = g.innerHeight || document.documentElement.clientHeight || 800;
+      if (rect.top < vh * 0.82 && rect.bottom > vh * 0.08) {
+        playSequence();
+      }
+    };
+
+    maybePlayIfAlreadyVisible();
+    g.addEventListener("load", maybePlayIfAlreadyVisible, { once: true });
+  }
+
+  function triponInitBlogsGsap() {
+    document.querySelectorAll("[data-tripon-blogs-gsap]").forEach(triponInitOneBlogSection);
+  }
+
+  g.triponInitBlogsGsap = triponInitBlogsGsap;
+  g.triponInitOneBlogSection = triponInitOneBlogSection;
+  g.triponRevealBlogSectionStatic = triponRevealBlogSectionStatic;
+  g.triponEnsureInnerBlogSectionsVisible = triponEnsureInnerBlogSectionsVisible;
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", triponEnsureInnerBlogSectionsVisible);
+  } else {
+    triponEnsureInnerBlogSectionsVisible();
+  }
+})(window);
+
+/**
+ * Why Choose Us — cinematic GSAP sequence (hero → lens → pill → headline → cards).
+ */
+(function (g) {
+  "use strict";
+
+  const EASE = "power3.out";
+
+  function triponInitWhyChooseGsap() {
+    const section = document.querySelector("[data-tripon-why-choose-gsap]");
+    if (!section || section.dataset.whyChooseGsapReady === "1") {
+      return;
+    }
+
+    const gsap = g.gsap;
+    const ScrollTrigger = g.ScrollTrigger;
+    if (!gsap || !ScrollTrigger) {
+      return;
+    }
+
+    section.dataset.whyChooseGsapReady = "1";
+    gsap.registerPlugin(ScrollTrigger);
+
+    const reduceMotion = g.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const slot = section.querySelector("[data-wc-slot]");
+    const stage = section.querySelector("[data-wc-stage]");
+    const settled = section.querySelector("[data-wc-settled]");
+    const heroStack = section.querySelector("[data-wc-hero-stack]");
+    const hero = section.querySelector("[data-wc-hero]");
+    const heroReveal = section.querySelector("[data-wc-hero-reveal]");
+    const heroLines = hero ? [...hero.querySelectorAll("[data-wc-hero-line]")] : [];
+    const magnifier = section.querySelector("[data-wc-magnifier]");
+    const lensRing = section.querySelector("[data-wc-lens-ring]");
+    const pill = section.querySelector("[data-wc-pill]");
+    const pillWrap = section.querySelector("[data-wc-pill-wrap]");
+    const intro = section.querySelector("[data-wc-intro]");
+    const headline = section.querySelector("[data-wc-headline]");
+    const words = [...section.querySelectorAll("[data-wc-word]")];
+    const priorityWord = section.querySelector("[data-wc-priority]");
+    const otherWords = words.filter((word) => word !== priorityWord);
+    const subtext = section.querySelector("[data-wc-subtext]");
+    const cards = [...section.querySelectorAll("[data-wc-card]")];
+    const grid = section.querySelector("[data-wc-grid]");
+
+    let masterTl = null;
+    let played = false;
+    let lineTargets = [];
+
+    const getRingCenterOffset = () => {
+      if (!magnifier || !lensRing) {
+        return { x: 0, y: 0 };
+      }
+      const magRect = magnifier.getBoundingClientRect();
+      const ringRect = lensRing.getBoundingClientRect();
+      return {
+        x: ringRect.left + ringRect.width / 2 - (magRect.left + magRect.width / 2),
+        y: ringRect.top + ringRect.height / 2 - (magRect.top + magRect.height / 2),
+      };
+    };
+
+    const measureLineTargets = () => {
+      if (!stage || !magnifier || !lensRing || !heroLines.length) {
+        return [];
+      }
+      const stageRect = stage.getBoundingClientRect();
+      const ringOffset = getRingCenterOffset();
+      return heroLines.map((line) => {
+        const lineRect = line.getBoundingClientRect();
+        const lineCx = lineRect.left + lineRect.width / 2;
+        const lineCy = lineRect.top + lineRect.height / 2;
+        return {
+          x: lineCx - stageRect.left - ringOffset.x - magnifier.offsetWidth / 2,
+          y: lineCy - stageRect.top - ringOffset.y - magnifier.offsetHeight / 2,
+          el: line,
+        };
+      });
+    };
+
+    const syncLensClip = () => {
+      if (!heroReveal || !lensRing) {
+        return;
+      }
+      const revealRect = heroReveal.getBoundingClientRect();
+      const ringRect = lensRing.getBoundingClientRect();
+      const cx = ringRect.left + ringRect.width / 2 - revealRect.left;
+      const cy = ringRect.top + ringRect.height / 2 - revealRect.top;
+      const radius = Math.max(40, ringRect.width / 2 - 5);
+      gsap.set(heroReveal, {
+        clipPath: `circle(${radius}px at ${cx}px ${cy}px)`,
+      });
+    };
+
+    const resetSection = () => {
+      played = false;
+      masterTl?.kill();
+      lineTargets = [];
+      section.classList.remove(
+        "is-wc-inview",
+        "is-wc-cinema-done",
+        "is-wc-revealed",
+        "is-wc-cards-live",
+        "is-wc-priority-glow"
+      );
+      gsap.killTweensOf([
+        slot,
+        settled,
+        heroStack,
+        hero,
+        heroReveal,
+        magnifier,
+        pill,
+        pillWrap,
+        intro,
+        headline,
+        ...words,
+        subtext,
+        ...cards,
+        grid,
+      ]);
+
+      gsap.set(heroStack, { scale: 1.12, x: 0, y: 0 });
+      gsap.set(hero, { opacity: 1, clearProps: "transform,filter" });
+      gsap.set(heroReveal, { clipPath: "circle(0px at 50% 50%)", clearProps: "transform" });
+      gsap.set(magnifier, {
+        x: -220,
+        y: 0,
+        opacity: 0,
+        scale: 1,
+        rotation: 0,
+        visibility: "visible",
+        clearProps: "left,top",
+      });
+      gsap.set(slot, { minHeight: "" });
+      gsap.set(settled, { opacity: 0, visibility: "hidden", y: 0 });
+      gsap.set(pill, { opacity: 0, visibility: "hidden", scale: 1, y: 0 });
+      gsap.set(pillWrap, { scale: 1, y: 0 });
+      gsap.set(intro, { opacity: 1, visibility: "visible" });
+      gsap.set(headline, { opacity: 1 });
+      gsap.set(words, {
+        opacity: 0,
+        y: -72,
+        z: -140,
+        rotationX: -78,
+        transformOrigin: "50% 100%",
+      });
+      gsap.set(priorityWord, { backgroundPosition: "0% 50%" });
+      gsap.set(subtext, { opacity: 0, scale: 0.35, filter: "blur(18px)" });
+      cards.forEach((card, index) => {
+        gsap.set(card, {
+          opacity: 0,
+          x: index % 2 === 0 ? -g.innerWidth * 0.35 : g.innerWidth * 0.35,
+          y: 48,
+          scale: 0.82,
+          visibility: "hidden",
+        });
+      });
+      if (grid) {
+        gsap.set(grid, { y: 0 });
+      }
+    };
+
+    const showAllReduced = () => {
+      section.classList.add("is-wc-cinema-done", "is-wc-revealed", "is-wc-cards-live");
+      gsap.set([hero, heroReveal, magnifier], { opacity: 0, visibility: "hidden" });
+      gsap.set(heroReveal, { clipPath: "circle(0px at 50% 50%)" });
+      gsap.set(pill, { opacity: 1, visibility: "visible", clearProps: "all" });
+      gsap.set(intro, { opacity: 1, visibility: "visible", clearProps: "all" });
+      gsap.set(words, { opacity: 1, clearProps: "transform" });
+      gsap.set(subtext, { opacity: 1, scale: 1, filter: "none", clearProps: "all" });
+      gsap.set(cards, { opacity: 1, x: 0, y: 0, scale: 1, visibility: "visible", clearProps: "all" });
+    };
+
+    const playCinematic = () => {
+      if (played) {
+        return;
+      }
+      played = true;
+      section.classList.add("is-wc-inview");
+
+      masterTl = gsap.timeline({
+        defaults: { ease: EASE },
+        onComplete: () => section.classList.add("is-wc-revealed"),
+      });
+
+      const refreshLineTargets = () => {
+        lineTargets = measureLineTargets();
+      };
+
+      const moveMagnifierToLine = (index, hold = 0.42) => {
+        masterTl.add(() => refreshLineTargets());
+        masterTl.to(
+          magnifier,
+          {
+            x: () => lineTargets[index]?.x ?? 0,
+            y: () => lineTargets[index]?.y ?? 0,
+            duration: 1.05,
+            ease: "power2.inOut",
+            onUpdate: syncLensClip,
+            onComplete: syncLensClip,
+          },
+          "+=0.02"
+        );
+        if (hold > 0) {
+          masterTl.to({}, { duration: hold, onUpdate: syncLensClip });
+        }
+      };
+
+      /* 1 — Big faded three-line WHY / CHOOSE / US only */
+      masterTl
+        .to(heroStack, { scale: 1.08, duration: 0.85 })
+        .to(hero, { opacity: 1, duration: 0.6 }, "-=0.85")
+        .to(magnifier, { opacity: 1, scale: 1, duration: 0.55 }, "-=0.45");
+
+      /* 2 — Magnifier sweeps WHY → CHOOSE → US (clip follows lens every frame) */
+      masterTl.add(() => {
+        refreshLineTargets();
+        const first = lineTargets[0];
+        const enterOffset = Math.min(360, (stage?.offsetWidth || 720) * 0.42);
+        if (first) {
+          gsap.set(magnifier, {
+            x: first.x - enterOffset,
+            y: first.y,
+          });
+          syncLensClip();
+        }
+      });
+      moveMagnifierToLine(0, 0.5);
+      moveMagnifierToLine(1, 0.5);
+      moveMagnifierToLine(2, 0.55);
+      masterTl.to(heroStack, { opacity: 0.35, duration: 0.45 });
+      masterTl.to(hero, { opacity: 0.14, filter: "blur(4px)", duration: 0.45 }, "-=0.45");
+
+      /* 3 — Magnifier zooms in and disappears; pill returns to original spot */
+      masterTl
+        .to(
+          magnifier,
+          {
+            scale: 2.4,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.in",
+            onUpdate: syncLensClip,
+          },
+          "+=0.05"
+        )
+        .to(heroReveal, { clipPath: "circle(0px at 50% 50%)", duration: 0.35 }, "-=0.5")
+        .set(magnifier, { visibility: "hidden" })
+        .to(heroStack, { opacity: 0, scale: 0.9, duration: 0.5 }, "-=0.45")
+        .to(
+          pillWrap,
+          {
+            y: 0,
+            scale: 1,
+            duration: 0.95,
+            ease: "back.out(1.2)",
+          },
+          "-=0.35"
+        )
+        .add(() => section.classList.add("is-wc-cinema-done"))
+        .to(slot, { minHeight: 0, duration: 0.7, ease: "power2.inOut" })
+        .set(settled, { visibility: "visible" })
+        .to(settled, { opacity: 1, y: 0, duration: 0.45 }, "-=0.55")
+        .set(pill, { visibility: "visible" })
+        .to(pill, { opacity: 1, duration: 0.5 }, "-=0.4");
+
+      /* 4 — Priority gradient fill */
+      masterTl.add(() => section.classList.add("is-wc-priority-glow"));
+      if (priorityWord) {
+        masterTl
+          .set(priorityWord, {
+            opacity: 1,
+            y: 0,
+            z: 0,
+            rotationX: 0,
+            scale: 0.88,
+          })
+          .to(priorityWord, { scale: 1.08, duration: 0.45, ease: "back.out(2)" })
+          .to(priorityWord, { scale: 1, duration: 0.35 })
+          .fromTo(
+            priorityWord,
+            { backgroundPosition: "0% 50%" },
+            { backgroundPosition: "220% 50%", duration: 1.4, ease: "none" }
+          )
+          .to(priorityWord, { backgroundPosition: "100% 50%", duration: 0.55 });
+      }
+
+      /* 5 — Full headline: each word 3D drop */
+      otherWords.forEach((word, index) => {
+        masterTl.fromTo(
+          word,
+          {
+            opacity: 0,
+            y: -68,
+            z: -130,
+            rotationX: -82,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            z: 0,
+            rotationX: 0,
+            duration: 0.62,
+            ease: "back.out(1.55)",
+          },
+          index === 0 ? "+=0.12" : "-=0.38"
+        );
+      });
+
+      if (priorityWord) {
+        masterTl.fromTo(
+          priorityWord,
+          { y: -42, rotationX: -55, z: -80 },
+          { y: 0, rotationX: 0, z: 0, duration: 0.55, ease: "bounce.out" },
+          "-=0.2"
+        );
+      }
+
+      /* 6 — Subtext: inside-out blur (scale + blur) */
+      masterTl.to(
+        subtext,
+        {
+          opacity: 1,
+          scale: 1,
+          filter: "blur(0px)",
+          duration: 1,
+          ease: "power2.out",
+        },
+        "+=0.08"
+      );
+
+      /* 7 — Cards jump in from sides */
+      const jumpCard = (card, fromX, at) => {
+        const icon = card.querySelector(".why-icon");
+        masterTl.set(card, { visibility: "visible" }, at);
+        masterTl
+          .fromTo(
+            card,
+            { opacity: 0, x: fromX, y: 52, scale: 0.78, rotation: fromX < 0 ? -10 : 10 },
+            { opacity: 1, x: 0, y: 0, scale: 1, rotation: 0, duration: 0.88, ease: "bounce.out" },
+            at
+          )
+          .to(card, { y: -14, duration: 0.2, ease: "power2.out" }, at + 0.5)
+          .to(card, { y: 0, duration: 0.45, ease: "bounce.out" }, at + 0.68);
+        if (icon) {
+          masterTl.fromTo(icon, { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2)" }, at + 0.28);
+        }
+      };
+
+      masterTl.add(() => section.classList.add("is-wc-cards-live"), "+=0.05");
+      if (cards[0]) {
+        jumpCard(cards[0], -g.innerWidth * 0.38, "+=0.02");
+      }
+      if (cards[1]) {
+        jumpCard(cards[1], g.innerWidth * 0.38, "-=0.55");
+      }
+      if (cards[2]) {
+        jumpCard(cards[2], -g.innerWidth * 0.34, "-=0.15");
+      }
+      if (cards[3]) {
+        jumpCard(cards[3], g.innerWidth * 0.34, "-=0.55");
+      }
+    };
+
+    if (reduceMotion) {
+      showAllReduced();
+      return;
+    }
+
+    resetSection();
+
+    const tryPlayIfVisible = () => {
+      ScrollTrigger.refresh();
+      const top = section.getBoundingClientRect().top;
+      const vh = g.innerHeight || document.documentElement.clientHeight;
+      if (top < vh * 0.82 && section.getBoundingClientRect().bottom > 0) {
+        playCinematic();
+      }
+    };
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top 82%",
+      once: false,
+      onEnter: playCinematic,
+      onLeaveBack: resetSection,
+    });
+
+    g.requestAnimationFrame(() => {
+      g.requestAnimationFrame(tryPlayIfVisible);
+    });
+
+    g.addEventListener("resize", () => {
+      syncLensClip();
+      ScrollTrigger.refresh();
+    });
+    g.addEventListener("load", () => {
+      ScrollTrigger.refresh();
+      tryPlayIfVisible();
+    });
+  }
+
+  g.triponInitWhyChooseGsap = triponInitWhyChooseGsap;
+})(window);
+
+let triponBodyScrollLockY = 0;
+let triponBodyScrollLockCount = 0;
+
+const triponClearBodyScrollLockStyles = () => {
+  document.documentElement.style.overflow = "";
+  document.body.style.overflow = "";
+  document.body.style.paddingRight = "";
+  document.body.style.position = "";
+  document.body.style.top = "";
+  document.body.style.left = "";
+  document.body.style.right = "";
+  document.body.style.width = "";
+};
+
+/** Lock page scroll without position:fixed (fixed top traps scroll-up). */
+const triponLockBodyScroll = () => {
+  if (triponBodyScrollLockCount === 0) {
+    triponBodyScrollLockY = window.scrollY || window.pageYOffset || 0;
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+    document.documentElement.style.overflow = "hidden";
+    document.body.style.overflow = "hidden";
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+  }
+  triponBodyScrollLockCount += 1;
+};
+
+const triponUnlockBodyScroll = () => {
+  if (triponBodyScrollLockCount <= 0) {
+    triponClearBodyScrollLockStyles();
+    return;
+  }
+  triponBodyScrollLockCount -= 1;
+  if (triponBodyScrollLockCount > 0) {
+    return;
+  }
+  triponClearBodyScrollLockStyles();
+  window.scrollTo(0, triponBodyScrollLockY);
+};
+
+const triponHasBlockingScrollOverlay = () =>
+  Boolean(
+    document.querySelector(
+      ".spotlight-3d-modal.active, .mobile-pref-modal-overlay.active, .submit-popup-overlay.active, .tripon-mobile-menu.is-open"
+    )
+  );
+
+const triponUnlockPageScroll = () => {
+  if (triponHasBlockingScrollOverlay()) {
+    return;
+  }
+  triponBodyScrollLockCount = 0;
+  const stuckY = Math.abs(parseInt(document.body.style.top || "0", 10)) || triponBodyScrollLockY;
+  triponClearBodyScrollLockStyles();
+  if (stuckY > 0) {
+    window.scrollTo(0, stuckY);
+  }
+};
+
+/** Recover if body was left position:fixed without an open overlay. */
+const triponRepairStuckPageScroll = () => {
+  if (document.body.style.position !== "fixed" && triponBodyScrollLockCount === 0) {
+    return;
+  }
+  if (triponHasBlockingScrollOverlay()) {
+    return;
+  }
+  triponUnlockPageScroll();
+};
+
+window.addEventListener("wheel", triponRepairStuckPageScroll, { passive: true });
+window.addEventListener("touchmove", triponRepairStuckPageScroll, { passive: true });
+window.addEventListener("pageshow", triponRepairStuckPageScroll);
+
 const triponInitMain = () => {
+  triponUnlockPageScroll();
+  triponRepairStuckPageScroll();
+
   const setActive = (items, activeItem, className = "active") => {
     items.forEach((item) => item.classList.remove(className));
     if (activeItem) {
@@ -25,11 +2374,14 @@ const triponInitMain = () => {
 
   /** Build a clean blogs/<slug>.html URL from any page depth. */
   const triponBlogDetailsBasePrefix = () => {
+    if (typeof window.triponRelPrefix === "function") {
+      return window.triponRelPrefix();
+    }
     const path = (window.location.pathname || "").replace(/\\/g, "/").toLowerCase();
     if (path.includes("/packages/package-details")) {
       return "../";
     }
-    if (/\/locations(\/|$)/i.test(path)) {
+    if (/\/locations(\/|$)/i.test(path) || /\/company\//i.test(path) || /\/packages\//i.test(path)) {
       return "../";
     }
     return "";
@@ -193,6 +2545,65 @@ const triponInitMain = () => {
   };
 
   const homeRoot = document.querySelector("#homeScreen");
+  if (homeRoot) {
+    if (typeof window.triponInitHomeAmbient === "function") {
+      window.triponInitHomeAmbient();
+    }
+    if (document.querySelector("[data-tripon-reasons-gsap], .reasons--gsap")) {
+      const bootReasonsGsap = () => {
+        if (window.gsap && window.ScrollTrigger) {
+          window.triponInitReasonsGsap();
+        } else {
+          window.setTimeout(bootReasonsGsap, 40);
+        }
+      };
+      bootReasonsGsap();
+    }
+    if (document.querySelector("[data-tripon-family-tour-gsap]")) {
+      const bootFamilyTourGsap = () => {
+        if (window.gsap && window.ScrollTrigger) {
+          window.triponInitFamilyTourGsap();
+        } else {
+          window.setTimeout(bootFamilyTourGsap, 40);
+        }
+      };
+      bootFamilyTourGsap();
+    }
+    if (document.querySelector("[data-tripon-why-choose-gsap]")) {
+      const bootWhyChooseGsap = () => {
+        if (window.gsap && window.ScrollTrigger) {
+          window.triponInitWhyChooseGsap();
+        } else {
+          window.setTimeout(bootWhyChooseGsap, 40);
+        }
+      };
+      bootWhyChooseGsap();
+    }
+  }
+
+  if (document.querySelector("[data-tripon-blogs-gsap]")) {
+    if (typeof window.triponEnsureInnerBlogSectionsVisible === "function") {
+      window.triponEnsureInnerBlogSectionsVisible();
+    }
+
+    const bootBlogsGsap = (attempt = 0) => {
+      if (window.gsap && window.ScrollTrigger) {
+        window.triponInitBlogsGsap();
+        return;
+      }
+      if (attempt > 80) {
+        document.querySelectorAll("[data-tripon-blogs-gsap]").forEach((el) => {
+          if (el.dataset.blogsGsapReady !== "1" && typeof window.triponRevealBlogSectionStatic === "function") {
+            window.triponRevealBlogSectionStatic(el);
+          }
+        });
+        return;
+      }
+      window.setTimeout(() => bootBlogsGsap(attempt + 1), 40);
+    };
+    bootBlogsGsap();
+  }
+
   replaceTextStarsWithIcons();
 
   // Navbar: switch between Home, People Reviews, and Packages screens
@@ -285,57 +2696,59 @@ const triponInitMain = () => {
   const homeMobileLocationList = document.querySelector("#homeMobileLocationList");
   const homeMobileLocationIcon = homeMobileLocationToggle?.querySelector(".home-mobile-location-icon");
 
-  const hideHomeMobileMenu = () => {
-    if (!homeMobileMenuOverlay) {
-      return;
-    }
-    homeMobileMenuOverlay.classList.remove("active");
-    homeMobileMenuOverlay.setAttribute("aria-hidden", "true");
-    homeMobileMenuToggle?.setAttribute("aria-expanded", "false");
-    document.body.style.overflow = "";
-  };
+  if (!window.triponNavbarHandlesMobile) {
+    const hideHomeMobileMenu = () => {
+      if (!homeMobileMenuOverlay) {
+        return;
+      }
+      homeMobileMenuOverlay.classList.remove("active");
+      homeMobileMenuOverlay.setAttribute("aria-hidden", "true");
+      homeMobileMenuToggle?.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+    };
 
-  const showHomeMobileMenu = () => {
-    if (!homeMobileMenuOverlay) {
-      return;
-    }
-    homeMobileMenuOverlay.classList.add("active");
-    homeMobileMenuOverlay.setAttribute("aria-hidden", "false");
-    homeMobileMenuToggle?.setAttribute("aria-expanded", "true");
-    document.body.style.overflow = "hidden";
-  };
+    const showHomeMobileMenu = () => {
+      if (!homeMobileMenuOverlay) {
+        return;
+      }
+      homeMobileMenuOverlay.classList.add("active");
+      homeMobileMenuOverlay.setAttribute("aria-hidden", "false");
+      homeMobileMenuToggle?.setAttribute("aria-expanded", "true");
+      document.body.style.overflow = "hidden";
+    };
 
-  homeMobileMenuToggle?.addEventListener("click", () => {
-    const isOpen = homeMobileMenuOverlay?.classList.contains("active");
-    if (isOpen) {
-      hideHomeMobileMenu();
-      return;
-    }
-    showHomeMobileMenu();
-  });
+    homeMobileMenuToggle?.addEventListener("click", () => {
+      const isOpen = homeMobileMenuOverlay?.classList.contains("active");
+      if (isOpen) {
+        hideHomeMobileMenu();
+        return;
+      }
+      showHomeMobileMenu();
+    });
 
-  homeMobileDrawerClose?.addEventListener("click", hideHomeMobileMenu);
-  homeMobileMenuOverlay?.addEventListener("click", (event) => {
-    if (event.target === homeMobileMenuOverlay) {
-      hideHomeMobileMenu();
-    }
-  });
-  homeMobileDrawerLinks.forEach((link) => {
-    link.addEventListener("click", hideHomeMobileMenu);
-  });
-  homeMobileLocationToggle?.addEventListener("click", () => {
-    const isOpen = homeMobileLocationList?.classList.contains("active");
-    homeMobileLocationList?.classList.toggle("active", !isOpen);
-    homeMobileLocationToggle.setAttribute("aria-expanded", String(!isOpen));
-    if (homeMobileLocationIcon) {
-      homeMobileLocationIcon.textContent = isOpen ? "+" : "−";
-    }
-  });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      hideHomeMobileMenu();
-    }
-  });
+    homeMobileDrawerClose?.addEventListener("click", hideHomeMobileMenu);
+    homeMobileMenuOverlay?.addEventListener("click", (event) => {
+      if (event.target === homeMobileMenuOverlay) {
+        hideHomeMobileMenu();
+      }
+    });
+    homeMobileDrawerLinks.forEach((link) => {
+      link.addEventListener("click", hideHomeMobileMenu);
+    });
+    homeMobileLocationToggle?.addEventListener("click", () => {
+      const isOpen = homeMobileLocationList?.classList.contains("active");
+      homeMobileLocationList?.classList.toggle("active", !isOpen);
+      homeMobileLocationToggle.setAttribute("aria-expanded", String(!isOpen));
+      if (homeMobileLocationIcon) {
+        homeMobileLocationIcon.textContent = isOpen ? "+" : "−";
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        hideHomeMobileMenu();
+      }
+    });
+  }
 
   paintNavState("home");
 
@@ -344,13 +2757,13 @@ const triponInitMain = () => {
 
   document.querySelectorAll(".want-more-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      window.location.href = `${triponPageRelPrefix()}blogs.html`;
+      window.location.href = `${triponPageRelPrefix()}blogs/`;
     });
   });
 
   document.querySelectorAll(".location-blogs-btn").forEach((btn) => {
     btn.addEventListener("click", () => {
-      window.location.href = `${triponPageRelPrefix()}blogs.html`;
+      window.location.href = `${triponPageRelPrefix()}blogs/`;
     });
   });
 
@@ -372,7 +2785,7 @@ const triponInitMain = () => {
       const shouldAutoMoveLeft = row.classList.contains("reviews-row-top") || row.classList.contains("reviews-row-bottom");
       let rowAutoTimer = null;
       let autoScrollIndex = 0;
-      let syncMediaRowLayout = () => {};
+      let syncMediaRowLayout = () => { };
       const shouldPackageStyleMove = shouldAutoMoveLeft && !isMediaRow;
       const horizontalStripActive = () =>
         shouldPackageStyleMove || (isMediaRow && isReviewsMobileLayout());
@@ -489,7 +2902,7 @@ const triponInitMain = () => {
         cards.forEach((card) => {
           const v = card.querySelector("video");
           if (v) {
-            v.play().catch(() => {});
+            v.play().catch(() => { });
           }
         });
       };
@@ -624,7 +3037,7 @@ const triponInitMain = () => {
       reviewsVideoOverlay.classList.add("active");
       reviewsVideoOverlay.setAttribute("aria-hidden", "false");
       reviewsPlaceVideo.currentTime = 0;
-      reviewsPlaceVideo.play().catch(() => {});
+      reviewsPlaceVideo.play().catch(() => { });
     };
 
     const closeReviewsVideo = () => {
@@ -678,6 +3091,12 @@ const triponInitMain = () => {
 
     locationLinks.forEach((link) => {
       link.addEventListener("click", (e) => {
+        const href = (link.getAttribute("href") || "").trim();
+        if (href && href !== "#") {
+          locationWrapper.classList.remove("active");
+          locationDropdown.classList.remove("active");
+          return;
+        }
         e.preventDefault();
         const selectedLocation = link.dataset.location;
         const displayName = link.textContent.trim();
@@ -704,6 +3123,8 @@ const triponInitMain = () => {
   // Hero section: lightweight form behavior
   const heroSection = document.querySelector(".hero");
   if (heroSection) {
+    triponInitHeroText2D(heroSection);
+
     const heroImage = heroSection.querySelector("img");
     if (heroImage) {
       const heroSlides = [
@@ -823,6 +3244,24 @@ const triponInitMain = () => {
       }
     };
 
+    const heroLuxuryCalendar =
+      travelDateInput && typeof window.TriponLuxuryCalendar?.attach === "function"
+        ? window.TriponLuxuryCalendar.attach(travelDateInput, {
+            minDate: getTodayDateString(),
+            packageName: "Your Bali Trip",
+            packageDuration: "",
+          })
+        : null;
+
+    const heroLuxuryGuests =
+      heroTravelersInput && typeof window.TriponLuxuryGuestsPicker?.attach === "function"
+        ? window.TriponLuxuryGuestsPicker.attach(heroTravelersInput, {
+            min: 1,
+            max: 20,
+            placeholder: "No. of Guests",
+          })
+        : null;
+
     if (travelDateInput) {
       travelDateInput.min = getTodayDateString();
       const validateTravelDate = () => {
@@ -847,18 +3286,10 @@ const triponInitMain = () => {
     heroNameInput?.addEventListener("input", validateHeroFields);
     heroPhoneInput?.addEventListener("input", validateHeroFields);
     heroTravelersInput?.addEventListener("input", validateHeroFields);
-
-    const openTravelDatePicker = () => {
-      if (!travelDateInput) {
-        return;
-      }
-      travelDateInput.focus();
-      if (typeof travelDateInput.showPicker === "function") {
-        travelDateInput.showPicker();
-      }
-    };
+    heroTravelersInput?.addEventListener("change", validateHeroFields);
 
     const closeTravelDatePicker = () => {
+      heroLuxuryCalendar?.close?.();
       if (!travelDateInput) {
         return;
       }
@@ -866,9 +3297,6 @@ const triponInitMain = () => {
         travelDateInput.blur();
       }
     };
-
-    travelDateField?.addEventListener("click", openTravelDatePicker);
-    travelDateInput?.addEventListener("click", openTravelDatePicker);
 
     const heroSearchForm = heroSection.querySelector(".search-box");
     const submitPopup = document.querySelector("#submitPopup");
@@ -930,6 +3358,11 @@ const triponInitMain = () => {
           clearHeroValidationState();
         }
       });
+      input.addEventListener("change", () => {
+        if (input.value.trim()) {
+          clearHeroValidationState();
+        }
+      });
     });
 
     const sendBtn = heroSection.querySelector(".send-btn");
@@ -965,6 +3398,8 @@ const triponInitMain = () => {
       if (sendBtn.disabled) {
         return;
       }
+      heroLuxuryCalendar?.close?.();
+      heroLuxuryGuests?.close?.();
       const invalidInput = Array.from(heroSearchForm.querySelectorAll("input")).find((input) => !input.checkValidity());
       if (invalidInput) {
         showHeroValidationMessage(invalidInput, getHeroValidationMessage(invalidInput));
@@ -978,6 +3413,10 @@ const triponInitMain = () => {
         heroSendStateTimer = window.setTimeout(() => {
           showSubmitPopup();
           heroSearchForm?.reset();
+          heroLuxuryCalendar?.trigger?.classList.add("is-placeholder");
+          heroLuxuryCalendar?.trigger && (heroLuxuryCalendar.trigger.textContent = "Select travel date");
+          heroLuxuryGuests?.trigger?.classList.add("is-placeholder");
+          heroLuxuryGuests?.trigger && (heroLuxuryGuests.trigger.textContent = "No. of Guests");
           setHeroSendButtonState("default");
         }, 550);
       }, 900);
@@ -989,6 +3428,7 @@ const triponInitMain = () => {
   if (mobilePrefModal) {
     const blurHeroTravelDateIfFocused = () => {
       const travelDateInput = document.querySelector('.hero .search-box .field input[type="date"]');
+      travelDateInput?._luxuryCalendar?.close?.();
       if (travelDateInput && document.activeElement === travelDateInput) {
         travelDateInput.blur();
       }
@@ -997,11 +3437,29 @@ const triponInitMain = () => {
     const mobileHeroBookingTrigger = document.querySelector(".mobile-hero-booking-trigger");
     const familyTourBookingTrigger = document.querySelector("#familyTourBookingTrigger");
     const mobilePrefClose = document.querySelector("#mobilePrefClose");
-    const mobilePrefSteps = Array.from(document.querySelectorAll(".mobile-pref-step"));
     const mobilePrefNext = document.querySelector("#mobilePrefNext");
     const mobilePrefPrev = document.querySelector("#mobilePrefPrev");
     const mobilePrefActions = document.querySelector("#mobilePrefActions");
     let mobilePrefStepIndex = 0;
+
+    const PACKAGE_PREF_SKIP_STEPS = new Set([1, 2, 6]);
+
+    const refreshMobilePrefVisibleSteps = () => {
+      const all = Array.from(mobilePrefModal.querySelectorAll(".mobile-pref-step"));
+      if (document.body?.classList.contains("package-details-page")) {
+        return all.filter((el) => {
+          const stepNum = Number(el.getAttribute("data-step"));
+          return !PACKAGE_PREF_SKIP_STEPS.has(stepNum);
+        });
+      }
+      return all;
+    };
+
+    let mobilePrefVisibleSteps = refreshMobilePrefVisibleSteps();
+
+    const getActivePrefStep = () => mobilePrefVisibleSteps[mobilePrefStepIndex];
+
+    const getPrefStepNumber = (stepEl) => Number(stepEl?.getAttribute("data-step")) || 0;
 
     const PREF_MODAL_POST_INTERACTION_COOLDOWN_MS = 40000;
     let prefModalAutoOpenSuppressedUntil = 0;
@@ -1015,23 +3473,11 @@ const triponInitMain = () => {
 
     const lockPageScrollForPrefModal = () => {
       prefModalLockedScrollY = window.scrollY || window.pageYOffset || 0;
-      document.documentElement.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${prefModalLockedScrollY}px`;
-      document.body.style.left = "0";
-      document.body.style.right = "0";
-      document.body.style.width = "100%";
+      triponLockBodyScroll();
     };
 
     const unlockPageScrollForPrefModal = () => {
-      document.documentElement.style.overflow = "";
-      document.body.style.overflow = "";
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.left = "";
-      document.body.style.right = "";
-      document.body.style.width = "";
+      triponUnlockBodyScroll();
       window.scrollTo(0, prefModalLockedScrollY);
     };
 
@@ -1065,11 +3511,12 @@ const triponInitMain = () => {
     };
 
     const isMobilePrefStepValid = () => {
-      const stepNumber = mobilePrefStepIndex + 1;
-      const activeStep = mobilePrefSteps[mobilePrefStepIndex];
+      const activeStep = getActivePrefStep();
       if (!activeStep) {
         return false;
       }
+
+      const stepNumber = getPrefStepNumber(activeStep);
 
       if (stepNumber >= 1 && stepNumber <= 3) {
         return Boolean(activeStep.querySelector('input[type="radio"]:checked'));
@@ -1093,23 +3540,31 @@ const triponInitMain = () => {
     };
 
     const paintMobilePrefStep = () => {
-      mobilePrefSteps.forEach((stepNode, idx) => {
-        stepNode.classList.toggle("active", idx === mobilePrefStepIndex);
+      const allSteps = Array.from(mobilePrefModal.querySelectorAll(".mobile-pref-step"));
+      const activeStep = getActivePrefStep();
+      allSteps.forEach((stepNode) => {
+        stepNode.classList.toggle("active", stepNode === activeStep);
       });
+
       if (!mobilePrefNext || !mobilePrefPrev || !mobilePrefActions) {
         return;
       }
 
-      const isFinalThankYou = mobilePrefStepIndex === 6;
+      const isFinalThankYou = activeStep?.classList.contains("mobile-pref-step-final");
       mobilePrefActions.style.display = isFinalThankYou ? "none" : "grid";
 
-      if (!isFinalThankYou) {
-        const currentStep = mobilePrefStepIndex + 1;
+      if (!isFinalThankYou && activeStep) {
+        const formSteps = mobilePrefVisibleSteps.filter(
+          (step) => !step.classList.contains("mobile-pref-step-final")
+        );
+        const currentFormIndex = Math.max(0, formSteps.indexOf(activeStep)) + 1;
+        const totalFormSteps = formSteps.length;
+        const isLastFormStep = mobilePrefStepIndex >= mobilePrefVisibleSteps.length - 2;
         const isCurrentStepValid = isMobilePrefStepValid();
-        mobilePrefNext.textContent = currentStep === 6 ? "Submit" : `Next (${currentStep}/6)`;
+
+        mobilePrefNext.textContent = isLastFormStep ? "Submit" : `Next (${currentFormIndex}/${totalFormSteps})`;
         mobilePrefNext.classList.toggle("is-enabled", isCurrentStepValid);
-        // Show Previous only from step 2 onwards.
-        const shouldShowPrevious = currentStep > 1;
+        const shouldShowPrevious = mobilePrefStepIndex > 0;
         mobilePrefPrev.style.display = shouldShowPrevious ? "block" : "none";
         mobilePrefPrev.style.pointerEvents = shouldShowPrevious ? "auto" : "none";
       }
@@ -1124,20 +3579,36 @@ const triponInitMain = () => {
       schedulePrefModalAutoCooldown();
     };
 
-    const showMobilePrefModal = () => {
+    const showMobilePrefModal = (options) => {
       blurHeroTravelDateIfFocused();
+      mobilePrefVisibleSteps = refreshMobilePrefVisibleSteps();
       mobilePrefModal.classList.add("active");
       mobilePrefModal.setAttribute("aria-hidden", "false");
       lockPageScrollForPrefModal();
-      mobilePrefStepIndex = 0;
+
+      const requestedStart = Number(options?.startStep);
+      if (document.body?.classList.contains("package-details-page")) {
+        mobilePrefStepIndex = 0;
+      } else if (Number.isFinite(requestedStart) && requestedStart >= 1) {
+        const target = mobilePrefVisibleSteps.find(
+          (el) => getPrefStepNumber(el) === requestedStart
+        );
+        mobilePrefStepIndex = target
+          ? mobilePrefVisibleSteps.indexOf(target)
+          : Math.min(requestedStart - 1, mobilePrefVisibleSteps.length - 1);
+      } else {
+        mobilePrefStepIndex = 0;
+      }
+
       paintMobilePrefStep();
     };
 
     window.triponShowMobilePrefModal = showMobilePrefModal;
     window.triponHideMobilePrefModal = hideMobilePrefModal;
+    window.triponOpenBookingPopup = showMobilePrefModal;
 
     const advanceMobilePrefStep = () => {
-      mobilePrefStepIndex = Math.min(mobilePrefStepIndex + 1, mobilePrefSteps.length - 1);
+      mobilePrefStepIndex = Math.min(mobilePrefStepIndex + 1, mobilePrefVisibleSteps.length - 1);
       paintMobilePrefStep();
     };
 
@@ -1176,9 +3647,9 @@ const triponInitMain = () => {
           return;
         }
         const inputStep = input.closest(".mobile-pref-step");
-        const activeStep = mobilePrefSteps[mobilePrefStepIndex];
-        const currentStep = mobilePrefStepIndex + 1;
-        const isAutoAdvanceStep = currentStep === 1 || currentStep === 2 || currentStep === 3 || currentStep === 6;
+        const activeStep = getActivePrefStep();
+        const stepNumber = getPrefStepNumber(activeStep);
+        const isAutoAdvanceStep = stepNumber === 1 || stepNumber === 2 || stepNumber === 3 || stepNumber === 6;
 
         if (inputStep === activeStep && isAutoAdvanceStep && isMobilePrefStepValid()) {
           window.setTimeout(() => {
@@ -1190,53 +3661,258 @@ const triponInitMain = () => {
     });
     paintMobilePrefStep();
 
-    // Desktop: first auto-open at 10s, then every 15s — paused while user is in a form/dialog, then cool down after.
-    if (
-      window.matchMedia("(min-width: 992px)").matches &&
-      !mobilePrefModal.hasAttribute("data-disable-auto-open")
-    ) {
-      const PREF_MODAL_FOCUSOUT_SETTLE_MS = 400;
-      let prefModalFocusOutSettleTimer = null;
-
-      const tryOpenDesktopPrefModal = () => {
-        if (mobilePrefModal.classList.contains("active")) {
-          return;
-        }
-        if (Date.now() < prefModalAutoOpenSuppressedUntil) {
-          return;
-        }
-        if (isActiveInPrefModalPauseRegion()) {
-          return;
-        }
-        showMobilePrefModal();
-      };
-
-      document.addEventListener(
-        "focusout",
-        () => {
-          window.clearTimeout(prefModalFocusOutSettleTimer);
-          prefModalFocusOutSettleTimer = window.setTimeout(() => {
-            if (!isActiveInPrefModalPauseRegion()) {
-              schedulePrefModalAutoCooldown();
-            }
-          }, PREF_MODAL_FOCUSOUT_SETTLE_MS);
-        },
-        true
-      );
-
-      window.setTimeout(() => {
-        tryOpenDesktopPrefModal();
-        window.setInterval(() => {
-          tryOpenDesktopPrefModal();
-        }, 15000);
-      }, 10000);
-    }
+    mobilePrefModal.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && mobilePrefModal.classList.contains("active")) {
+        hideMobilePrefModal();
+      }
+    });
   }
+
+  /** Resolve site links from the current document URL (ignores document base URL). */
+  const triponResolveSiteHref = (rawLink) => {
+    const link = String(rawLink || "").trim();
+    if (!link) {
+      return "";
+    }
+    if (/^(https?:|mailto:|tel:|#)/i.test(link)) {
+      return link;
+    }
+    const rel = typeof window.triponRelPrefix === "function" ? window.triponRelPrefix() : "";
+    const path = link.charAt(0) === "/" ? link.slice(1) : link.replace(/^\.\//, "");
+    try {
+      return new URL(rel + path, window.location.href).href;
+    } catch {
+      return rel + path;
+    }
+  };
+
+  /** Slug from /locations/bali/nusa-penida.html → nusa-penida (not bali). */
+  const triponParseLocationSlug = (pathname) => {
+    const pathParts = String(pathname || "").replace(/\\/g, "/").split("/").filter(Boolean);
+    const locationIdx = pathParts.findIndex((segment) => segment.toLowerCase() === "locations");
+    if (locationIdx < 0) {
+      return "";
+    }
+    const segA = pathParts[locationIdx + 1] || "";
+    const segB = pathParts[locationIdx + 2] || "";
+    if (/\.html?$/i.test(segB)) {
+      return segB.replace(/\.html?$/i, "").toLowerCase();
+    }
+    if (/\.html?$/i.test(segA)) {
+      return segA.replace(/\.html?$/i, "").toLowerCase();
+    }
+    return segA.replace(/\.html?$/i, "").toLowerCase();
+  };
+
+  const wireAdventureLocationLinks = (section) => {
+    section.querySelectorAll(".place-item[data-location-link]").forEach((item) => {
+      const href = triponResolveSiteHref(item.getAttribute("data-location-link"));
+      if (!href) {
+        return;
+      }
+      if (item.tagName === "A") {
+        item.setAttribute("href", href);
+        return;
+      }
+      const link = document.createElement("a");
+      link.className = item.className;
+      link.href = href;
+      Array.from(item.attributes).forEach((attr) => {
+        if (attr.name !== "class") {
+          link.setAttribute(attr.name, attr.value);
+        }
+      });
+      while (item.firstChild) {
+        link.appendChild(item.firstChild);
+      }
+      item.replaceWith(link);
+    });
+  };
+
+  const ADVENTURE_3D_SLOTS = {
+    "-3": { x: -620, rotateY: 48, z: -90, scale: 0.58, opacity: 0 },
+    "-2": { x: -480, rotateY: 34, z: -10, scale: 0.74, opacity: 0.82 },
+    "-1": { x: -280, rotateY: 20, z: 55, scale: 0.9, opacity: 1 },
+    0: { x: 0, rotateY: 0, z: 150, scale: 1.1, opacity: 1 },
+    1: { x: 280, rotateY: -20, z: 55, scale: 0.9, opacity: 1 },
+    2: { x: 480, rotateY: -34, z: -10, scale: 0.74, opacity: 0.82 },
+    3: { x: 620, rotateY: -48, z: -90, scale: 0.58, opacity: 0 },
+  };
+
+  const getAdventure3dSlot = (offset) => {
+    const key = Math.max(-3, Math.min(3, offset));
+    return ADVENTURE_3D_SLOTS[key] || ADVENTURE_3D_SLOTS["-3"];
+  };
+
+  const getWrappedOffset = (index, activeIndex, total) => {
+    let diff = index - activeIndex;
+    if (diff > total / 2) {
+      diff -= total;
+    }
+    if (diff < -total / 2) {
+      diff += total;
+    }
+    return diff;
+  };
+
+  const triponInitAdventure3dCarousel = (section) => {
+    const carousel = section.querySelector("[data-adventure-carousel]");
+    if (!carousel) {
+      return;
+    }
+
+    const items = [...carousel.querySelectorAll(".place-item--3d")];
+    if (!items.length) {
+      return;
+    }
+
+    const gsap = window.gsap;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isMobileCarousel = () => window.matchMedia("(max-width: 620px)").matches;
+    const startItem = items.findIndex((item) => item.hasAttribute("data-adventure-start"));
+    let activeIndex = startItem >= 0 ? startItem : 0;
+    let isAnimating = false;
+    let autoplayId = null;
+
+    const applyLayout = (animate) => {
+      if (isMobileCarousel()) {
+        items.forEach((item, i) => {
+          item.classList.toggle("is-active", i === activeIndex);
+          if (gsap) {
+            gsap.set(item, { clearProps: "all" });
+          }
+        });
+        const active = items[activeIndex];
+        if (active) {
+          active.scrollIntoView({ behavior: animate ? "smooth" : "auto", inline: "center", block: "nearest" });
+        }
+        return;
+      }
+
+      const duration = animate && gsap && !reduceMotion ? 0.72 : 0;
+      const ease = "power3.out";
+
+      items.forEach((item, i) => {
+        const offset = getWrappedOffset(i, activeIndex, items.length);
+        const slot = getAdventure3dSlot(offset);
+        const isActive = offset === 0;
+        item.classList.toggle("is-active", isActive);
+        item.style.pointerEvents = slot.opacity < 0.2 ? "none" : "";
+
+        const isSeeAll = item.classList.contains("place-item-see-all");
+        /* See All: no extra Y nudge or scale — size comes from CSS; avoids top/bottom clip when front */
+        const activeYOffset = isActive && !isSeeAll ? 18 : 0;
+        const activeScale = isSeeAll && isActive ? 1 : slot.scale;
+
+        const vars = {
+          xPercent: -50,
+          yPercent: -50,
+          x: slot.x,
+          y: activeYOffset,
+          z: slot.z,
+          rotateY: slot.rotateY,
+          scale: activeScale,
+          opacity: slot.opacity,
+          transformPerspective: 1400,
+          transformOrigin: isSeeAll ? "50% 50%" : "50% 52%",
+          force3D: true,
+        };
+
+        if (gsap) {
+          if (duration) {
+            gsap.to(item, { ...vars, duration, ease });
+          } else {
+            gsap.set(item, vars);
+          }
+        } else {
+          item.style.opacity = String(slot.opacity);
+          item.style.transform = `translate(-50%, -50%) translate3d(${slot.x}px, 0, ${slot.z}px) rotateY(${slot.rotateY}deg) scale(${slot.scale})`;
+        }
+      });
+
+      section.classList.add("is-adventure-live");
+    };
+
+    const step = (dir) => {
+      if (isAnimating && !isMobileCarousel()) {
+        return;
+      }
+      activeIndex = (activeIndex + dir + items.length) % items.length;
+      isAnimating = true;
+      applyLayout(true);
+      window.setTimeout(() => {
+        isAnimating = false;
+      }, isMobileCarousel() ? 420 : 760);
+    };
+
+    const syncAutoplay = () => {
+      if (autoplayId) {
+        window.clearInterval(autoplayId);
+        autoplayId = null;
+      }
+      if (reduceMotion || items.length < 2) {
+        return;
+      }
+      autoplayId = window.setInterval(() => step(1), 3400);
+    };
+
+    section.querySelector("[data-adventure-prev]")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      step(-1);
+      syncAutoplay();
+    });
+
+    section.querySelector("[data-adventure-next]")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      step(1);
+      syncAutoplay();
+    });
+
+    carousel.addEventListener(
+      "scroll",
+      () => {
+        if (!isMobileCarousel()) {
+          return;
+        }
+        const center = carousel.scrollLeft + carousel.clientWidth / 2;
+        let nearest = activeIndex;
+        let nearestDist = Infinity;
+        items.forEach((item, i) => {
+          const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+          const dist = Math.abs(itemCenter - center);
+          if (dist < nearestDist) {
+            nearestDist = dist;
+            nearest = i;
+          }
+        });
+        if (nearest !== activeIndex) {
+          activeIndex = nearest;
+          items.forEach((item, i) => item.classList.toggle("is-active", i === activeIndex));
+        }
+      },
+      { passive: true }
+    );
+
+    applyLayout(false);
+    syncAutoplay();
+
+    window.addEventListener("resize", () => {
+      applyLayout(false);
+      syncAutoplay();
+    });
+  };
 
   // Adventure section: move place cards left/right one by one
   const adventureSections = document.querySelectorAll(".adventure, .adventure-section, [data-adventure-section]");
 
   adventureSections.forEach((section) => {
+    wireAdventureLocationLinks(section);
+
+    if (section.hasAttribute("data-tripon-adventure-3d")) {
+      triponInitAdventure3dCarousel(section);
+      return;
+    }
+
     const row = section.querySelector(".place-row");
     let items = Array.from(section.querySelectorAll(".place-item"));
     const initialPlaceOrder = row ? Array.from(row.querySelectorAll(".place-item")) : [];
@@ -1735,23 +4411,15 @@ const triponInitMain = () => {
       );
     };
 
-    const resolveLocationHref = (rawLink) => String(rawLink || "").trim();
-
-    items.forEach((item) => {
-      const locationLink = item.getAttribute("data-location-link");
-      if (locationLink) {
-        item.style.cursor = "pointer";
-        item.addEventListener("click", () => {
-          window.location.href = resolveLocationHref(locationLink);
-        });
-      }
-    });
-
-    controls[0]?.addEventListener("click", () => {
+    controls[0]?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       shiftRight();
     });
 
-    controls[1]?.addEventListener("click", () => {
+    controls[1]?.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
       shiftLeft();
     });
 
@@ -1794,23 +4462,434 @@ const triponInitMain = () => {
     window.addEventListener("resize", syncAdventureCarouselAutomation);
   });
 
+  const animateAllLocationCards = (wrap) => {
+    if (!wrap) {
+      return;
+    }
+    const hero = wrap.querySelector(".all-locations-hero");
+    const cards = Array.from(wrap.querySelectorAll(".all-location-card:not(.all-location-card--hub-feature)"));
+    const destGallery = wrap.querySelector("[data-tripon-dest-gallery]");
+    if (!cards.length && destGallery) {
+      window.setTimeout(() => wrap.classList.remove("is-entering"), 720);
+      return;
+    }
+    if (!cards.length) {
+      wrap.classList.remove("is-entering");
+      return;
+    }
+    hero?.classList.add("all-locations-hero--revealed");
+    cards.forEach((card, index) => {
+      card.classList.remove("all-location-card-animate");
+      card.style.animationDelay = `${index * 90}ms`;
+      void card.offsetWidth;
+      card.classList.add("all-location-card-animate");
+    });
+    const lastDelay = (cards.length - 1) * 90 + 560;
+    window.setTimeout(() => {
+      wrap.classList.remove("is-entering");
+      cards.forEach((card) => {
+        card.style.removeProperty("animation-delay");
+      });
+    }, lastDelay + 80);
+  };
+
+  const triponLocationsDrillKey = "tripon_locations_drill_in";
+
+  const TRIPON_DEST_GALLERY_DESTINATIONS = [
+    {
+      id: "ubud",
+      name: "Ubud",
+      href: "/locations/bali/ubud.html",
+      cover: "/assets/images/location1.png",
+      gallery: [
+        "/assets/images/location1.png",
+        "/assets/images/insta_pic7.png",
+        "/assets/images/places.png",
+      ],
+    },
+    {
+      id: "kuta",
+      name: "Kuta",
+      href: "/locations/bali/kuta.html",
+      cover: "/assets/images/location2.png",
+      gallery: [
+        "/assets/images/location2.png",
+        "/assets/images/insta_pic1.png",
+        "/assets/images/insta_pic4.png",
+      ],
+    },
+    {
+      id: "seminyak",
+      name: "Seminyak",
+      href: "/locations/bali/seminyak.html",
+      cover: "/assets/images/location4.png",
+      gallery: [
+        "/assets/images/location4.png",
+        "/assets/images/insta_pic2.png",
+        "/assets/images/insta_pic5.png",
+      ],
+    },
+    {
+      id: "lombok",
+      name: "Lombok",
+      href: "/locations/bali/lombok.html",
+      cover: "/assets/images/location3.png",
+      gallery: [
+        "/assets/images/location3.png",
+        "/assets/images/insta_pic3.png",
+        "/assets/images/insta_pic6.png",
+      ],
+    },
+    {
+      id: "nusa-penida",
+      name: "Nusa Penida",
+      href: "/locations/bali/nusa-penida.html",
+      cover: "/assets/images/location5.png",
+      gallery: [
+        "/assets/images/location5.png",
+        "/assets/images/insta_pic1.png",
+        "/assets/images/insta_pic7.png",
+      ],
+    },
+    {
+      id: "uluwatu",
+      name: "Uluwatu",
+      href: "/locations/bali/uluwatu.html",
+      cover: "/assets/images/location6.png",
+      gallery: [
+        "/assets/images/location6.png",
+        "/assets/images/insta_pic4.png",
+        "/assets/images/insta_pic5.png",
+      ],
+    },
+  ];
+
+  const triponInitDestGallery = (root) => {
+    const section = root?.closest?.("[data-tripon-dest-gallery]") || root;
+    if (!section || section.dataset.triponDestGalleryReady === "true") {
+      return;
+    }
+    section.dataset.triponDestGalleryReady = "true";
+
+    const galleryRoot = section.querySelector("[data-tripon-gallery-root]");
+    const tabsRoot = section.querySelector(".tripon-dest-gallery__tabs");
+    const coverflow = section.querySelector("[data-tripon-coverflow]");
+    const coverflowTrack = section.querySelector("[data-tripon-coverflow-track]");
+    const coverflowViewport = section.querySelector("[data-tripon-coverflow-viewport]");
+    const coverflowPanel = section.querySelector("#triponDestPanel");
+    const count = TRIPON_DEST_GALLERY_DESTINATIONS.length;
+
+    if (!tabsRoot || !coverflow || !coverflowTrack || !count) {
+      return;
+    }
+
+    let slides = [];
+    let activeIndex = 0;
+    let slideTimer = null;
+    let dragStartX = 0;
+    let dragDeltaX = 0;
+    let isDragging = false;
+    let suppressClick = false;
+    let pointerDragActive = false;
+    const dragStartThreshold = 10;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const coverflowMs = reduceMotion ? 40 : 800;
+
+    const getDest = (index) => TRIPON_DEST_GALLERY_DESTINATIONS[((index % count) + count) % count];
+
+    const normalizeIndex = (index) => ((index % count) + count) % count;
+
+    const getRelativeOffset = (slideIndex, centerIndex) => {
+      let diff = slideIndex - centerIndex;
+      if (diff > count / 2) {
+        diff -= count;
+      }
+      if (diff < -count / 2) {
+        diff += count;
+      }
+      return diff;
+    };
+
+    const getSlideWidth = () => {
+      const first = slides[0];
+      if (!first) {
+        return 280;
+      }
+      return first.offsetWidth || 280;
+    };
+
+    const getActiveSlide = () => slides.find((slide) => Number(slide.dataset.slideIndex) === activeIndex);
+
+
+    const buildTabs = () => {
+      tabsRoot.textContent = "";
+      TRIPON_DEST_GALLERY_DESTINATIONS.forEach((dest, index) => {
+        const tab = document.createElement("button");
+        tab.type = "button";
+        tab.className = "tripon-dest-gallery__tab";
+        tab.id = `triponDestTab-${index}`;
+        tab.setAttribute("role", "tab");
+        tab.setAttribute("aria-selected", index === 0 ? "true" : "false");
+        tab.setAttribute("aria-controls", "triponDestPanel");
+        tab.dataset.destIndex = String(index);
+        tab.textContent = dest.name;
+        tabsRoot.appendChild(tab);
+      });
+    };
+
+    const buildCoverflowSlides = () => {
+      coverflowTrack.textContent = "";
+      TRIPON_DEST_GALLERY_DESTINATIONS.forEach((dest, index) => {
+        const slide = document.createElement("article");
+        slide.className = "tripon-coverflow__slide";
+        slide.dataset.slideIndex = String(index);
+        slide.setAttribute("role", "group");
+        slide.setAttribute("aria-label", dest.name);
+        slide.innerHTML = `
+          <div class="tripon-coverflow__card">
+            <a class="tripon-dest-gallery__card-open" href="${dest.href}" data-tripon-gallery-open
+              aria-label="View ${dest.name}">
+              <div class="tripon-dest-gallery__media" data-tripon-gallery-media>
+                <img src="${dest.cover}" alt="${dest.name}, Bali" decoding="async" />
+              </div>
+              <div class="tripon-dest-gallery__glass">
+                <span class="tripon-dest-gallery__label">${dest.name}</span>
+              </div>
+            </a>
+          </div>`;
+        coverflowTrack.appendChild(slide);
+      });
+      slides = Array.from(coverflowTrack.querySelectorAll(".tripon-coverflow__slide"));
+    };
+
+    const setActiveTab = (index) => {
+      tabsRoot.querySelectorAll(".tripon-dest-gallery__tab").forEach((tab, tabIndex) => {
+        const isActive = tabIndex === index;
+        tab.classList.toggle("is-active", isActive);
+        tab.setAttribute("aria-selected", isActive ? "true" : "false");
+      });
+      coverflowPanel?.setAttribute("aria-labelledby", `triponDestTab-${index}`);
+    };
+
+    const updateCoverflow = (dragOffsetPx = 0) => {
+      const spacing = getSlideWidth() * 0.58;
+      slides.forEach((slide) => {
+        const slideIndex = Number(slide.dataset.slideIndex);
+        const offset = getRelativeOffset(slideIndex, activeIndex);
+        const abs = Math.abs(offset);
+        const scale = offset === 0 ? 1 : abs === 1 ? 0.8 : 0.72;
+        const opacity = offset === 0 ? 1 : abs === 1 ? 0.62 : abs === 2 ? 0.38 : 0.12;
+        const rotateY = offset * -42;
+        const translateX = offset * spacing + (offset === 0 ? dragOffsetPx * 0.35 : dragOffsetPx * 0.18);
+        const translateZ = offset === 0 ? 40 : -abs * 90;
+        const blur = abs === 0 ? 0 : abs === 1 ? 1.5 : 3;
+
+        slide.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+        slide.style.opacity = String(Math.max(opacity, 0));
+        slide.style.filter = blur ? `blur(${blur}px)` : "none";
+        slide.style.zIndex = String(20 - abs);
+        slide.classList.toggle("is-active", offset === 0);
+        slide.classList.toggle("is-side", abs === 1);
+        slide.style.pointerEvents = abs <= 2 ? "auto" : "none";
+      });
+    };
+
+    const goTo = (index, { fromUser = false } = {}) => {
+      const nextIndex = normalizeIndex(index);
+      if (nextIndex === activeIndex && !isDragging) {
+        return;
+      }
+      activeIndex = nextIndex;
+      setActiveTab(activeIndex);
+      updateCoverflow(0);
+      if (fromUser) {
+        resetSlideshow();
+      }
+    };
+
+    const stopSlideshow = () => {
+      if (slideTimer) {
+        window.clearInterval(slideTimer);
+        slideTimer = null;
+      }
+    };
+
+    const startSlideshow = () => {
+      stopSlideshow();
+      if (reduceMotion || isDragging) {
+        return;
+      }
+      slideTimer = window.setInterval(() => {
+        goTo(activeIndex + 1);
+      }, 3000);
+    };
+
+    const resetSlideshow = () => {
+      stopSlideshow();
+      startSlideshow();
+    };
+
+    buildTabs();
+    buildCoverflowSlides();
+    setActiveTab(0);
+    updateCoverflow(0);
+
+    tabsRoot.addEventListener("click", (event) => {
+      const tab = event.target.closest(".tripon-dest-gallery__tab");
+      if (!tab) {
+        return;
+      }
+      const index = Number(tab.dataset.destIndex);
+      if (Number.isNaN(index)) {
+        return;
+      }
+      goTo(index, { fromUser: true });
+    });
+
+    coverflowTrack.addEventListener("click", (event) => {
+      if (suppressClick) {
+        suppressClick = false;
+        event.preventDefault();
+      }
+    });
+
+    const onPointerDown = (event) => {
+      if (event.button > 0) {
+        return;
+      }
+      pointerDragActive = true;
+      isDragging = false;
+      dragStartX = event.clientX;
+      dragDeltaX = 0;
+    };
+
+    const onPointerMove = (event) => {
+      if (!pointerDragActive) {
+        return;
+      }
+      dragDeltaX = event.clientX - dragStartX;
+      if (!isDragging && Math.abs(dragDeltaX) < dragStartThreshold) {
+        return;
+      }
+      if (!isDragging) {
+        isDragging = true;
+        suppressClick = true;
+        coverflow.classList.add("is-dragging");
+        coverflowViewport?.setPointerCapture(event.pointerId);
+        stopSlideshow();
+      }
+      updateCoverflow(dragDeltaX);
+    };
+
+    const onPointerUp = (event) => {
+      if (!pointerDragActive) {
+        return;
+      }
+      pointerDragActive = false;
+      if (coverflowViewport?.hasPointerCapture(event.pointerId)) {
+        coverflowViewport.releasePointerCapture(event.pointerId);
+      }
+      coverflow.classList.remove("is-dragging");
+
+      if (isDragging) {
+        const threshold = Math.min(80, getSlideWidth() * 0.22);
+        if (dragDeltaX <= -threshold) {
+          goTo(activeIndex + 1, { fromUser: true });
+        } else if (dragDeltaX >= threshold) {
+          goTo(activeIndex - 1, { fromUser: true });
+        } else {
+          updateCoverflow(0);
+        }
+      }
+
+      isDragging = false;
+      dragDeltaX = 0;
+      window.setTimeout(() => {
+        suppressClick = false;
+        startSlideshow();
+      }, 0);
+    };
+
+    coverflowViewport?.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        goTo(activeIndex - 1, { fromUser: true });
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        goTo(activeIndex + 1, { fromUser: true });
+      }
+    });
+
+    coverflowViewport?.addEventListener("pointerdown", onPointerDown);
+    coverflowViewport?.addEventListener("pointermove", onPointerMove);
+    coverflowViewport?.addEventListener("pointerup", onPointerUp);
+    coverflowViewport?.addEventListener("pointercancel", onPointerUp);
+
+    section.addEventListener("mouseenter", stopSlideshow);
+    section.addEventListener("mouseleave", startSlideshow);
+    section.addEventListener("focusin", stopSlideshow);
+    section.addEventListener("focusout", (event) => {
+      if (!section.contains(event.relatedTarget)) {
+        startSlideshow();
+      }
+    });
+
+    window.addEventListener(
+      "resize",
+      () => {
+        updateCoverflow(0);
+      },
+      { passive: true }
+    );
+
+    const hubWrap = document.querySelector(".all-locations-main-wrap");
+    window.setTimeout(() => {
+      hubWrap?.classList.remove("is-entering");
+      galleryRoot?.classList.add("is-revealed");
+    }, 80);
+    startSlideshow();
+  };
+
+  const destGalleryRoot = document.querySelector("[data-tripon-dest-gallery]");
+  if (destGalleryRoot) {
+    triponInitDestGallery(destGalleryRoot);
+  }
+
+  document.querySelectorAll(".all-locations-main-wrap").forEach((wrap) => {
+    const grid = wrap.querySelector(".all-locations-grid");
+    if (!grid) {
+      return;
+    }
+    wrap.classList.add("is-entering");
+    const fromHub = (() => {
+      try {
+        return sessionStorage.getItem(triponLocationsDrillKey) === "bali";
+      } catch (_e) {
+        return false;
+      }
+    })();
+    if (fromHub) {
+      try {
+        sessionStorage.removeItem(triponLocationsDrillKey);
+      } catch (_e) {
+        /* ignore */
+      }
+    }
+    const startDelay = fromHub ? 120 : 40;
+    window.setTimeout(() => {
+      window.requestAnimationFrame(() => animateAllLocationCards(wrap));
+    }, startDelay);
+  });
+
   // Location page: toggle between "all locations" grid and detail view
   const allLocationsView = document.getElementById("allLocationsView");
   const locationDetailView = document.getElementById("locationDetailView");
   if (allLocationsView && locationDetailView) {
-    const pathSegments = window.location.pathname.split("/").filter(Boolean);
-    const locIdx = pathSegments.findIndex(function (s) { return s.toLowerCase() === "locations"; });
-    const rawSeg = (locIdx >= 0 ? pathSegments[locIdx + 1] || "" : "").toLowerCase();
-    const nextSeg = (locIdx >= 0 ? pathSegments[locIdx + 2] || "" : "").toLowerCase();
-    let locSlug = "";
-    if (rawSeg && /\.html?$/i.test(rawSeg)) {
-      locSlug = rawSeg.replace(/\.html?$/i, "");
-    } else if (rawSeg && /\.html?$/i.test(nextSeg)) {
-      locSlug = rawSeg;
-    } else {
-      locSlug = rawSeg.replace(/\.html?$/i, "");
-    }
-    if (locSlug === "all" || locSlug === "index" || !locSlug) {
+    const locSlug = triponParseLocationSlug(window.location.pathname);
+    const isBaliLocationsHub =
+      locSlug === "bali" && document.querySelector("[data-bali-locations-hub='true']");
+    if (locSlug === "all" || locSlug === "index" || !locSlug || isBaliLocationsHub) {
       allLocationsView.style.display = "";
       locationDetailView.style.display = "none";
       document.body.classList.add("all-locations-page");
@@ -1818,6 +4897,9 @@ const triponInitMain = () => {
       allLocationsView.style.display = "none";
       locationDetailView.style.display = "";
     }
+  } else if (allLocationsView && document.querySelector("[data-bali-locations-hub='true']")) {
+    allLocationsView.style.display = "";
+    document.body.classList.add("all-locations-page");
   }
 
   // Location page: bind content by slug from pathname
@@ -1845,287 +4927,322 @@ const triponInitMain = () => {
         img.src = fallbackSrc;
       });
     };
-    const pathParts = window.location.pathname.split("/").filter(Boolean);
-    let locationFromPath = "";
-    const locationIdx = pathParts.findIndex((segment) => segment.toLowerCase() === "locations");
-    if (locationIdx >= 0) {
-      const segA = pathParts[locationIdx + 1] || "";
-      const segB = pathParts[locationIdx + 2] || "";
-      if (/\.html?$/i.test(segA)) {
-        locationFromPath = segA.replace(/\.html?$/i, "").toLowerCase();
-      } else if (segA && /\.html?$/i.test(segB)) {
-        locationFromPath = segA.toLowerCase();
-      } else if (segA) {
-        locationFromPath = segA.toLowerCase();
-      }
-    }
+    const locationFromPath = triponParseLocationSlug(window.location.pathname);
     const skipLocationDynamicBinding =
       locationFromPath === "all" ||
       locationFromPath === "index" ||
+      locationFromPath === "bali" ||
       !locationFromPath ||
-      locationPageRoot.getAttribute("data-static-location-page") === "true";
+      locationPageRoot.getAttribute("data-static-location-page") === "true" ||
+      locationPageRoot.getAttribute("data-bali-locations-hub") === "true";
 
     if (!skipLocationDynamicBinding) {
-    const locationKey = (locationFromPath || "ubud").toLowerCase();
-    const locationThingsOverrides = {
-      ubud: [
-        { image: "/assets/images/ubud1.png", title: "Monkey Forest" }, { image: "/assets/images/ubud2.png", title: "Tegallalang Rice Terrace" },
-        { image: "/assets/images/ubud3.png", title: "Tirta Empul Temple" }, { image: "/assets/images/ubud4.png", title: "Ubud Art Market" },
-        { image: "/assets/images/ubud5.png", title: "Campuhan Ridge Walk" }, { image: "/assets/images/ubud6.png", title: "Tegenungan Waterfall" },
-        { image: "/assets/images/ubud7.png", title: "Goa Gajah Elephant Cave" }, { image: "/assets/images/ubud8.png", title: "Ubud Royal Palace" },
-        { image: "/assets/images/ubud9.png", title: "Saraswati Temple" }, { image: "/assets/images/ubud10.png", title: "Bali Swing" },
-        { image: "/assets/images/ubud11.png", title: "Tukad Cepung Waterfall" }, { image: "/assets/images/ubud12.png", title: "Kanto Lampo Waterfall" },
-        { image: "/assets/images/ubud13.png", title: "Ubud Cooking Class" }, { image: "/assets/images/ubud14.png", title: "Gunung Kawi Temple" },
-        { image: "/assets/images/ubud15.png", title: "Traditional Dance Show" }, { image: "/assets/images/ubud16.png", title: "Yoga Retreat" },
-        { image: "/assets/images/ubud17.png", title: "Cycling Through Villages" }, { image: "/assets/images/ubud18.png", title: "Pura Taman Saraswati" },
-        { image: "/assets/images/ubud19.png", title: "Jatiluwih Rice Fields" }, { image: "/assets/images/ubud20.png", title: "Ubud Night Market" }
-      ],
-      kuta: [
-        { image: "/assets/images/kuta1.png", title: "Kuta Beach" }, { image: "/assets/images/kuta2.png", title: "Waterbom Bali" },
-        { image: "/assets/images/kuta3.png", title: "Beachwalk Shopping" }, { image: "/assets/images/kuta4.png", title: "Surf Lessons" },
-        { image: "/assets/images/kuta5.png", title: "Kuta Night Market" }, { image: "/assets/images/kuta6.png", title: "Sea Turtle Conservation" },
-        { image: "/assets/images/kuta7.png", title: "Discovery Mall" }, { image: "/assets/images/kuta8.png", title: "Kuta Beach Sunset" },
-        { image: "/assets/images/kuta9.png", title: "Dream Museum Zone" }, { image: "/assets/images/kuta10.png", title: "Circus Waterpark" },
-        { image: "/assets/images/kuta11.png", title: "Tuban Beach" }, { image: "/assets/images/kuta12.png", title: "Hard Rock Hotel Area" },
-        { image: "/assets/images/kuta13.png", title: "Vihara Dharmayana Temple" }, { image: "/assets/images/kuta14.png", title: "Ground Zero Monument" },
-        { image: "/assets/images/kuta15.png", title: "Kuta Square" }, { image: "/assets/images/kuta16.png", title: "Beach Volleyball" },
-        { image: "/assets/images/kuta17.png", title: "Parasailing Adventure" }, { image: "/assets/images/kuta18.png", title: "Legian Street Walk" },
-        { image: "/assets/images/kuta19.png", title: "Kuta Art Market" }, { image: "/assets/images/kuta20.png", title: "Massage on the Beach" }
-      ],
-      seminyak: [
-        { image: "/assets/images/seminyak1.png", title: "Seminyak Beach Sunset" }, { image: "/assets/images/seminyak2.png", title: "Potato Head Beach Club" },
-        { image: "/assets/images/seminyak3.png", title: "Petitenget Temple" }, { image: "/assets/images/seminyak4.png", title: "Eat Street Dining" },
-        { image: "/assets/images/seminyak5.png", title: "Ku De Ta Beach Club" }, { image: "/assets/images/seminyak6.png", title: "Seminyak Flea Market" },
-        { image: "/assets/images/seminyak7.png", title: "Boutique Shopping" }, { image: "/assets/images/seminyak8.png", title: "Bodywork Spa" },
-        { image: "/assets/images/seminyak9.png", title: "Double Six Beach" }, { image: "/assets/images/seminyak10.png", title: "La Plancha Beach Bar" },
-        { image: "/assets/images/seminyak11.png", title: "Bali Riding Stables" }, { image: "/assets/images/seminyak12.png", title: "Oberoi Street Walk" },
-        { image: "/assets/images/seminyak13.png", title: "Mrs Sippy Bali" }, { image: "/assets/images/seminyak14.png", title: "Motel Mexicola" },
-        { image: "/assets/images/seminyak15.png", title: "Echo Beach Trip" }, { image: "/assets/images/seminyak16.png", title: "Sunset Yoga Session" },
-        { image: "/assets/images/seminyak17.png", title: "Cocoon Beach Club" }, { image: "/assets/images/seminyak18.png", title: "Villa Pool Day" },
-        { image: "/assets/images/seminyak19.png", title: "Gallery Hopping" }, { image: "/assets/images/seminyak20.png", title: "Night Street Food" }
-      ],
-      lombok: [
-        { image: "/assets/images/lambok1.png", title: "Mount Rinjani Trek" }, { image: "/assets/images/lambok2.png", title: "Gili Trawangan" },
-        { image: "/assets/images/lambok3.png", title: "Tanjung Aan Beach" }, { image: "/assets/images/lambok4.png", title: "Sendang Gile Waterfall" },
-        { image: "/assets/images/lambok5.png", title: "Sasak Village Tour" }, { image: "/assets/images/lambok6.png", title: "Pink Beach" },
-        { image: "/assets/images/lambok7.png", title: "Gili Meno Lake" }, { image: "/assets/images/lambok8.png", title: "Selong Belanak Beach" },
-        { image: "/assets/images/lambok9.png", title: "Benang Stokel Waterfall" }, { image: "/assets/images/lambok10.png", title: "Kuta Lombok" },
-        { image: "/assets/images/lambok11.png", title: "Merese Hill Viewpoint" }, { image: "/assets/images/lambok12.png", title: "Gili Air Snorkeling" },
-        { image: "/assets/images/lambok13.png", title: "Sembalun Valley" }, { image: "/assets/images/lambok14.png", title: "Pura Lingsar Temple" },
-        { image: "/assets/images/lambok15.png", title: "Mawun Beach" }, { image: "/assets/images/lambok16.png", title: "Traditional Weaving" },
-        { image: "/assets/images/lambok17.png", title: "Bukit Pergasingan" }, { image: "/assets/images/lambok18.png", title: "Narmada Water Palace" },
-        { image: "/assets/images/lambok19.png", title: "Sunset at Malimbu Hill" }, { image: "/assets/images/lambok20.png", title: "Tiu Kelep Waterfall" }
-      ],
-      "nusa-penida": [
-        { image: "/assets/images/nusa1.png", title: "Kelingking Beach" }, { image: "/assets/images/nusa2.png", title: "Broken Beach" },
-        { image: "/assets/images/nusa3.png", title: "Angel's Billabong" }, { image: "/assets/images/nusa4.png", title: "Diamond Beach" },
-        { image: "/assets/images/nusa5.png", title: "Crystal Bay" }, { image: "/assets/images/nusa6.png", title: "Manta Point Dive" },
-        { image: "/assets/images/nusa7.png", title: "Atuh Beach" }, { image: "/assets/images/nusa8.png", title: "Teletubbies Hill" },
-        { image: "/assets/images/nusa9.png", title: "Rumah Pohon Treehouse" }, { image: "/assets/images/nusa10.png", title: "Tembeling Beach" },
-        { image: "/assets/images/nusa11.png", title: "Peguyangan Waterfall" }, { image: "/assets/images/nusa12.png", title: "Pura Goa Giri Putri" },
-        { image: "/assets/images/nusa13.png", title: "Banah Cliff Point" }, { image: "/assets/images/nusa14.png", title: "Suwehan Beach" },
-        { image: "/assets/images/nusa15.png", title: "Gamat Bay Snorkeling" }, { image: "/assets/images/nusa16.png", title: "Thousand Islands Viewpoint" },
-        { image: "/assets/images/nusa17.png", title: "Saren Cliff Point" }, { image: "/assets/images/nusa18.png", title: "Toyapakeh Wall Dive" },
-        { image: "/assets/images/nusa19.png", title: "Pura Dalem Penataran Ped" }, { image: "/assets/images/nusa20.png", title: "Island Road Trip" }
-      ],
-      uluwatu: [
-        { image: "/assets/images/uluwatu1.png", title: "Uluwatu Temple" }, { image: "/assets/images/uluwatu2.png", title: "Kecak Fire Dance" },
-        { image: "/assets/images/uluwatu3.png", title: "Padang Padang Beach" }, { image: "/assets/images/uluwatu4.png", title: "Suluban Beach" },
-        { image: "/assets/images/uluwatu5.png", title: "Single Fin Beach Club" }, { image: "/assets/images/uluwatu6.png", title: "Nyang Nyang Beach" },
-        { image: "/assets/images/uluwatu7.png", title: "Bingin Beach" }, { image: "/assets/images/uluwatu8.png", title: "Dreamland Beach" },
-        { image: "/assets/images/uluwatu9.png", title: "Balangan Beach" }, { image: "/assets/images/uluwatu10.png", title: "GWK Cultural Park" },
-        { image: "/assets/images/uluwatu11.png", title: "Sunday Beach Club" }, { image: "/assets/images/uluwatu12.png", title: "Blue Point Beach" },
-        { image: "/assets/images/uluwatu13.png", title: "Cliff Sunset Viewpoint" }, { image: "/assets/images/uluwatu14.png", title: "Surf at Uluwatu Reef" },
-        { image: "/assets/images/uluwatu15.png", title: "Melasti Beach" }, { image: "/assets/images/uluwatu16.png", title: "Karma Beach Club" },
-        { image: "/assets/images/uluwatu17.png", title: "Savaya Day Club" }, { image: "/assets/images/uluwatu18.png", title: "Jimbaran Seafood Dinner" },
-        { image: "/assets/images/uluwatu19.png", title: "Temple Monkey Encounters" }, { image: "/assets/images/uluwatu20.png", title: "Cliff Coastal Walk" }
-      ]
-    };
-    const locationContentMap = {
-      ubud: {
-        label: "Ubud",
-        miniMeta: "20+ Activities, 18 Sight Seeing",
-        miniImage: "/assets/images/location1.png",
-        visitors: "100K+",
-        places: "20+",
-        oneWord: "Cultural",
-        historyIntro:
-          "Ubud, located in the uplands of Bali, has a rich and layered history that blends spirituality, royal patronage, artistic growth, and village traditions across centuries.",
-        historyPoints: [
-          "Ancient Origins: Ubud developed as a sacred area where Hindu priests, healers, and local communities gathered for meditation, rituals, and traditional learning in a calm natural setting.",
-          "Kingdom Era Influence: During historical Balinese kingdoms, Ubud became a recognized center for ceremonial arts, temple culture, and royal-supported performances tied to community identity.",
-          "Dutch Colonial Period: Although Bali experienced colonial pressure, Ubud retained much of its cultural continuity through village customs, temple activities, and artistic social structures.",
-          "Artistic Renaissance: In the early twentieth century, Ubud drew local and international artists who helped document, promote, and elevate Balinese dance, painting, carving, and music traditions.",
-          "Royal Patronage: The royal family of Ubud played a major role in preserving cultural institutions, supporting artists, and hosting festivals that strengthened the town's heritage reputation.",
-          "Community and Agriculture: Rice terrace systems, local markets, and village cooperation shaped Ubud's social rhythm, combining farming life with ritual and artistic expression.",
-          "Modern Cultural Growth: Ubud evolved into a global destination for culture and wellness while still maintaining traditional ceremonies, craft villages, and temple-centered community values.",
-          "Present Identity: Today, Ubud stands as a balanced mix of heritage, creativity, nature, and mindful travel, where old traditions continue to coexist with modern tourism."
+      const locationKey = (locationFromPath || "ubud").toLowerCase();
+      const locationThingsOverrides = {
+        ubud: [
+          { image: "/assets/images/ubud1.png", title: "Monkey Forest" }, { image: "/assets/images/ubud2.png", title: "Tegallalang Rice Terrace" },
+          { image: "/assets/images/ubud3.png", title: "Tirta Empul Temple" }, { image: "/assets/images/ubud4.png", title: "Ubud Art Market" },
+          { image: "/assets/images/ubud5.png", title: "Campuhan Ridge Walk" }, { image: "/assets/images/ubud6.png", title: "Tegenungan Waterfall" },
+          { image: "/assets/images/ubud7.png", title: "Goa Gajah Elephant Cave" }, { image: "/assets/images/ubud8.png", title: "Ubud Royal Palace" },
+          { image: "/assets/images/ubud9.png", title: "Saraswati Temple" }, { image: "/assets/images/ubud10.png", title: "Bali Swing" },
+          { image: "/assets/images/ubud11.png", title: "Tukad Cepung Waterfall" }, { image: "/assets/images/ubud12.png", title: "Kanto Lampo Waterfall" },
+          { image: "/assets/images/ubud13.png", title: "Ubud Cooking Class" }, { image: "/assets/images/ubud14.png", title: "Gunung Kawi Temple" },
+          { image: "/assets/images/ubud15.png", title: "Traditional Dance Show" }, { image: "/assets/images/ubud16.png", title: "Yoga Retreat" },
+          { image: "/assets/images/ubud17.png", title: "Cycling Through Villages" }, { image: "/assets/images/ubud18.png", title: "Pura Taman Saraswati" },
+          { image: "/assets/images/ubud19.png", title: "Jatiluwih Rice Fields" }, { image: "/assets/images/ubud20.png", title: "Ubud Night Market" }
         ],
-        historyImage: "https://images.unsplash.com/photo-1532186651327-6ac23687d189?auto=format&fit=crop&w=1400&q=80",
-        historyImageAlt: "Temple in Ubud",
-        bestTimeIntro: "The best time to travel to Ubud, Bali, largely depends on your preferences and what you aim to experience during your visit.",
-        bestTimeSeasons: [
-          { title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "This period sees the highest influx of tourists due to dry weather and pleasant temperatures. Expect clear skies, ideal for outdoor activities and cultural sightseeing." }, { label: "Shoulder Seasons (April to June, September to October)", text: "These months offer similar weather to peak season but with fewer crowds and better value stays." }] },
-          { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "The wet season brings frequent showers and humidity, while offering lush landscapes and lower prices." }, { label: "Festivals and Cultural Events", text: "Traditional ceremonies and festival windows can make travel more culturally immersive." }] }
+        kuta: [
+          { image: "/assets/images/kuta1.png", title: "Kuta Beach" }, { image: "/assets/images/kuta2.png", title: "Waterbom Bali" },
+          { image: "/assets/images/kuta3.png", title: "Beachwalk Shopping" }, { image: "/assets/images/kuta4.png", title: "Surf Lessons" },
+          { image: "/assets/images/kuta5.png", title: "Kuta Night Market" }, { image: "/assets/images/kuta6.png", title: "Sea Turtle Conservation" },
+          { image: "/assets/images/kuta7.png", title: "Discovery Mall" }, { image: "/assets/images/kuta8.png", title: "Kuta Beach Sunset" },
+          { image: "/assets/images/kuta9.png", title: "Dream Museum Zone" }, { image: "/assets/images/kuta10.png", title: "Circus Waterpark" },
+          { image: "/assets/images/kuta11.png", title: "Tuban Beach" }, { image: "/assets/images/kuta12.png", title: "Hard Rock Hotel Area" },
+          { image: "/assets/images/kuta13.png", title: "Vihara Dharmayana Temple" }, { image: "/assets/images/kuta14.png", title: "Ground Zero Monument" },
+          { image: "/assets/images/kuta15.png", title: "Kuta Square" }, { image: "/assets/images/kuta16.png", title: "Beach Volleyball" },
+          { image: "/assets/images/kuta17.png", title: "Parasailing Adventure" }, { image: "/assets/images/kuta18.png", title: "Legian Street Walk" },
+          { image: "/assets/images/kuta19.png", title: "Kuta Art Market" }, { image: "/assets/images/kuta20.png", title: "Massage on the Beach" }
         ],
-        bestTimeOutro: "If you prefer sunny weather with fewer crowds, shoulder months are ideal; if you enjoy culture and lower costs, wet months can still be rewarding.",
-        thingsTitle: "Things To Do in Ubud",
-        things: [
-          { image: "/assets/images/location1.png", title: "Monkey Forest" }, { image: "/assets/images/location2.png", title: "Puri Saren Agung" }, { image: "/assets/images/location3.png", title: "Traditional Dance" }, { image: "/assets/images/location4.png", title: "Art Market" }, { image: "/assets/images/location5.png", title: "Rice Terraces" }, { image: "/assets/images/location6.png", title: "Hike to Waterfalls" }, { image: "/assets/images/location7.png", title: "Cooking Class" }, { image: "/assets/images/location.png", title: "Sacred Temples" }
+        seminyak: [
+          { image: "/assets/images/seminyak1.png", title: "Seminyak Beach Sunset" }, { image: "/assets/images/seminyak2.png", title: "Potato Head Beach Club" },
+          { image: "/assets/images/seminyak3.png", title: "Petitenget Temple" }, { image: "/assets/images/seminyak4.png", title: "Eat Street Dining" },
+          { image: "/assets/images/seminyak5.png", title: "Ku De Ta Beach Club" }, { image: "/assets/images/seminyak6.png", title: "Seminyak Flea Market" },
+          { image: "/assets/images/seminyak7.png", title: "Boutique Shopping" }, { image: "/assets/images/seminyak8.png", title: "Bodywork Spa" },
+          { image: "/assets/images/seminyak9.png", title: "Double Six Beach" }, { image: "/assets/images/seminyak10.png", title: "La Plancha Beach Bar" },
+          { image: "/assets/images/seminyak11.png", title: "Bali Riding Stables" }, { image: "/assets/images/seminyak12.png", title: "Oberoi Street Walk" },
+          { image: "/assets/images/seminyak13.png", title: "Mrs Sippy Bali" }, { image: "/assets/images/seminyak14.png", title: "Motel Mexicola" },
+          { image: "/assets/images/seminyak15.png", title: "Echo Beach Trip" }, { image: "/assets/images/seminyak16.png", title: "Sunset Yoga Session" },
+          { image: "/assets/images/seminyak17.png", title: "Cocoon Beach Club" }, { image: "/assets/images/seminyak18.png", title: "Villa Pool Day" },
+          { image: "/assets/images/seminyak19.png", title: "Gallery Hopping" }, { image: "/assets/images/seminyak20.png", title: "Night Street Food" }
+        ],
+        lombok: [
+          { image: "/assets/images/lambok1.png", title: "Mount Rinjani Trek" }, { image: "/assets/images/lambok2.png", title: "Gili Trawangan" },
+          { image: "/assets/images/lambok3.png", title: "Tanjung Aan Beach" }, { image: "/assets/images/lambok4.png", title: "Sendang Gile Waterfall" },
+          { image: "/assets/images/lambok5.png", title: "Sasak Village Tour" }, { image: "/assets/images/lambok6.png", title: "Pink Beach" },
+          { image: "/assets/images/lambok7.png", title: "Gili Meno Lake" }, { image: "/assets/images/lambok8.png", title: "Selong Belanak Beach" },
+          { image: "/assets/images/lambok9.png", title: "Benang Stokel Waterfall" }, { image: "/assets/images/lambok10.png", title: "Kuta Lombok" },
+          { image: "/assets/images/lambok11.png", title: "Merese Hill Viewpoint" }, { image: "/assets/images/lambok12.png", title: "Gili Air Snorkeling" },
+          { image: "/assets/images/lambok13.png", title: "Sembalun Valley" }, { image: "/assets/images/lambok14.png", title: "Pura Lingsar Temple" },
+          { image: "/assets/images/lambok15.png", title: "Mawun Beach" }, { image: "/assets/images/lambok16.png", title: "Traditional Weaving" },
+          { image: "/assets/images/lambok17.png", title: "Bukit Pergasingan" }, { image: "/assets/images/lambok18.png", title: "Narmada Water Palace" },
+          { image: "/assets/images/lambok19.png", title: "Sunset at Malimbu Hill" }, { image: "/assets/images/lambok20.png", title: "Tiu Kelep Waterfall" }
+        ],
+        "nusa-penida": [
+          { image: "/assets/images/nusa1.png", title: "Kelingking Beach" }, { image: "/assets/images/nusa2.png", title: "Broken Beach" },
+          { image: "/assets/images/nusa3.png", title: "Angel's Billabong" }, { image: "/assets/images/nusa4.png", title: "Diamond Beach" },
+          { image: "/assets/images/nusa5.png", title: "Crystal Bay" }, { image: "/assets/images/nusa6.png", title: "Manta Point Dive" },
+          { image: "/assets/images/nusa7.png", title: "Atuh Beach" }, { image: "/assets/images/nusa8.png", title: "Teletubbies Hill" },
+          { image: "/assets/images/nusa9.png", title: "Rumah Pohon Treehouse" }, { image: "/assets/images/nusa10.png", title: "Tembeling Beach" },
+          { image: "/assets/images/nusa11.png", title: "Peguyangan Waterfall" }, { image: "/assets/images/nusa12.png", title: "Pura Goa Giri Putri" },
+          { image: "/assets/images/nusa13.png", title: "Banah Cliff Point" }, { image: "/assets/images/nusa14.png", title: "Suwehan Beach" },
+          { image: "/assets/images/nusa15.png", title: "Gamat Bay Snorkeling" }, { image: "/assets/images/nusa16.png", title: "Thousand Islands Viewpoint" },
+          { image: "/assets/images/nusa17.png", title: "Saren Cliff Point" }, { image: "/assets/images/nusa18.png", title: "Toyapakeh Wall Dive" },
+          { image: "/assets/images/nusa19.png", title: "Pura Dalem Penataran Ped" }, { image: "/assets/images/nusa20.png", title: "Island Road Trip" }
+        ],
+        uluwatu: [
+          { image: "/assets/images/uluwatu1.png", title: "Uluwatu Temple" }, { image: "/assets/images/uluwatu2.png", title: "Kecak Fire Dance" },
+          { image: "/assets/images/uluwatu3.png", title: "Padang Padang Beach" }, { image: "/assets/images/uluwatu4.png", title: "Suluban Beach" },
+          { image: "/assets/images/uluwatu5.png", title: "Single Fin Beach Club" }, { image: "/assets/images/uluwatu6.png", title: "Nyang Nyang Beach" },
+          { image: "/assets/images/uluwatu7.png", title: "Bingin Beach" }, { image: "/assets/images/uluwatu8.png", title: "Dreamland Beach" },
+          { image: "/assets/images/uluwatu9.png", title: "Balangan Beach" }, { image: "/assets/images/uluwatu10.png", title: "GWK Cultural Park" },
+          { image: "/assets/images/uluwatu11.png", title: "Sunday Beach Club" }, { image: "/assets/images/uluwatu12.png", title: "Blue Point Beach" },
+          { image: "/assets/images/uluwatu13.png", title: "Cliff Sunset Viewpoint" }, { image: "/assets/images/uluwatu14.png", title: "Surf at Uluwatu Reef" },
+          { image: "/assets/images/uluwatu15.png", title: "Melasti Beach" }, { image: "/assets/images/uluwatu16.png", title: "Karma Beach Club" },
+          { image: "/assets/images/uluwatu17.png", title: "Savaya Day Club" }, { image: "/assets/images/uluwatu18.png", title: "Jimbaran Seafood Dinner" },
+          { image: "/assets/images/uluwatu19.png", title: "Temple Monkey Encounters" }, { image: "/assets/images/uluwatu20.png", title: "Cliff Coastal Walk" }
         ]
-      },
-      kuta: {
-        label: "Kuta, Gali",
-        miniMeta: "16+ Activities, 20 Sight Seeing",
-        miniImage: "/assets/images/location2.png",
-        visitors: "180K+",
-        places: "16+",
-        oneWord: "Beachlife",
-        historyIntro: "Kuta, once a modest coastal settlement, has grown into one of Bali's most recognized beach destinations through decades of tourism, surf culture, and urban development.",
-        historyPoints: [
-          "Fishing Village Roots: Kuta historically began as a simple fishing community where coastal livelihoods and local trading activities shaped everyday social and economic life.",
-          "Early Tourism Shift: As international travelers discovered Bali's coastline, Kuta gradually transitioned from a quiet beach village into a popular stop for leisure tourism.",
-          "Surf Culture Expansion: During the 1970s and beyond, Kuta became globally known for beginner-friendly waves, attracting surfers and helping build its international identity.",
-          "Commercial Development: Hotels, restaurants, shopping strips, and transport access expanded rapidly, transforming Kuta into one of the island's most active visitor zones.",
-          "Urban Connectivity: Its proximity to Ngurah Rai International Airport made Kuta a practical gateway for first-time tourists and short-stay holiday travelers.",
-          "Local Economy Evolution: Beach vendors, family businesses, tour operators, and hospitality workers all contributed to Kuta's growth as a high-volume tourism district.",
-          "Cultural Continuity: Despite modernization, temple ceremonies, local traditions, and community rituals continue to be part of Kuta's identity and seasonal rhythm.",
-          "Current Character: Today Kuta represents a lively blend of beach culture, nightlife, shopping convenience, and classic Bali holiday energy."
-        ],
-        historyImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80",
-        historyImageAlt: "Kuta beach sunset",
-        bestTimeIntro: "The best time to visit Kuta depends on whether you prefer peak beach energy or calmer travel days with easier movement.",
-        bestTimeSeasons: [
-          { title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "Kuta is at its liveliest with packed beaches, active nightlife, and a vibrant holiday atmosphere." }, { label: "Shoulder Seasons (May to June, September)", text: "You still get excellent beach weather, surfing conditions, and sunset views, but with more manageable crowds." }] },
-          { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Kuta remains warm and travel-friendly, though short rain spells are common and rates are usually lower." }, { label: "Best For Relaxed Travel", text: "If you prefer quieter beaches and easier restaurant bookings, wet months can still be enjoyable with flexible planning." }] }
-        ],
-        bestTimeOutro: "For balanced weather and value, shoulder months are often the most practical choice for Kuta.",
-        thingsTitle: "Things To Do in Kuta",
-        things: [
-          { image: "/assets/images/location3.png", title: "Kuta Beach Sunset" }, { image: "/assets/images/location4.png", title: "Surfing Lessons" }, { image: "/assets/images/location5.png", title: "Beach Walk Mall" }, { image: "/assets/images/location6.png", title: "Waterbom Bali" }, { image: "/assets/images/location7.png", title: "Street Shopping" }, { image: "/assets/images/location.png", title: "Nightlife Spots" }, { image: "/assets/images/location1.png", title: "Beach Cafes" }, { image: "/assets/images/location2.png", title: "Temple Visits" }
-        ]
-      },
-      lombok: {
-        label: "Lombok",
-        miniMeta: "15+ Activities, 10 Sight Seeing",
-        miniImage: "/assets/images/location3.png",
-        visitors: "90K+",
-        places: "15+",
-        oneWord: "Scenic",
-        historyIntro: "Lombok has a distinctive cultural and geographic history shaped by Sasak traditions, volcanic landscapes, coastal livelihoods, and a slower tourism trajectory than Bali.",
-        historyPoints: [
-          "Sasak Heritage Foundations: Lombok's history is deeply rooted in Sasak language, customs, architecture, and village traditions that continue to shape local identity today.",
-          "Agrarian and Maritime Life: Farming, weaving, and coastal fishing historically sustained communities, creating a resilient economy tied to both land and sea cycles.",
-          "Volcanic Geography Influence: Mount Rinjani played a major role in spiritual beliefs, settlement patterns, and travel movement across the island's interior regions.",
-          "Regional Trade Links: Lombok participated in historical island trade networks, connecting local products and craftsmanship with wider Indonesian maritime routes.",
-          "Cultural Preservation: Because large-scale tourism arrived later, many villages retained stronger continuity in rituals, crafts, and traditional social structures.",
-          "Craft and Community Skills: Handwoven textiles, local markets, and village-based production remain important symbols of Lombok's cultural and economic heritage.",
-          "Tourism Transformation: Adventure and eco-focused travel gradually expanded Lombok's profile, especially through trekking, island hopping, and waterfall exploration.",
-          "Present-Day Identity: Modern Lombok is known for blending authentic local culture with nature-driven tourism in a quieter, more spacious island environment."
-        ],
-        historyImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1400&q=80",
-        historyImageAlt: "Lombok scenic mountain view",
-        bestTimeIntro: "Lombok is ideal for outdoor exploration during drier months with calmer sea conditions and better visibility for nature routes.",
-        bestTimeSeasons: [
-          { title: "Dry Season (May to October)", details: [{ label: "Peak Season (July and August)", text: "Popular among trekkers and adventure travelers, especially around Mount Rinjani and island routes." }, { label: "Shoulder Seasons (May to June, September)", text: "Great for mixed itineraries with beaches, waterfalls, and village experiences while avoiding heavy crowds." }] },
-          { title: "Wet Season (November to April)", details: [{ label: "Rainy Season", text: "Lombok turns lush and green, and accommodation rates are often lower, though routes may require flexibility." }, { label: "Best For Nature Lovers", text: "This season suits travelers who enjoy dramatic landscapes and fewer tourists with adaptive planning." }] }
-        ],
-        bestTimeOutro: "For active itineraries in Lombok, dry and shoulder months usually provide the best balance of comfort and accessibility.",
-        thingsTitle: "Things To Do in Lombok",
-        things: [
-          { image: "/assets/images/location5.png", title: "Mount Rinjani Trek" }, { image: "/assets/images/location6.png", title: "Sasak Village Tour" }, { image: "/assets/images/location7.png", title: "Pink Beach" }, { image: "/assets/images/location.png", title: "Gili Island Hop" }, { image: "/assets/images/location1.png", title: "Waterfall Hike" }, { image: "/assets/images/location2.png", title: "Snorkeling Spots" }, { image: "/assets/images/location3.png", title: "Coastal Drives" }, { image: "/assets/images/location4.png", title: "Sunrise Viewpoints" }
-        ]
-      },
-      seminyak: { label: "Seminyak", miniMeta: "18+ Activities, 14 Sight Seeing", miniImage: "/assets/images/location4.png", visitors: "130K+", places: "18+", oneWord: "Trendy", historyIntro: "Seminyak transformed from a quieter coastal extension into a premium destination known for lifestyle travel, dining culture, boutique retail, and modern beach experiences.", historyPoints: ["Coastal Extension Origins: Seminyak initially developed as a calmer neighboring area to Kuta, with lower density and a more relaxed shoreline atmosphere.", "Hospitality Growth: Over time, upscale villas, curated stays, and premium service models helped Seminyak emerge as a higher-end Bali destination.", "Lifestyle Development: Beach clubs, wellness spaces, and design-focused venues shaped a distinct identity centered around comfort and contemporary travel culture.", "Culinary Reputation: The district became one of Bali's strongest dining corridors, offering international cuisine, local fusion concepts, and destination restaurants.", "Retail and Design Influence: Boutique shopping, interior brands, and local artisan collaborations elevated Seminyak's appeal for style-oriented travelers.", "Community and Ritual Life: Despite commercial growth, local temple ceremonies and neighborhood traditions continue to anchor cultural continuity in the area.", "Traveler Profile Expansion: Seminyak attracted couples, families, and remote professionals seeking convenience, aesthetics, and premium leisure experiences.", "Current Positioning: Today Seminyak is recognized for combining modern luxury, beachside relaxation, and elements of Balinese cultural heritage."], historyImage: "https://images.unsplash.com/photo-1483683804023-6ccdb62f86ef?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Seminyak beach view", bestTimeIntro: "Seminyak is best during dry months for beach sunsets, shopping walks, and outdoor dining experiences.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "Seminyak is busiest with beach clubs, luxury stays, and high-demand dining." }, { label: "Shoulder Seasons (May to June, September)", text: "You still get clear sunsets and excellent weather while enjoying easier reservations." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Warm tropical weather continues with occasional showers and better hotel value." }, { label: "Best For Slow Travel", text: "Great for cafe culture, spa routines, and boutique exploration with fewer crowds." }] }], bestTimeOutro: "For a balanced Seminyak trip with comfort and fewer queues, shoulder season works very well.", thingsTitle: "Things To Do in Seminyak", things: [{ image: "/assets/images/location4.png", title: "Seminyak Beach Sunset" }, { image: "/assets/images/location5.png", title: "Beach Clubs" }, { image: "/assets/images/location6.png", title: "Boutique Shopping" }, { image: "/assets/images/location7.png", title: "Spa & Wellness" }, { image: "/assets/images/location.png", title: "Cafe Hopping" }, { image: "/assets/images/location1.png", title: "Petitenget Temple" }, { image: "/assets/images/location2.png", title: "Night Dining Streets" }, { image: "/assets/images/location3.png", title: "Artisan Markets" }] },
-      "nusa-penida": { label: "Nusa Penida", miniMeta: "14+ Activities, 12 Sight Seeing", miniImage: "/assets/images/location5.png", visitors: "85K+", places: "14+", oneWord: "Dramatic", historyIntro: "Nusa Penida has evolved from a remote island community into a sought-after nature destination known for steep cliffs, sacred sites, and dramatic marine landscapes.", historyPoints: ["Island Community Roots: Historically, Nusa Penida was home to fishing families and temple-centered communities shaped by sea-based livelihoods and spiritual traditions.", "Geographic Isolation: Its rugged roads and steep coastal terrain kept tourism limited for many years, preserving natural viewpoints and village character.", "Temple and Ritual Significance: Sacred sites and ceremonial practices have long played a central role in social and cultural life across the island.", "Access and Tourism Rise: Fast-boat connectivity from Bali significantly increased visitor movement and encouraged overnight stays and guided excursions.", "Photographic Recognition: Iconic cliff landscapes such as Kelingking and Diamond Beach gained global visibility through digital travel media and photography.", "Infrastructure Improvements: Better roads and transport links gradually opened western and eastern routes to a wider range of travelers.", "Marine Adventure Appeal: Snorkeling and diving ecosystems, including manta experiences, strengthened Nusa Penida's position in nature-based tourism.", "Current Destination Identity: Today Nusa Penida is known for dramatic scenery, ocean adventure, and spiritual heritage within a compact island setting."], historyImage: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Nusa Penida cliff coast", bestTimeIntro: "Nusa Penida is best when sea crossings are smoother and visibility is clear for viewpoints.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "The island sees high visitor numbers, especially at major photo viewpoints." }, { label: "Shoulder Seasons (May to June, September)", text: "Good sea and weather conditions remain with lower crowd pressure." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Rougher crossings and short storms can occur, requiring flexible route timing." }, { label: "Best For Flexible Itineraries", text: "You can still enjoy dramatic scenery during clear weather windows." }] }], bestTimeOutro: "For safer crossings and better outdoor comfort, dry or shoulder months are recommended.", thingsTitle: "Things To Do in Nusa Penida", things: [{ image: "/assets/images/location5.png", title: "Kelingking Beach Viewpoint" }, { image: "/assets/images/location6.png", title: "Broken Beach" }, { image: "/assets/images/location7.png", title: "Angel's Billabong" }, { image: "/assets/images/location.png", title: "Diamond Beach" }, { image: "/assets/images/location1.png", title: "Crystal Bay Snorkeling" }, { image: "/assets/images/location2.png", title: "Manta Point Tour" }, { image: "/assets/images/location3.png", title: "Island Road Trip" }, { image: "/assets/images/location4.png", title: "Sunset Cliff Stops" }] },
-      uluwatu: { label: "Uluwatu", miniMeta: "12+ Activities, 9 Sight Seeing", miniImage: "/assets/images/location6.png", visitors: "95K+", places: "12+", oneWord: "Clifftop", historyIntro: "Uluwatu has a strong cultural and geographic identity built around cliffside temples, ocean-facing landscapes, and one of Bali's most recognized surf regions.", historyPoints: ["Temple-Centered Origins: Uluwatu's early identity formed around coastal settlements and the spiritual significance of Uluwatu Temple on the cliff edge.", "Sacred Landscape Influence: High limestone cliffs and ocean-facing terrain made the area both ceremonially important and visually distinctive.", "Surf Destination Emergence: International surfers helped establish Uluwatu as a renowned wave destination, increasing global attention over time.", "Cultural Performance Legacy: Sunset Kecak dance events near the temple became a defining attraction that connects visitors with Balinese storytelling traditions.", "Heritage Preservation: Temple management and local communities continue to protect ritual practices and sacred customs within a growing tourism environment.", "Hospitality Expansion: Boutique stays, cliffside venues, and curated travel services developed as Uluwatu's popularity rose among premium travelers.", "Coastal Exploration Growth: Hidden beaches and cove access routes attracted photographers, surfers, and sunset-seeking visitors from around the world.", "Present-Day Character: Uluwatu now represents a blend of spiritual heritage, dramatic coastal scenery, surf culture, and destination-level sunset experiences."], historyImage: "https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Uluwatu temple cliff", bestTimeIntro: "Uluwatu is most enjoyable during dry weather when cliff roads and beach access are easier.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "Uluwatu is vibrant with temple visits, Kecak dance crowds, and busy sunset venues." }, { label: "Shoulder Seasons (May to June, September)", text: "Excellent weather for clifftop experiences and surfing with fewer queues." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Humidity and occasional rain increase, and sea conditions can be less predictable." }, { label: "Best For Relaxed Exploration", text: "Good for quieter stays and flexible sightseeing plans." }] }], bestTimeOutro: "Shoulder months give a great mix of views, weather, and manageable crowd levels in Uluwatu.", thingsTitle: "Things To Do in Uluwatu", things: [{ image: "/assets/images/location6.png", title: "Uluwatu Temple" }, { image: "/assets/images/location7.png", title: "Kecak Dance Show" }, { image: "/assets/images/location.png", title: "Clifftop Sunset Spots" }, { image: "/assets/images/location1.png", title: "Padang Padang Beach" }, { image: "/assets/images/location2.png", title: "Suluban Beach" }, { image: "/assets/images/location3.png", title: "Surfing Breaks" }, { image: "/assets/images/location4.png", title: "Seafood Dinner by Coast" }, { image: "/assets/images/location5.png", title: "Scenic Cliff Walks" }] }
-    };
+      };
+      const locationContentMap = {
+        ubud: {
+          label: "Ubud",
+          miniMeta: "20+ Activities, 18 Sight Seeing",
+          miniImage: "/assets/images/location1.png",
+          visitors: "100K+",
+          places: "20+",
+          oneWord: "Cultural",
+          historyIntro:
+            "Ubud, located in the uplands of Bali, has a rich and layered history that blends spirituality, royal patronage, artistic growth, and village traditions across centuries.",
+          historyPoints: [
+            "Ancient Origins: Ubud developed as a sacred area where Hindu priests, healers, and local communities gathered for meditation, rituals, and traditional learning in a calm natural setting.",
+            "Kingdom Era Influence: During historical Balinese kingdoms, Ubud became a recognized center for ceremonial arts, temple culture, and royal-supported performances tied to community identity.",
+            "Dutch Colonial Period: Although Bali experienced colonial pressure, Ubud retained much of its cultural continuity through village customs, temple activities, and artistic social structures.",
+            "Artistic Renaissance: In the early twentieth century, Ubud drew local and international artists who helped document, promote, and elevate Balinese dance, painting, carving, and music traditions.",
+            "Royal Patronage: The royal family of Ubud played a major role in preserving cultural institutions, supporting artists, and hosting festivals that strengthened the town's heritage reputation.",
+            "Community and Agriculture: Rice terrace systems, local markets, and village cooperation shaped Ubud's social rhythm, combining farming life with ritual and artistic expression.",
+            "Modern Cultural Growth: Ubud evolved into a global destination for culture and wellness while still maintaining traditional ceremonies, craft villages, and temple-centered community values.",
+            "Present Identity: Today, Ubud stands as a balanced mix of heritage, creativity, nature, and mindful travel, where old traditions continue to coexist with modern tourism."
+          ],
+          historyImage: "https://images.unsplash.com/photo-1532186651327-6ac23687d189?auto=format&fit=crop&w=1400&q=80",
+          historyImageAlt: "Temple in Ubud",
+          bestTimeIntro: "The best time to travel to Ubud, Bali, largely depends on your preferences and what you aim to experience during your visit.",
+          bestTimeSeasons: [
+            { title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "This period sees the highest influx of tourists due to dry weather and pleasant temperatures. Expect clear skies, ideal for outdoor activities and cultural sightseeing." }, { label: "Shoulder Seasons (April to June, September to October)", text: "These months offer similar weather to peak season but with fewer crowds and better value stays." }] },
+            { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "The wet season brings frequent showers and humidity, while offering lush landscapes and lower prices." }, { label: "Festivals and Cultural Events", text: "Traditional ceremonies and festival windows can make travel more culturally immersive." }] }
+          ],
+          bestTimeOutro: "If you prefer sunny weather with fewer crowds, shoulder months are ideal; if you enjoy culture and lower costs, wet months can still be rewarding.",
+          thingsTitle: "Things To Do in Ubud",
+          things: [
+            { image: "/assets/images/location1.png", title: "Monkey Forest" }, { image: "/assets/images/location2.png", title: "Puri Saren Agung" }, { image: "/assets/images/location3.png", title: "Traditional Dance" }, { image: "/assets/images/location4.png", title: "Art Market" }, { image: "/assets/images/location5.png", title: "Rice Terraces" }, { image: "/assets/images/location6.png", title: "Hike to Waterfalls" }, { image: "/assets/images/location7.png", title: "Cooking Class" }, { image: "/assets/images/location.png", title: "Sacred Temples" }
+          ]
+        },
+        kuta: {
+          label: "Kuta, Gali",
+          miniMeta: "16+ Activities, 20 Sight Seeing",
+          miniImage: "/assets/images/location2.png",
+          visitors: "180K+",
+          places: "16+",
+          oneWord: "Beachlife",
+          historyIntro: "Kuta, once a modest coastal settlement, has grown into one of Bali's most recognized beach destinations through decades of tourism, surf culture, and urban development.",
+          historyPoints: [
+            "Fishing Village Roots: Kuta historically began as a simple fishing community where coastal livelihoods and local trading activities shaped everyday social and economic life.",
+            "Early Tourism Shift: As international travelers discovered Bali's coastline, Kuta gradually transitioned from a quiet beach village into a popular stop for leisure tourism.",
+            "Surf Culture Expansion: During the 1970s and beyond, Kuta became globally known for beginner-friendly waves, attracting surfers and helping build its international identity.",
+            "Commercial Development: Hotels, restaurants, shopping strips, and transport access expanded rapidly, transforming Kuta into one of the island's most active visitor zones.",
+            "Urban Connectivity: Its proximity to Ngurah Rai International Airport made Kuta a practical gateway for first-time tourists and short-stay holiday travelers.",
+            "Local Economy Evolution: Beach vendors, family businesses, tour operators, and hospitality workers all contributed to Kuta's growth as a high-volume tourism district.",
+            "Cultural Continuity: Despite modernization, temple ceremonies, local traditions, and community rituals continue to be part of Kuta's identity and seasonal rhythm.",
+            "Current Character: Today Kuta represents a lively blend of beach culture, nightlife, shopping convenience, and classic Bali holiday energy."
+          ],
+          historyImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1400&q=80",
+          historyImageAlt: "Kuta beach sunset",
+          bestTimeIntro: "The best time to visit Kuta depends on whether you prefer peak beach energy or calmer travel days with easier movement.",
+          bestTimeSeasons: [
+            { title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "Kuta is at its liveliest with packed beaches, active nightlife, and a vibrant holiday atmosphere." }, { label: "Shoulder Seasons (May to June, September)", text: "You still get excellent beach weather, surfing conditions, and sunset views, but with more manageable crowds." }] },
+            { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Kuta remains warm and travel-friendly, though short rain spells are common and rates are usually lower." }, { label: "Best For Relaxed Travel", text: "If you prefer quieter beaches and easier restaurant bookings, wet months can still be enjoyable with flexible planning." }] }
+          ],
+          bestTimeOutro: "For balanced weather and value, shoulder months are often the most practical choice for Kuta.",
+          thingsTitle: "Things To Do in Kuta",
+          things: [
+            { image: "/assets/images/location3.png", title: "Kuta Beach Sunset" }, { image: "/assets/images/location4.png", title: "Surfing Lessons" }, { image: "/assets/images/location5.png", title: "Beach Walk Mall" }, { image: "/assets/images/location6.png", title: "Waterbom Bali" }, { image: "/assets/images/location7.png", title: "Street Shopping" }, { image: "/assets/images/location.png", title: "Nightlife Spots" }, { image: "/assets/images/location1.png", title: "Beach Cafes" }, { image: "/assets/images/location2.png", title: "Temple Visits" }
+          ]
+        },
+        lombok: {
+          label: "Lombok",
+          miniMeta: "15+ Activities, 10 Sight Seeing",
+          miniImage: "/assets/images/location3.png",
+          visitors: "90K+",
+          places: "15+",
+          oneWord: "Scenic",
+          historyIntro: "Lombok has a distinctive cultural and geographic history shaped by Sasak traditions, volcanic landscapes, coastal livelihoods, and a slower tourism trajectory than Bali.",
+          historyPoints: [
+            "Sasak Heritage Foundations: Lombok's history is deeply rooted in Sasak language, customs, architecture, and village traditions that continue to shape local identity today.",
+            "Agrarian and Maritime Life: Farming, weaving, and coastal fishing historically sustained communities, creating a resilient economy tied to both land and sea cycles.",
+            "Volcanic Geography Influence: Mount Rinjani played a major role in spiritual beliefs, settlement patterns, and travel movement across the island's interior regions.",
+            "Regional Trade Links: Lombok participated in historical island trade networks, connecting local products and craftsmanship with wider Indonesian maritime routes.",
+            "Cultural Preservation: Because large-scale tourism arrived later, many villages retained stronger continuity in rituals, crafts, and traditional social structures.",
+            "Craft and Community Skills: Handwoven textiles, local markets, and village-based production remain important symbols of Lombok's cultural and economic heritage.",
+            "Tourism Transformation: Adventure and eco-focused travel gradually expanded Lombok's profile, especially through trekking, island hopping, and waterfall exploration.",
+            "Present-Day Identity: Modern Lombok is known for blending authentic local culture with nature-driven tourism in a quieter, more spacious island environment."
+          ],
+          historyImage: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1400&q=80",
+          historyImageAlt: "Lombok scenic mountain view",
+          bestTimeIntro: "Lombok is ideal for outdoor exploration during drier months with calmer sea conditions and better visibility for nature routes.",
+          bestTimeSeasons: [
+            { title: "Dry Season (May to October)", details: [{ label: "Peak Season (July and August)", text: "Popular among trekkers and adventure travelers, especially around Mount Rinjani and island routes." }, { label: "Shoulder Seasons (May to June, September)", text: "Great for mixed itineraries with beaches, waterfalls, and village experiences while avoiding heavy crowds." }] },
+            { title: "Wet Season (November to April)", details: [{ label: "Rainy Season", text: "Lombok turns lush and green, and accommodation rates are often lower, though routes may require flexibility." }, { label: "Best For Nature Lovers", text: "This season suits travelers who enjoy dramatic landscapes and fewer tourists with adaptive planning." }] }
+          ],
+          bestTimeOutro: "For active itineraries in Lombok, dry and shoulder months usually provide the best balance of comfort and accessibility.",
+          thingsTitle: "Things To Do in Lombok",
+          things: [
+            { image: "/assets/images/location5.png", title: "Mount Rinjani Trek" }, { image: "/assets/images/location6.png", title: "Sasak Village Tour" }, { image: "/assets/images/location7.png", title: "Pink Beach" }, { image: "/assets/images/location.png", title: "Gili Island Hop" }, { image: "/assets/images/location1.png", title: "Waterfall Hike" }, { image: "/assets/images/location2.png", title: "Snorkeling Spots" }, { image: "/assets/images/location3.png", title: "Coastal Drives" }, { image: "/assets/images/location4.png", title: "Sunrise Viewpoints" }
+          ]
+        },
+        seminyak: { label: "Seminyak", miniMeta: "18+ Activities, 14 Sight Seeing", miniImage: "/assets/images/location4.png", visitors: "130K+", places: "18+", oneWord: "Trendy", historyIntro: "Seminyak transformed from a quieter coastal extension into a premium destination known for lifestyle travel, dining culture, boutique retail, and modern beach experiences.", historyPoints: ["Coastal Extension Origins: Seminyak initially developed as a calmer neighboring area to Kuta, with lower density and a more relaxed shoreline atmosphere.", "Hospitality Growth: Over time, upscale villas, curated stays, and premium service models helped Seminyak emerge as a higher-end Bali destination.", "Lifestyle Development: Beach clubs, wellness spaces, and design-focused venues shaped a distinct identity centered around comfort and contemporary travel culture.", "Culinary Reputation: The district became one of Bali's strongest dining corridors, offering international cuisine, local fusion concepts, and destination restaurants.", "Retail and Design Influence: Boutique shopping, interior brands, and local artisan collaborations elevated Seminyak's appeal for style-oriented travelers.", "Community and Ritual Life: Despite commercial growth, local temple ceremonies and neighborhood traditions continue to anchor cultural continuity in the area.", "Traveler Profile Expansion: Seminyak attracted couples, families, and remote professionals seeking convenience, aesthetics, and premium leisure experiences.", "Current Positioning: Today Seminyak is recognized for combining modern luxury, beachside relaxation, and elements of Balinese cultural heritage."], historyImage: "https://images.unsplash.com/photo-1483683804023-6ccdb62f86ef?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Seminyak beach view", bestTimeIntro: "Seminyak is best during dry months for beach sunsets, shopping walks, and outdoor dining experiences.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "Seminyak is busiest with beach clubs, luxury stays, and high-demand dining." }, { label: "Shoulder Seasons (May to June, September)", text: "You still get clear sunsets and excellent weather while enjoying easier reservations." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Warm tropical weather continues with occasional showers and better hotel value." }, { label: "Best For Slow Travel", text: "Great for cafe culture, spa routines, and boutique exploration with fewer crowds." }] }], bestTimeOutro: "For a balanced Seminyak trip with comfort and fewer queues, shoulder season works very well.", thingsTitle: "Things To Do in Seminyak", things: [{ image: "/assets/images/location4.png", title: "Seminyak Beach Sunset" }, { image: "/assets/images/location5.png", title: "Beach Clubs" }, { image: "/assets/images/location6.png", title: "Boutique Shopping" }, { image: "/assets/images/location7.png", title: "Spa & Wellness" }, { image: "/assets/images/location.png", title: "Cafe Hopping" }, { image: "/assets/images/location1.png", title: "Petitenget Temple" }, { image: "/assets/images/location2.png", title: "Night Dining Streets" }, { image: "/assets/images/location3.png", title: "Artisan Markets" }] },
+        "nusa-penida": { label: "Nusa Penida", miniMeta: "14+ Activities, 12 Sight Seeing", miniImage: "/assets/images/location5.png", visitors: "85K+", places: "14+", oneWord: "Dramatic", historyIntro: "Nusa Penida has evolved from a remote island community into a sought-after nature destination known for steep cliffs, sacred sites, and dramatic marine landscapes.", historyPoints: ["Island Community Roots: Historically, Nusa Penida was home to fishing families and temple-centered communities shaped by sea-based livelihoods and spiritual traditions.", "Geographic Isolation: Its rugged roads and steep coastal terrain kept tourism limited for many years, preserving natural viewpoints and village character.", "Temple and Ritual Significance: Sacred sites and ceremonial practices have long played a central role in social and cultural life across the island.", "Access and Tourism Rise: Fast-boat connectivity from Bali significantly increased visitor movement and encouraged overnight stays and guided excursions.", "Photographic Recognition: Iconic cliff landscapes such as Kelingking and Diamond Beach gained global visibility through digital travel media and photography.", "Infrastructure Improvements: Better roads and transport links gradually opened western and eastern routes to a wider range of travelers.", "Marine Adventure Appeal: Snorkeling and diving ecosystems, including manta experiences, strengthened Nusa Penida's position in nature-based tourism.", "Current Destination Identity: Today Nusa Penida is known for dramatic scenery, ocean adventure, and spiritual heritage within a compact island setting."], historyImage: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Nusa Penida cliff coast", bestTimeIntro: "Nusa Penida is best when sea crossings are smoother and visibility is clear for viewpoints.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "The island sees high visitor numbers, especially at major photo viewpoints." }, { label: "Shoulder Seasons (May to June, September)", text: "Good sea and weather conditions remain with lower crowd pressure." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Rougher crossings and short storms can occur, requiring flexible route timing." }, { label: "Best For Flexible Itineraries", text: "You can still enjoy dramatic scenery during clear weather windows." }] }], bestTimeOutro: "For safer crossings and better outdoor comfort, dry or shoulder months are recommended.", thingsTitle: "Things To Do in Nusa Penida", things: [{ image: "/assets/images/location5.png", title: "Kelingking Beach Viewpoint" }, { image: "/assets/images/location6.png", title: "Broken Beach" }, { image: "/assets/images/location7.png", title: "Angel's Billabong" }, { image: "/assets/images/location.png", title: "Diamond Beach" }, { image: "/assets/images/location1.png", title: "Crystal Bay Snorkeling" }, { image: "/assets/images/location2.png", title: "Manta Point Tour" }, { image: "/assets/images/location3.png", title: "Island Road Trip" }, { image: "/assets/images/location4.png", title: "Sunset Cliff Stops" }] },
+        uluwatu: { label: "Uluwatu", miniMeta: "12+ Activities, 9 Sight Seeing", miniImage: "/assets/images/location6.png", visitors: "95K+", places: "12+", oneWord: "Clifftop", historyIntro: "Uluwatu has a strong cultural and geographic identity built around cliffside temples, ocean-facing landscapes, and one of Bali's most recognized surf regions.", historyPoints: ["Temple-Centered Origins: Uluwatu's early identity formed around coastal settlements and the spiritual significance of Uluwatu Temple on the cliff edge.", "Sacred Landscape Influence: High limestone cliffs and ocean-facing terrain made the area both ceremonially important and visually distinctive.", "Surf Destination Emergence: International surfers helped establish Uluwatu as a renowned wave destination, increasing global attention over time.", "Cultural Performance Legacy: Sunset Kecak dance events near the temple became a defining attraction that connects visitors with Balinese storytelling traditions.", "Heritage Preservation: Temple management and local communities continue to protect ritual practices and sacred customs within a growing tourism environment.", "Hospitality Expansion: Boutique stays, cliffside venues, and curated travel services developed as Uluwatu's popularity rose among premium travelers.", "Coastal Exploration Growth: Hidden beaches and cove access routes attracted photographers, surfers, and sunset-seeking visitors from around the world.", "Present-Day Character: Uluwatu now represents a blend of spiritual heritage, dramatic coastal scenery, surf culture, and destination-level sunset experiences."], historyImage: "https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Uluwatu temple cliff", bestTimeIntro: "Uluwatu is most enjoyable during dry weather when cliff roads and beach access are easier.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "Uluwatu is vibrant with temple visits, Kecak dance crowds, and busy sunset venues." }, { label: "Shoulder Seasons (May to June, September)", text: "Excellent weather for clifftop experiences and surfing with fewer queues." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Humidity and occasional rain increase, and sea conditions can be less predictable." }, { label: "Best For Relaxed Exploration", text: "Good for quieter stays and flexible sightseeing plans." }] }], bestTimeOutro: "Shoulder months give a great mix of views, weather, and manageable crowd levels in Uluwatu.", thingsTitle: "Things To Do in Uluwatu", things: [{ image: "/assets/images/location6.png", title: "Uluwatu Temple" }, { image: "/assets/images/location7.png", title: "Kecak Dance Show" }, { image: "/assets/images/location.png", title: "Clifftop Sunset Spots" }, { image: "/assets/images/location1.png", title: "Padang Padang Beach" }, { image: "/assets/images/location2.png", title: "Suluban Beach" }, { image: "/assets/images/location3.png", title: "Surfing Breaks" }, { image: "/assets/images/location4.png", title: "Seafood Dinner by Coast" }, { image: "/assets/images/location5.png", title: "Scenic Cliff Walks" }] }
+      };
 
-    const selectedLocation = locationContentMap[locationKey] || locationContentMap.ubud;
-    const overrideThings = locationThingsOverrides[locationKey];
-    if (Array.isArray(overrideThings) && overrideThings.length) {
-      selectedLocation.things = overrideThings;
-    }
-    document.getElementById("locationName")?.replaceChildren(document.createTextNode(selectedLocation.label));
-    document.getElementById("locationHeading")?.replaceChildren(document.createTextNode(selectedLocation.label));
-
-    const miniImg = locationPageRoot.querySelector(".location-mini-badge img");
-    if (miniImg) {
-      miniImg.src = selectedLocation.miniImage;
-      miniImg.alt = `${selectedLocation.label} icon`;
-      bindImageExtensionFallback(miniImg);
-    }
-    const miniMeta = locationPageRoot.querySelector(".location-mini-badge p");
-    if (miniMeta) miniMeta.textContent = selectedLocation.miniMeta;
-
-    const stats = locationPageRoot.querySelectorAll(".location-stats-row article");
-    if (stats[0]) stats[0].innerHTML = `<strong>${selectedLocation.visitors}</strong><small>Monthly Visitors</small>`;
-    if (stats[1]) stats[1].innerHTML = `<strong>${selectedLocation.places}</strong><small>Iconic Places</small>`;
-    if (stats[2]) stats[2].innerHTML = `<strong>${selectedLocation.oneWord}</strong><small>One Word About ${selectedLocation.label}</small>`;
-
-    const historySection = locationPageRoot.querySelector(".location-copy-block--history");
-    if (historySection) {
-      const intro = historySection.querySelector("p");
-      const list = historySection.querySelector("ol");
-      const image = historySection.querySelector("img");
-      if (intro) intro.textContent = selectedLocation.historyIntro;
-      if (list) list.innerHTML = selectedLocation.historyPoints.map((point) => `<li>${point}</li>`).join("");
-      if (image) {
-        image.src = selectedLocation.historyImage;
-        image.alt = selectedLocation.historyImageAlt;
-        bindImageExtensionFallback(image);
+      const selectedLocation = locationContentMap[locationKey] || locationContentMap.ubud;
+      const overrideThings = locationThingsOverrides[locationKey];
+      if (Array.isArray(overrideThings) && overrideThings.length) {
+        selectedLocation.things = overrideThings;
       }
-    }
+      document.getElementById("locationName")?.replaceChildren(document.createTextNode(selectedLocation.label));
+      document.getElementById("locationHeading")?.replaceChildren(document.createTextNode(selectedLocation.label));
 
-    const seasonSection = locationPageRoot.querySelector(".location-copy-block--season");
-    if (seasonSection) {
-      const paragraphs = seasonSection.querySelectorAll("p");
-      const list = seasonSection.querySelector("ol");
-      if (paragraphs[0]) paragraphs[0].textContent = selectedLocation.bestTimeIntro;
-      if (list) {
-        list.innerHTML = (selectedLocation.bestTimeSeasons || [])
-          .map((season) => `<li><strong>${season.title}</strong><ul>${season.details.map((detail) => `<li><u>${detail.label}</u>: ${detail.text}</li>`).join("")}</ul></li>`)
-          .join("");
+      const miniImg = locationPageRoot.querySelector(".location-mini-badge img");
+      if (miniImg) {
+        miniImg.src = selectedLocation.miniImage;
+        miniImg.alt = `${selectedLocation.label} icon`;
+        bindImageExtensionFallback(miniImg);
       }
-      if (paragraphs[1]) paragraphs[1].textContent = selectedLocation.bestTimeOutro;
-    }
+      const miniMeta = locationPageRoot.querySelector(".location-mini-badge p");
+      if (miniMeta) miniMeta.textContent = selectedLocation.miniMeta;
 
-    const thingsHeading = locationPageRoot.querySelector(".location-things h3");
-    if (thingsHeading) thingsHeading.textContent = selectedLocation.thingsTitle;
-    const thingsGrid = locationPageRoot.querySelector(".location-things-grid");
-    const thingsExtra = locationPageRoot.querySelector(".location-things-gallery-extra");
-    const primaryThings = selectedLocation.things.slice(0, 8);
-    const extraThings = selectedLocation.things.slice(8);
-    if (thingsGrid) {
-      thingsGrid.innerHTML = `${primaryThings.map((item) => `<article><img src="${item.image}" alt="${item.title}" /><span>${item.title}</span></article>`).join("")}
+      const stats = locationPageRoot.querySelectorAll(".location-stats-row article");
+      if (stats[0]) stats[0].innerHTML = `<strong>${selectedLocation.visitors}</strong><small>Monthly Visitors</small>`;
+      if (stats[1]) stats[1].innerHTML = `<strong>${selectedLocation.places}</strong><small>Iconic Places</small>`;
+      if (stats[2]) stats[2].innerHTML = `<strong>${selectedLocation.oneWord}</strong><small>One Word About ${selectedLocation.label}</small>`;
+
+      const historySection = locationPageRoot.querySelector(".location-copy-block--history");
+      if (historySection) {
+        const intro = historySection.querySelector("p");
+        const list = historySection.querySelector("ol");
+        const image = historySection.querySelector("img");
+        if (intro) intro.textContent = selectedLocation.historyIntro;
+        if (list) list.innerHTML = selectedLocation.historyPoints.map((point) => `<li>${point}</li>`).join("");
+        if (image) {
+          image.src = selectedLocation.historyImage;
+          image.alt = selectedLocation.historyImageAlt;
+          bindImageExtensionFallback(image);
+        }
+      }
+
+      const seasonSection = locationPageRoot.querySelector(".location-copy-block--season");
+      if (seasonSection) {
+        const paragraphs = seasonSection.querySelectorAll("p");
+        const list = seasonSection.querySelector("ol");
+        if (paragraphs[0]) paragraphs[0].textContent = selectedLocation.bestTimeIntro;
+        if (list) {
+          list.innerHTML = (selectedLocation.bestTimeSeasons || [])
+            .map((season) => `<li><strong>${season.title}</strong><ul>${season.details.map((detail) => `<li><u>${detail.label}</u>: ${detail.text}</li>`).join("")}</ul></li>`)
+            .join("");
+        }
+        if (paragraphs[1]) paragraphs[1].textContent = selectedLocation.bestTimeOutro;
+      }
+
+      const thingsHeading = locationPageRoot.querySelector(".location-things h3");
+      if (thingsHeading) thingsHeading.textContent = selectedLocation.thingsTitle;
+      const thingsGrid = locationPageRoot.querySelector(".location-things-grid");
+      const thingsExtra = locationPageRoot.querySelector(".location-things-gallery-extra");
+      const primaryThings = selectedLocation.things.slice(0, 8);
+      const extraThings = selectedLocation.things.slice(8);
+      if (thingsGrid) {
+        thingsGrid.innerHTML = `${primaryThings.map((item) => `<article><img src="${item.image}" alt="${item.title}" /><span>${item.title}</span></article>`).join("")}
         <article class="location-more-card" id="locationThingsMoreCard"><img src="${selectedLocation.things[0]?.image || "/assets/images/location.png"}" alt="More activities" /><span><strong>${extraThings.length || 20}+ More</strong><small>Activities & Sightseetings</small></span></article>`;
-      thingsGrid.querySelectorAll("img").forEach((img) => bindImageExtensionFallback(img));
-    }
-    if (thingsExtra) {
-      thingsExtra.innerHTML = (extraThings.length ? extraThings : selectedLocation.things.slice(0, 12))
-        .map((item) => `<img src="${item.image}" alt="${item.title}" />`)
-        .join("");
-      thingsExtra.querySelectorAll("img").forEach((img) => bindImageExtensionFallback(img));
-    }
+        thingsGrid.querySelectorAll("img").forEach((img) => bindImageExtensionFallback(img));
+      }
+      if (thingsExtra) {
+        thingsExtra.innerHTML = (extraThings.length ? extraThings : selectedLocation.things.slice(0, 12))
+          .map((item) => `<img src="${item.image}" alt="${item.title}" />`)
+          .join("");
+        thingsExtra.querySelectorAll("img").forEach((img) => bindImageExtensionFallback(img));
+      }
 
-    // Keep executable URL on static/local servers.
-    // (Path-style routes like /locations/slug require server rewrite support.)
+      // Keep executable URL on static/local servers.
+      // (Path-style routes like /locations/slug require server rewrite support.)
     }
   }
 
-  // Location things: selectable activity cards + gallery lightbox from "20+ More"
+  // Location things: fullscreen 3D ring stack gallery (upgrade legacy markup in JS)
+  const triponUpgradeLocationThingsLightbox = (modal) => {
+    if (!modal) {
+      return null;
+    }
+    const hasLegacyMarkup = Boolean(
+      modal.querySelector(
+        ".location-things-lightbox-inner, .location-things-lightbox-prev, .location-things-lightbox-next, #locationThingsLightboxImg, [data-lightbox-coverflow-track]"
+      )
+    );
+    if (modal.querySelector("[data-lightbox-ring-track]") && !hasLegacyMarkup) {
+      modal.dataset.triponCinemaReady = "3";
+      return modal;
+    }
+    const label = modal.getAttribute("aria-label") || "Photo gallery";
+    modal.innerHTML = `
+      <div class="location-things-lightbox__backdrop" data-lightbox-dismiss tabindex="-1" aria-hidden="true"></div>
+      <div class="location-things-lightbox__stage">
+        <div class="location-things-ring" data-lightbox-ring>
+          <div class="location-things-ring__viewport" data-lightbox-ring-viewport" tabindex="0" role="region" aria-label="Activity photos carousel">
+            <div class="location-things-ring__floor" aria-hidden="true"></div>
+            <div class="location-things-ring__track" data-lightbox-ring-track></div>
+          </div>
+        </div>
+      </div>
+      <div class="location-things-lightbox__chrome">
+        <button type="button" class="location-things-lightbox__close" aria-label="Close gallery"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        <button type="button" class="location-things-lightbox__nav location-things-lightbox__nav--prev" aria-label="Previous image"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+        <button type="button" class="location-things-lightbox__nav location-things-lightbox__nav--next" aria-label="Next image"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+        <p class="location-things-lightbox__caption" id="locationThingsLightboxCaption"></p>
+        <p class="location-things-lightbox__counter" id="locationThingsLightboxCounter" aria-live="polite"></p>
+      </div>`;
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-label", label);
+    modal.dataset.triponCinemaReady = "3";
+    return modal;
+  };
+
   const locationThingsSection = document.querySelector(".location-things");
   if (locationThingsSection) {
     const thingCards = Array.from(locationThingsSection.querySelectorAll(".location-things-grid article"));
-    const lightbox = document.getElementById("locationThingsLightbox");
-    const lightboxImg = document.getElementById("locationThingsLightboxImg");
-    const lightboxCaption = lightbox?.querySelector(".location-things-lightbox-caption");
-    const lightboxCounter = lightbox?.querySelector(".location-things-lightbox-counter");
+    const lightbox = triponUpgradeLocationThingsLightbox(document.getElementById("locationThingsLightbox"));
+    const ringTrack = lightbox?.querySelector("[data-lightbox-ring-track]");
+    const ringViewport = lightbox?.querySelector("[data-lightbox-ring-viewport]");
+    const ringRoot = lightbox?.querySelector("[data-lightbox-ring]");
+    const lightboxCaption = lightbox?.querySelector(".location-things-lightbox__caption");
+    const lightboxCounter = lightbox?.querySelector(".location-things-lightbox__counter");
     const moreCard = document.getElementById("locationThingsMoreCard");
+
+    const cinemaMs = () => {
+      const raw = getComputedStyle(document.documentElement).getPropertyValue("--tripon-cinema-duration").trim();
+      const n = parseFloat(raw);
+      return Number.isFinite(n) ? n : 880;
+    };
 
     const setActiveThing = (card) => {
       thingCards.forEach((node) => node.classList.remove("is-active"));
-      card.classList.add("is-active");
+      card?.classList.add("is-active");
     };
 
     const collectGalleryItems = () => {
@@ -2140,39 +5257,188 @@ const triponInitMain = () => {
         }
         const caption =
           card.querySelector("span")?.textContent?.replace(/\s+/g, " ").trim() || img.alt || "Activity";
-        items.push({ src: img.currentSrc || img.src, alt: img.alt || caption, caption });
+        items.push({ src: img.currentSrc || img.src, alt: img.alt || caption, caption, card });
       });
       locationThingsSection.querySelectorAll(".location-things-gallery-extra img").forEach((img) => {
         if (!img.src) {
           return;
         }
-        const cap = img.alt?.trim() || "Ubud experience";
-        items.push({ src: img.currentSrc || img.src, alt: img.alt || cap, caption: cap });
+        const cap = img.alt?.trim() || "Activity";
+        items.push({ src: img.currentSrc || img.src, alt: img.alt || cap, caption: cap, card: null });
       });
       return items;
     };
 
     let galleryItems = [];
+    let gallerySlides = [];
     let galleryIndex = 0;
     let lightboxReturnFocus = null;
+    let dragStartX = 0;
+    let dragDeltaX = 0;
+    let isDragging = false;
+    let pointerDragActive = false;
+    const dragStartThreshold = 10;
 
-    const renderLightbox = () => {
-      if (!lightbox || !lightboxImg || galleryItems.length === 0) {
+    const normalizeIndex = (index, total) => ((index % total) + total) % total;
+
+    const getRelativeOffset = (slideIndex, centerIndex, total) => {
+      let diff = slideIndex - centerIndex;
+      const half = Math.floor(total / 2);
+      if (diff > half) {
+        diff -= total;
+      }
+      if (diff < -half) {
+        diff += total;
+      }
+      return diff;
+    };
+
+    const getSlideWidth = () => {
+      const measured = gallerySlides[0]?.offsetWidth || 0;
+      if (measured > 40) {
+        return measured;
+      }
+      const host = ringRoot || lightbox;
+      const cssW = host ? parseFloat(getComputedStyle(host).getPropertyValue("--ring-slide-w")) : NaN;
+      if (Number.isFinite(cssW) && cssW > 40) {
+        return cssW;
+      }
+      return Math.min(500, Math.max(240, window.innerWidth * 0.4));
+    };
+
+    const getRingRadius = () => Math.min(560, Math.max(300, window.innerWidth * 0.36));
+
+    const layoutRing = (dragOffsetPx = 0) => {
+      requestAnimationFrame(() => updateRing(dragOffsetPx));
+    };
+
+    const updateLightboxText = (animate = true) => {
+      const item = galleryItems[galleryIndex];
+      if (!item) {
         return;
       }
-      const item = galleryItems[galleryIndex];
-      lightboxImg.src = item.src;
-      lightboxImg.alt = item.alt;
-      if (lightboxCaption) {
-        lightboxCaption.textContent = item.caption;
+      if (animate) {
+        lightbox?.classList.add("is-text-changing");
       }
-      if (lightboxCounter) {
-        lightboxCounter.textContent = `${galleryIndex + 1} / ${galleryItems.length}`;
+      const apply = () => {
+        if (lightboxCaption) {
+          lightboxCaption.textContent = item.caption;
+        }
+        if (lightboxCounter) {
+          lightboxCounter.textContent = `${galleryIndex + 1} / ${galleryItems.length}`;
+        }
+        if (animate) {
+          requestAnimationFrame(() => lightbox?.classList.remove("is-text-changing"));
+        }
+      };
+      if (animate) {
+        window.setTimeout(apply, 140);
+      } else {
+        apply();
       }
     };
 
-    const openLightbox = () => {
-      if (!lightbox) {
+    const updateRing = (dragOffsetPx = 0) => {
+      const total = galleryItems.length;
+      if (!total || !gallerySlides.length) {
+        return;
+      }
+      const radius = getRingRadius();
+      const angleStep = total > 10 ? 20 : 24;
+      const dragAngle = (dragOffsetPx / Math.max(getSlideWidth(), 1)) * angleStep * 0.45;
+
+      gallerySlides.forEach((slide) => {
+        const slideIndex = Number(slide.dataset.slideIndex);
+        const offset = getRelativeOffset(slideIndex, galleryIndex, total);
+        const abs = Math.abs(offset);
+        const angleDeg = offset * angleStep + dragAngle;
+        const rad = (angleDeg * Math.PI) / 180;
+        const translateX = Math.sin(rad) * radius;
+        const translateZ = Math.cos(rad) * radius - radius;
+        const rotateY = -angleDeg;
+        const depth = Math.max(0, Math.min(1, (translateZ + radius) / radius));
+        const scale = 0.48 + 0.58 * Math.pow(depth, 0.82);
+        const opacity =
+          offset === 0 ? 1 : abs === 1 ? 0.9 : abs === 2 ? 0.72 : abs === 3 ? 0.5 : abs <= 5 ? 0.28 : 0.1;
+        const blur = abs === 0 ? 0 : abs === 1 ? 0.4 : abs <= 3 ? 1.5 : abs <= 5 ? 3 : 5;
+
+        slide.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+        slide.style.opacity = String(Math.max(opacity, 0));
+        slide.style.filter = blur ? `blur(${blur}px)` : "none";
+        slide.style.zIndex = String(Math.round(depth * 100));
+        slide.classList.toggle("is-active", offset === 0);
+        slide.classList.toggle("is-side", abs === 1);
+        slide.style.pointerEvents = abs <= 4 ? "auto" : "none";
+        slide.setAttribute("aria-hidden", abs > 5 ? "true" : "false");
+      });
+    };
+
+    const buildRingSlides = () => {
+      if (!ringTrack) {
+        return;
+      }
+      ringTrack.textContent = "";
+      galleryItems.forEach((item, index) => {
+        const slide = document.createElement("article");
+        slide.className = "location-things-ring__slide";
+        slide.dataset.slideIndex = String(index);
+        slide.setAttribute("role", "group");
+        slide.setAttribute("aria-label", item.caption);
+        const safeAlt = String(item.alt || item.caption).replace(/"/g, "&quot;");
+        slide.innerHTML = `
+          <div class="location-things-ring__card">
+            <div class="location-things-ring__frame">
+              <img src="${item.src}" alt="${safeAlt}" decoding="async" />
+            </div>
+          </div>`;
+        ringTrack.appendChild(slide);
+      });
+      gallerySlides = Array.from(ringTrack.querySelectorAll(".location-things-ring__slide"));
+      gallerySlides.forEach((slide) => {
+        slide.addEventListener("click", () => {
+          if (isDragging) {
+            return;
+          }
+          const index = Number(slide.dataset.slideIndex);
+          if (!Number.isNaN(index) && index !== galleryIndex) {
+            goTo(index);
+          }
+        });
+      });
+
+      const imgs = ringTrack.querySelectorAll("img");
+      let pending = imgs.length;
+      const markReady = () => {
+        pending -= 1;
+        if (pending <= 0) {
+          layoutRing(0);
+        }
+      };
+      if (!pending) {
+        layoutRing(0);
+      } else {
+        imgs.forEach((img) => {
+          if (img.complete) {
+            markReady();
+          } else {
+            img.addEventListener("load", markReady, { once: true });
+            img.addEventListener("error", markReady, { once: true });
+          }
+        });
+      }
+    };
+
+    const goTo = (index, { animateText = true } = {}) => {
+      if (!galleryItems.length || !gallerySlides.length) {
+        return;
+      }
+      galleryIndex = normalizeIndex(index, galleryItems.length);
+      updateLightboxText(animateText);
+      layoutRing(0);
+    };
+
+    const openLightbox = (startIndex = 0) => {
+      if (!lightbox || !ringTrack) {
         return;
       }
       galleryItems = collectGalleryItems();
@@ -2180,57 +5446,106 @@ const triponInitMain = () => {
         showStatus("No gallery images available");
         return;
       }
-      galleryIndex = 0;
-      renderLightbox();
+      buildRingSlides();
+      galleryIndex = normalizeIndex(startIndex, galleryItems.length);
+
       lightboxReturnFocus = document.activeElement;
-      lightbox.classList.add("is-open");
+      lightbox.classList.remove("is-closing", "is-text-changing", "is-ui-ready");
+      lightbox.classList.add("is-mounting");
       lightbox.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
-      lightbox.querySelector(".location-things-lightbox-close")?.focus({ preventScroll: true });
+      updateLightboxText(false);
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          lightbox.classList.add("is-open");
+          layoutRing(0);
+          window.setTimeout(() => {
+            lightbox.classList.add("is-ui-ready");
+            layoutRing(0);
+            ringViewport?.focus({ preventScroll: true });
+          }, Math.min(cinemaMs() * 0.35, 320));
+        });
+      });
+
+      lightbox.querySelector(".location-things-lightbox__close")?.focus({ preventScroll: true });
     };
 
     const closeLightbox = () => {
-      if (!lightbox?.classList.contains("is-open")) {
+      if (!lightbox?.classList.contains("is-open") && !lightbox?.classList.contains("is-mounting")) {
         return;
       }
-      lightbox.classList.remove("is-open");
-      lightbox.setAttribute("aria-hidden", "true");
-      document.body.style.overflow = "";
-      if (lightboxImg) {
-        lightboxImg.removeAttribute("src");
-      }
-      const back = lightboxReturnFocus;
-      lightboxReturnFocus = null;
-      if (back instanceof HTMLElement && document.contains(back)) {
-        back.focus({ preventScroll: true });
-      } else {
-        moreCard?.focus({ preventScroll: true });
-      }
+      lightbox.classList.remove("is-open", "is-ui-ready", "is-text-changing");
+      lightbox.classList.add("is-closing");
+      const done = () => {
+        lightbox.classList.remove("is-mounting", "is-closing");
+        lightbox.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        if (ringTrack) {
+          ringTrack.textContent = "";
+        }
+        gallerySlides = [];
+        const back = lightboxReturnFocus;
+        lightboxReturnFocus = null;
+        if (back instanceof HTMLElement && document.contains(back)) {
+          back.focus({ preventScroll: true });
+        } else {
+          moreCard?.focus({ preventScroll: true });
+        }
+      };
+      window.setTimeout(done, cinemaMs());
     };
 
     const stepLightbox = (delta) => {
-      if (galleryItems.length === 0) {
+      if (!lightbox?.classList.contains("is-open") || galleryItems.length < 2) {
         return;
       }
-      galleryIndex = (galleryIndex + delta + galleryItems.length) % galleryItems.length;
-      renderLightbox();
+      if (!gallerySlides.length) {
+        buildRingSlides();
+      }
+      goTo(galleryIndex + delta);
+    };
+
+    const galleryIndexForCard = (card) => {
+      const img = card?.querySelector("img");
+      if (!img?.src) {
+        return 0;
+      }
+      const src = img.currentSrc || img.src;
+      const items = collectGalleryItems();
+      const idx = items.findIndex((item) => item.src === src);
+      return idx >= 0 ? idx : 0;
     };
 
     if (lightbox) {
-      lightbox.querySelector(".location-things-lightbox-prev")?.addEventListener("click", (e) => {
-        e.stopPropagation();
-        stepLightbox(-1);
+      lightbox.addEventListener("click", (event) => {
+        if (!lightbox.classList.contains("is-open")) {
+          return;
+        }
+        if (event.target.closest(".location-things-lightbox__nav--prev, .location-things-lightbox-prev")) {
+          event.preventDefault();
+          event.stopPropagation();
+          stepLightbox(-1);
+          return;
+        }
+        if (event.target.closest(".location-things-lightbox__nav--next, .location-things-lightbox-next")) {
+          event.preventDefault();
+          event.stopPropagation();
+          stepLightbox(1);
+          return;
+        }
+        if (event.target.closest(".location-things-lightbox__close, .location-things-lightbox-close")) {
+          event.preventDefault();
+          event.stopPropagation();
+          closeLightbox();
+          return;
+        }
+        if (event.target.closest("[data-lightbox-dismiss]")) {
+          closeLightbox();
+        }
       });
-      lightbox.querySelector(".location-things-lightbox-next")?.addEventListener("click", (e) => {
-        e.stopPropagation();
-        stepLightbox(1);
-      });
-      lightbox.querySelector(".location-things-lightbox-close")?.addEventListener("click", (e) => {
-        e.stopPropagation();
-        closeLightbox();
-      });
-      lightbox.querySelector(".location-things-lightbox-backdrop")?.addEventListener("click", closeLightbox);
-      window.addEventListener("keydown", (event) => {
+
+      const onLightboxKeydown = (event) => {
         if (!lightbox.classList.contains("is-open")) {
           return;
         }
@@ -2244,7 +5559,80 @@ const triponInitMain = () => {
           event.preventDefault();
           stepLightbox(1);
         }
-      });
+      };
+
+      window.addEventListener("keydown", onLightboxKeydown);
+
+      window.addEventListener(
+        "resize",
+        () => {
+          if (lightbox.classList.contains("is-open")) {
+            layoutRing(0);
+          }
+        },
+        { passive: true }
+      );
+    }
+
+    if (lightbox && ringViewport) {
+      const onPointerDown = (event) => {
+        if (!lightbox.classList.contains("is-open") || event.button > 0) {
+          return;
+        }
+        if (event.target.closest(".location-things-lightbox__chrome, .location-things-lightbox-inner")) {
+          return;
+        }
+        pointerDragActive = true;
+        isDragging = false;
+        dragStartX = event.clientX;
+        dragDeltaX = 0;
+      };
+
+      const onPointerMove = (event) => {
+        if (!pointerDragActive || !lightbox.classList.contains("is-open")) {
+          return;
+        }
+        dragDeltaX = event.clientX - dragStartX;
+        if (!isDragging && Math.abs(dragDeltaX) < dragStartThreshold) {
+          return;
+        }
+        if (!isDragging) {
+          isDragging = true;
+          ringRoot?.classList.add("is-dragging");
+          ringViewport.setPointerCapture(event.pointerId);
+        }
+        updateRing(dragDeltaX);
+      };
+
+      const onPointerUp = (event) => {
+        if (!pointerDragActive) {
+          return;
+        }
+        pointerDragActive = false;
+        if (ringViewport.hasPointerCapture(event.pointerId)) {
+          ringViewport.releasePointerCapture(event.pointerId);
+        }
+        ringRoot?.classList.remove("is-dragging");
+
+        if (isDragging && lightbox.classList.contains("is-open")) {
+          const threshold = Math.min(80, getSlideWidth() * 0.22);
+          if (dragDeltaX <= -threshold) {
+            stepLightbox(1);
+          } else if (dragDeltaX >= threshold) {
+            stepLightbox(-1);
+          } else {
+            layoutRing(0);
+          }
+        }
+
+        isDragging = false;
+        dragDeltaX = 0;
+      };
+
+      ringViewport.addEventListener("pointerdown", onPointerDown);
+      ringViewport.addEventListener("pointermove", onPointerMove);
+      ringViewport.addEventListener("pointerup", onPointerUp);
+      ringViewport.addEventListener("pointercancel", onPointerUp);
     }
 
     thingCards.forEach((card, idx) => {
@@ -2254,13 +5642,11 @@ const triponInitMain = () => {
 
       const activateCard = () => {
         if (card.classList.contains("location-more-card")) {
-          openLightbox();
+          openLightbox(0);
           return;
         }
-
         setActiveThing(card);
-        const title = card.querySelector("span")?.textContent?.trim() || "Activity";
-        showStatus(`Selected: ${title}`);
+        openLightbox(galleryIndexForCard(card));
       };
 
       card.addEventListener("click", activateCard);
@@ -2309,13 +5695,25 @@ const triponInitMain = () => {
     let activeIndex = 0;
 
     const renderDays = () => {
+      const usesMotion = daySection.classList.contains("trip-days--motion");
+      const motionVisible = usesMotion && daySection.classList.contains("is-visible");
       cards.forEach((card, idx) => {
         card.setAttribute("aria-pressed", String(idx === activeIndex));
-        card.style.opacity = "1";
-        card.style.transform = idx === activeIndex ? "scale(1.02)" : "scale(1)";
-        card.style.transition = "all 180ms ease";
+        if (!usesMotion) {
+          card.style.opacity = "1";
+        } else {
+          card.style.removeProperty("opacity");
+        }
+        if (!card.matches(":hover")) {
+          card.style.removeProperty("transform");
+        }
+        if (idx === activeIndex && motionVisible && !card.matches(":hover")) {
+          card.style.transform = "translate3d(0, -4px, 18px) scale(1.03)";
+        }
       });
     };
+
+    daySection.addEventListener("tripon:trip-days-visibility", () => renderDays());
 
     cards.forEach((card, idx) => {
       card.addEventListener("click", () => {
@@ -2323,9 +5721,10 @@ const triponInitMain = () => {
         renderDays();
         const selectedText = card.textContent?.trim() || "";
         const selectedDays = selectedText.match(/\d+/)?.[0];
+        const packagesBase = (typeof triponRelPrefix === "function" ? triponRelPrefix() : "") + "packages/";
         const targetUrl = selectedDays
-          ? `packages.html?days=${encodeURIComponent(selectedDays)}`
-          : "packages.html";
+          ? `${packagesBase}?days=${encodeURIComponent(selectedDays)}`
+          : packagesBase;
         window.location.href = targetUrl;
       });
     });
@@ -2340,6 +5739,10 @@ const triponInitMain = () => {
     });
 
     renderDays();
+
+    if (typeof window.triponInitTripDaysMotion === "function") {
+      window.triponInitTripDaysMotion();
+    }
   }
 
   // Reasons section: interactive topic switch
@@ -2349,6 +5752,8 @@ const triponInitMain = () => {
     const reasonTextBox = reasonsSection.querySelector(".reason-text");
     const reasonArticle = reasonsSection.querySelector(".reason-text article");
     const articleTitle = reasonsSection.querySelector(".reason-text article h3");
+    const articleTitleInner =
+      articleTitle?.querySelector(".reasons__article-line-inner") || articleTitle;
     const articleCopy = reasonsSection.querySelector(".reason-text article p");
     const reasonImage = reasonsSection.querySelector(".reasons-layout img");
     const defaultReasonImage = reasonImage?.getAttribute("src") || "/assets/images/reason.png";
@@ -2459,8 +5864,12 @@ const triponInitMain = () => {
       window.requestAnimationFrame(() => {
         reasonImage.src = slide.image;
         reasonImage.alt = slide.title;
-        articleTitle.textContent = slide.title;
-        articleCopy.textContent = slide.body;
+        if (typeof window.triponReasonsGsapUpdateArticle === "function") {
+          window.triponReasonsGsapUpdateArticle(slide.title, slide.body);
+        } else if (articleTitleInner && articleCopy) {
+          articleTitleInner.textContent = slide.title;
+          articleCopy.textContent = slide.body;
+        }
         reasonImage.classList.add("festival-slide-spotlight");
       });
     };
@@ -2492,8 +5901,12 @@ const triponInitMain = () => {
       }
 
       stopReasonSlideshow();
-      articleTitle.textContent = selected.title;
-      articleCopy.textContent = selected.body;
+      if (typeof window.triponReasonsGsapUpdateArticle === "function") {
+        window.triponReasonsGsapUpdateArticle(selected.title, selected.body);
+      } else if (articleTitleInner && articleCopy) {
+        articleTitleInner.textContent = selected.title;
+        articleCopy.textContent = selected.body;
+      }
       if (reasonImage) {
         reasonImage.classList.remove("festival-slide-spotlight");
         reasonImage.src = defaultReasonImage;
@@ -2539,9 +5952,13 @@ const triponInitMain = () => {
     requestAnimationFrame(initMarker);
     const activeKey = reasonsSection.querySelector(".reason-text h4.active")?.textContent?.trim() || "Festivals";
     const activeReason = reasonContent[activeKey];
-    if (activeReason && articleTitle && articleCopy) {
-      articleTitle.textContent = activeReason.title;
-      articleCopy.textContent = activeReason.body;
+    if (activeReason && articleTitleInner && articleCopy) {
+      if (typeof window.triponReasonsGsapUpdateArticle === "function") {
+        window.triponReasonsGsapUpdateArticle(activeReason.title, activeReason.body, { instant: true });
+      } else {
+        articleTitleInner.textContent = activeReason.title;
+        articleCopy.textContent = activeReason.body;
+      }
     }
     if (reasonImage) {
       reasonImage.src = defaultReasonImage;
@@ -2553,110 +5970,23 @@ const triponInitMain = () => {
     });
   }
 
-  // Location packages: ‹ › cycle day chips (≤768px); horizontal strip shows up to three cards for that duration (no autoplay)
-  const locationPackagesSection = document.querySelector(".location-packages");
-  if (locationPackagesSection) {
-    const filterSection = locationPackagesSection.querySelector(".package-screen-filters");
-    const chips = Array.from(filterSection?.querySelectorAll(".chip") || []);
-    const packagesCustomSelectedClass = "packages-custom-selected";
-    const chipDayDullClass = "chip-day-dull";
-    const cards = Array.from(locationPackagesSection.querySelectorAll(".package-screen-grid .package-card"));
-    const packageTrack = locationPackagesSection.querySelector(".package-screen-grid");
-    const prevDayArrow = filterSection?.querySelector(".package-day-arrow-prev");
-    const nextDayArrow = filterSection?.querySelector(".package-day-arrow-next");
-    let selectedDays = null;
-    const dayChips = chips.filter((chip) => !chip.classList.contains("chip-custom"));
-
-    const extractDaysFromChip = (chip) => chip.textContent.match(/\d+/g)?.[1] || null;
-    const getCardDaysValue = (card) => {
-      const dataDays = card.dataset.days || null;
-      if (dataDays) {
-        return dataDays;
-      }
-      const metaText =
-        card.querySelector(".package-meta-days-text")?.textContent?.trim() ||
-        card.querySelector(".package-meta-duration")?.textContent?.trim() ||
-        "";
-      const visibleDays = metaText.match(/\d+/)?.[0] || null;
-      return visibleDays || null;
-    };
-
-    const getCurrentPool = () => {
-      const dayMatched = selectedDays ? cards.filter((card) => getCardDaysValue(card) === selectedDays) : cards.slice();
-      return dayMatched.slice(0, 3);
-    };
-
-    const applyLocationPackagesTrackLayout = () => {
-      cards.forEach((card) => {
-        card.style.removeProperty("flex");
-        card.style.removeProperty("minWidth");
-        card.style.removeProperty("maxWidth");
-        card.style.removeProperty("width");
-      });
-    };
-
-    const applyLocationPackagesFilter = () => {
-      applyLocationPackagesTrackLayout();
-      const pool = getCurrentPool();
-      cards.forEach((card) => {
-        if (pool.includes(card)) {
-          card.style.removeProperty("display");
-        } else {
-          card.style.display = "none";
-        }
-        card.classList.remove("package-card-animate");
-      });
-      packageTrack?.scrollTo({ left: 0, top: 0, behavior: "auto" });
-      animateVisiblePackageCards(cards);
-    };
-
-    const moveLocationDayChip = (step) => {
-      const activeIndex = dayChips.findIndex((c) => c.classList.contains("chip-active"));
-      const dullIndex = dayChips.findIndex((c) => c.classList.contains(chipDayDullClass));
-      const baseIndex = activeIndex >= 0 ? activeIndex : (dullIndex >= 0 ? dullIndex : 0);
-      const targetIndex = (baseIndex + step + dayChips.length) % dayChips.length;
-      dayChips[targetIndex]?.click();
-    };
-
-    chips.forEach((chip) => {
-      chip.addEventListener("click", () => {
-        if (chip.classList.contains("chip-custom")) {
-          const previousDay =
-            filterSection?.querySelector(".chip-active:not(.chip-custom)") ||
-            filterSection?.querySelector(`.chip.${chipDayDullClass}:not(.chip-custom)`);
-          chips.forEach((node) => node.classList.remove("chip-active"));
-          chip.classList.add("chip-active");
-          dayChips.forEach((d) => d.classList.remove(chipDayDullClass));
-          previousDay?.classList.add(chipDayDullClass);
-          filterSection?.classList.add(packagesCustomSelectedClass);
-          showStatus("Custom package feature coming soon!");
-          selectedDays = null;
-        } else {
-          dayChips.forEach((d) => d.classList.remove(chipDayDullClass));
-          filterSection?.classList.remove(packagesCustomSelectedClass);
-          chips.forEach((node) => node.classList.remove("chip-active"));
-          chip.classList.add("chip-active");
-          selectedDays = extractDaysFromChip(chip);
-        }
-        applyLocationPackagesFilter();
-      });
-    });
-
-    if (filterSection && dayChips.length > 1 && prevDayArrow && nextDayArrow) {
-      prevDayArrow.addEventListener("click", () => moveLocationDayChip(-1));
-      nextDayArrow.addEventListener("click", () => moveLocationDayChip(1));
+  // Location pages: same package cards, filters, hover, and day chips as packages/index.html
+  document.querySelectorAll(".location-packages").forEach((section) => {
+    section.classList.add("packages-screen");
+    section.setAttribute("data-tripon-sync-package-screen", "true");
+    if (typeof triponRenderPackageScreenGrid === "function") {
+      triponRenderPackageScreenGrid(section.querySelector(".package-screen-grid"));
     }
+    if (typeof triponSyncPackageScreenFilters === "function") {
+      triponSyncPackageScreenFilters(section.querySelector(".package-screen-filters"));
+    }
+  });
 
-    window.addEventListener("resize", applyLocationPackagesTrackLayout);
-
-    const defaultChip = filterSection?.querySelector(".chip-active:not(.chip-custom)");
-    selectedDays = defaultChip ? extractDaysFromChip(defaultChip) : null;
-    applyLocationPackagesFilter();
-  }
-
-  // Packages page: filter cards by selected day chip
-  const packagesScreenSection = document.querySelector(".packages-screen");
-  if (packagesScreenSection) {
+  // Packages page + synced location strips: filter cards by selected day chip
+  const packageScreenRoots = Array.from(
+    document.querySelectorAll(".packages-screen, [data-tripon-sync-package-screen]")
+  );
+  packageScreenRoots.forEach((packagesScreenSection) => {
     const filterSection = packagesScreenSection.querySelector(".package-screen-filters");
     const chips = Array.from(filterSection?.querySelectorAll(".chip") || []);
     const dayChips = chips.filter((chip) => !chip.classList.contains("chip-custom"));
@@ -2696,7 +6026,11 @@ const triponInitMain = () => {
       "/assets/images/friends3.png"
     ];
 
-    const extractDaysFromChip = (chip) => chip.textContent.match(/\d+/g)?.[1] || null;
+    const extractDaysFromChip = (chip) => {
+      const nums = chip.textContent.match(/\d+/g);
+      if (!nums?.length) return null;
+      return nums.length > 1 ? nums[1] : nums[0];
+    };
     const getCardDaysValue = (card) => {
       const dataDays = card.dataset.days || null;
       if (dataDays) {
@@ -2732,7 +6066,7 @@ const triponInitMain = () => {
       return dayMatched.slice(0, 3);
     };
 
-    const stopPackageAutoplay = () => {};
+    const stopPackageAutoplay = () => { };
 
     const getVisiblePackageCards = () => cards.filter((card) => card.style.display !== "none");
 
@@ -2745,11 +6079,11 @@ const triponInitMain = () => {
       });
     };
 
-    const scrollToPackage = () => {};
+    const scrollToPackage = () => { };
 
-    const runPackageLeftStep = () => {};
+    const runPackageLeftStep = () => { };
 
-    const startPackageAutoplay = () => {};
+    const startPackageAutoplay = () => { };
 
     const applyPackagesDayFilter = () => {
       applyPackagesTrackLayout();
@@ -2883,7 +6217,7 @@ const triponInitMain = () => {
                 imageNode.style.transform = "scale(1.03)";
                 hoverHi = (hoverHi + 1) % hoverPool.length;
               })
-              .catch(() => {});
+              .catch(() => { });
           };
 
           enqueueCarouselStep();
@@ -2932,20 +6266,6 @@ const triponInitMain = () => {
     });
 
     if (filterSection && dayChips.length > 1) {
-      const createDayArrow = (direction) => {
-        const arrow = document.createElement("button");
-        arrow.type = "button";
-        arrow.className = `package-day-arrow package-day-arrow-${direction}`;
-        arrow.setAttribute("aria-label", direction === "prev" ? "Previous day option" : "Next day option");
-        arrow.textContent = direction === "prev" ? "‹" : "›";
-        return arrow;
-      };
-
-      const prevArrow = createDayArrow("prev");
-      const nextArrow = createDayArrow("next");
-      filterSection.prepend(prevArrow);
-      filterSection.append(nextArrow);
-
       const moveDayChip = (step) => {
         const activeIndex = dayChips.findIndex((chip) => chip.classList.contains("chip-active"));
         const dullIndex = dayChips.findIndex((chip) => chip.classList.contains(chipDayDullClass));
@@ -2954,6 +6274,26 @@ const triponInitMain = () => {
         dayChips[targetIndex]?.click();
       };
 
+      let prevArrow = filterSection.querySelector(".package-day-arrow-prev");
+      let nextArrow = filterSection.querySelector(".package-day-arrow-next");
+      if (!prevArrow || !nextArrow) {
+        const createDayArrow = (direction) => {
+          const arrow = document.createElement("button");
+          arrow.type = "button";
+          arrow.className = `package-day-arrow package-day-arrow-${direction}`;
+          arrow.setAttribute("aria-label", direction === "prev" ? "Previous day option" : "Next day option");
+          arrow.textContent = direction === "prev" ? "‹" : "›";
+          return arrow;
+        };
+        if (!prevArrow) {
+          prevArrow = createDayArrow("prev");
+          filterSection.prepend(prevArrow);
+        }
+        if (!nextArrow) {
+          nextArrow = createDayArrow("next");
+          filterSection.append(nextArrow);
+        }
+      }
       prevArrow.addEventListener("click", () => moveDayChip(-1));
       nextArrow.addEventListener("click", () => moveDayChip(1));
     }
@@ -2978,7 +6318,40 @@ const triponInitMain = () => {
     const defaultChip = filterSection?.querySelector(".chip-active:not(.chip-custom)");
     selectedDays = defaultChip ? extractDaysFromChip(defaultChip) : null;
     applyPackagesDayFilter();
-  }
+
+    const durationFolderPreset = (document.body?.getAttribute("data-package-duration") || "").match(
+      /^(\d+)-days$/i
+    )?.[1];
+    const presetDays =
+      document.body?.dataset.triponPackageDays ||
+      new URLSearchParams(window.location.search).get("days") ||
+      durationFolderPreset;
+    if (presetDays) {
+      const targetChip = dayChips.find((chip) => extractDaysFromChip(chip) === String(presetDays));
+      if (targetChip) {
+        targetChip.click();
+      }
+    }
+
+    const packageTypePreset =
+      new URLSearchParams(window.location.search).get("type") ||
+      (window.location.hash || "").replace(/^#/, "").toLowerCase();
+    if (["family", "couple", "friends"].includes(packageTypePreset)) {
+      selectedDays = null;
+      dayChips.forEach((chip) => chip.classList.remove("chip-active"));
+      cards.forEach((card) => {
+        const match = (card.dataset.type || "") === packageTypePreset;
+        if (match) {
+          card.style.removeProperty("display");
+        } else {
+          card.style.display = "none";
+        }
+      });
+      activePackageIndex = 0;
+      packageTrack?.scrollTo({ left: 0, behavior: "auto" });
+      animateVisiblePackageCards(cards);
+    }
+  });
 
   // Popular packages: tab filtering
   const packageSection = document.querySelector(".popular-packages");
@@ -3065,8 +6438,21 @@ const triponInitMain = () => {
     };
 
 
-    // Show only couple cards on load (All tab active shows all)
-    applyPackageFilter("all");
+    const homePackageType =
+      new URLSearchParams(window.location.search).get("type") ||
+      (window.location.hash || "").replace(/^#/, "").toLowerCase();
+    const initialFilter = ["family", "couple", "friends"].includes(homePackageType)
+      ? homePackageType
+      : "all";
+    applyPackageFilter(initialFilter);
+    if (initialFilter !== "all") {
+      const matchTab = tabs.find(
+        (tab) => (tab.textContent || "").trim().toLowerCase() === initialFilter
+      );
+      if (matchTab) {
+        setActive(tabs, matchTab);
+      }
+    }
     if (packageTrack) {
       packageTrack.classList.add("one-by-one-package-slider");
       packageTrack.addEventListener(
@@ -3249,7 +6635,7 @@ const triponInitMain = () => {
                 imageNode.style.transform = "scale(1.03)";
                 hoverHi = (hoverHi + 1) % hoverPool.length;
               })
-              .catch(() => {});
+              .catch(() => { });
           };
 
           enqueueCarouselStep();
@@ -3267,18 +6653,125 @@ const triponInitMain = () => {
     });
 
     packageSection.querySelector(".see-all")?.addEventListener("click", () => {
-      window.location.href = "packages.html";
+      window.location.href = (typeof triponRelPrefix === "function" ? triponRelPrefix() : "") + "packages/";
     });
   }
 
-  // Package cards: open package details with selected card data
-  const packageCards = Array.from(document.querySelectorAll(".package-card"));
-  if (packageCards.length) {
+  // Duration hub URLs (/packages/bali/5-days/) use preset day chips — do not overwrite every card label.
+
+  /** Match location/home package cards to catalog entries via gallery image filenames. */
+  const triponHydratePackageCardMetadata = () => {
+    const catalog = typeof window.TRIPON_PACKAGE_CATALOG === "object" ? window.TRIPON_PACKAGE_CATALOG : null;
+    if (!catalog) {
+      return;
+    }
+    const imageBasename = (src) => {
+      const raw = String(src || "").trim().replace(/\\/g, "/");
+      if (!raw) {
+        return "";
+      }
+      return raw.split("/").pop().split("?")[0].toLowerCase();
+    };
+    const cardImageKeys = (card) => {
+      const keys = new Set();
+      const detailCsv = card.getAttribute("data-package-detail-images") || "";
+      detailCsv.split(",").forEach((piece) => {
+        const base = imageBasename(piece.trim());
+        if (base) {
+          keys.add(base);
+        }
+      });
+      const thumbSrc = card.querySelector(".package-thumb img")?.getAttribute("src") || "";
+      const thumbBase = imageBasename(thumbSrc);
+      if (thumbBase) {
+        keys.add(thumbBase);
+      }
+      return keys;
+    };
+    const entryImageKeys = (entry) => {
+      const keys = new Set();
+      String(entry?.detailImages || "")
+        .split(",")
+        .forEach((piece) => {
+          const base = imageBasename(piece.trim());
+          if (base) {
+            keys.add(base);
+          }
+        });
+      return keys;
+    };
+    const imagesOverlap = (a, b) => {
+      for (const key of a) {
+        if (b.has(key)) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    document.querySelectorAll(".package-card").forEach((card) => {
+      if (card.getAttribute("data-package-slug")) {
+        return;
+      }
+      const cardKeys = cardImageKeys(card);
+      if (!cardKeys.size) {
+        return;
+      }
+      const cardDayNum = String(card.getAttribute("data-days") || "").match(/\d+/)?.[0] || "";
+      const matches = Object.entries(catalog)
+        .map(([key, entry]) => {
+          const slash = key.indexOf("/");
+          if (slash < 0) {
+            return null;
+          }
+          const place = key.slice(0, slash);
+          const slug = key.slice(slash + 1);
+          const entryDayNum = String(entry?.days || "").match(/\d+/)?.[0] || "";
+          if (cardDayNum && entryDayNum && cardDayNum !== entryDayNum) {
+            return null;
+          }
+          if (!imagesOverlap(cardKeys, entryImageKeys(entry))) {
+            return null;
+          }
+          return { place, slug, entryDayNum };
+        })
+        .filter(Boolean);
+      const match = matches[0];
+      if (!match) {
+        return;
+      }
+      card.setAttribute("data-package-place", match.place);
+      card.setAttribute("data-package-slug", match.slug);
+      if (!card.getAttribute("data-package-duration") && match.entryDayNum) {
+        card.setAttribute("data-package-duration", `${match.entryDayNum}-days`);
+      }
+    });
+  };
+
+  const contactExploreGridMount = document.querySelector(
+    '.contact-explore-grid[data-tripon-contact-explore="true"]'
+  );
+  if (contactExploreGridMount && typeof window.triponRenderContactExploreGrid === "function") {
+    window.triponRenderContactExploreGrid(contactExploreGridMount);
+  }
+
+  triponHydratePackageCardMetadata();
+
+  const triponWirePackageCardClicks = (scope) => {
+    const root = scope && typeof scope.querySelectorAll === "function" ? scope : document;
+    const packageCards = Array.from(root.querySelectorAll(".package-card"));
+    if (!packageCards.length) {
+      return;
+    }
     const toPackageSlug = (text) =>
       String(text || "")
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/^-+|-+$/g, "") || "tripon-package";
+    const toPlaceSlug = (text) => {
+      const name = String(text || "").split(",")[0].trim();
+      return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "ubud";
+    };
     const triponNormalizePackageImageRef = (src) => {
       const raw = String(src || "").trim();
       if (!raw) return "";
@@ -3314,7 +6807,13 @@ const triponInitMain = () => {
       const loc = (window.location.pathname || "").replace(/\\/g, "/");
       const tail = path.startsWith("/") ? path.slice(1) : path;
       try {
-        if (loc.includes("/packages/package-details") || loc.includes("/packages/package-details")) {
+        if (/\/packages\/bali\/[^/]+\/[^/]+\.html?$/i.test(loc)) {
+          return new URL(`../../../${tail}`, window.location.href).href;
+        }
+        if (/\/packages\/[^/]+\/[^/]+\.html?$/i.test(loc) || loc.includes("/packages/package-details")) {
+          return new URL(`../../${tail}`, window.location.href).href;
+        }
+        if (loc.includes("/packages/package-details")) {
           return new URL(`../${tail}`, window.location.href).href;
         }
         return new URL(tail, window.location.href).href;
@@ -3333,6 +6832,10 @@ const triponInitMain = () => {
     packageCards.forEach((card) => {
       // Skip package cards inside modals on details page, if any shared script usage occurs.
       if (card.closest(".modal-overlay")) return;
+      if (card.dataset.triponPackageClickWired === "1") {
+        return;
+      }
+      card.dataset.triponPackageClickWired = "1";
 
       card.style.cursor = "pointer";
       card.addEventListener("click", () => {
@@ -3352,12 +6855,26 @@ const triponInitMain = () => {
         const packageActivities = (card.getAttribute("data-package-activities") || card.getAttribute("data-activities") || "").trim();
         const packageGallery = normalizeCsvImages(card.getAttribute("data-package-gallery") || "");
         const packageDetailImages = normalizeCsvImages(card.getAttribute("data-package-detail-images") || "");
+        const packageSlug = card.getAttribute("data-package-slug") || toPackageSlug(title);
+        const placeSlug = card.getAttribute("data-package-place") || toPlaceSlug(locationText);
+        const rel = typeof window.triponRelPrefix === "function" ? window.triponRelPrefix() : "";
+        const durationFolder =
+          card.getAttribute("data-package-duration") ||
+          document.body?.getAttribute("data-package-duration") ||
+          ({ "4": "4-days", "5": "5-days", "6": "6-days", "7": "7-days", "8": "8-days" })[
+          card.getAttribute("data-days") || ""
+          ] ||
+          "";
+        const folderDurationLabel =
+          typeof triponDurationLabelFromFolder === "function"
+            ? triponDurationLabelFromFolder(durationFolder)
+            : "";
         const payload = {
           title,
           location: locationText,
           rating: ratingMatch?.[1] || "",
           reviews: reviewsMatch?.[1] || "",
-          days: daysText,
+          days: folderDurationLabel || daysText,
           type: packageType,
           price: priceText,
           image: imageSrc ? toAbsoluteImageUrl(imageSrc) : "",
@@ -3366,13 +6883,36 @@ const triponInitMain = () => {
           places: packagePlaces,
           activities: packageActivities
         };
-        const slug = toPackageSlug(title);
+        const catalogEntry =
+          typeof window.triponGetCatalogEntry === "function"
+            ? window.triponGetCatalogEntry(placeSlug, packageSlug)
+            : window.TRIPON_PACKAGE_CATALOG?.[`${placeSlug}/${packageSlug}`] || null;
+        if (!catalogEntry) {
+          showStatus("Package details are not available yet.");
+          return;
+        }
+
         sessionStorage.setItem("tripon_selected_package", JSON.stringify(payload));
-        sessionStorage.setItem("tripon_selected_package_slug", slug);
-        window.location.href = "/packages/package-details.html";
+        sessionStorage.setItem("tripon_selected_package_slug", packageSlug);
+        const daysAttr = card.getAttribute("data-days") || "";
+        const folderFromDays =
+          daysAttr &&
+          ({ "4": "4-days", "5": "5-days", "6": "6-days", "7": "7-days", "8": "8-days" })[daysAttr];
+        const targetFolder = durationFolder || folderFromDays || "";
+        const detailPath = targetFolder
+          ? `packages/bali/${targetFolder}/${packageSlug}.html`
+          : `packages/bali/5-days/${packageSlug}.html`;
+        const detailHref = triponResolveSiteHref(`/${detailPath}`);
+        if (!detailHref) {
+          showStatus("Package details are not available yet.");
+          return;
+        }
+        window.location.assign(detailHref);
       });
     });
-  }
+  };
+
+  triponWirePackageCardClicks(document);
 
   // Testimonials: read-more + horizontal carousel (desktop row / 320px one-by-one)
   const testimonials = document.querySelector(".testimonials");
@@ -3496,23 +7036,11 @@ const triponInitMain = () => {
   let spotlight3dLockedScrollY = 0;
   const lockScrollForSpotlight3d = () => {
     spotlight3dLockedScrollY = window.scrollY || window.pageYOffset || 0;
-    document.documentElement.style.overflow = "hidden";
-    document.body.style.overflow = "hidden";
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${spotlight3dLockedScrollY}px`;
-    document.body.style.left = "0";
-    document.body.style.right = "0";
-    document.body.style.width = "100%";
+    triponLockBodyScroll();
   };
 
   const unlockScrollForSpotlight3d = () => {
-    document.documentElement.style.overflow = "";
-    document.body.style.overflow = "";
-    document.body.style.position = "";
-    document.body.style.top = "";
-    document.body.style.left = "";
-    document.body.style.right = "";
-    document.body.style.width = "";
+    triponUnlockBodyScroll();
     window.scrollTo(0, spotlight3dLockedScrollY);
   };
 
@@ -3736,13 +7264,16 @@ const triponInitMain = () => {
 
   blogSections.forEach((blogSection) => {
 
-  // Blog click
-    const blogCards = blogSection.querySelectorAll(".bali-card");
+    // Blog click
+    const blogCards = blogSection.querySelectorAll(".bali-card, .bali-card-3d");
 
     blogCards.forEach((card) => {
       card.style.cursor = "pointer";
 
-      card.addEventListener("click", () => {
+      card.addEventListener("click", (event) => {
+        if (event.target.closest("a, button")) {
+          return;
+        }
         const slug = (card.getAttribute("data-blog-slug") || "").trim();
         if (slug) {
           window.location.href = triponBlogDetailPageHref(slug);
@@ -3759,7 +7290,11 @@ const triponInitMain = () => {
           return;
         }
         const pageName = (window.location.pathname.split("/").pop() || "").toLowerCase();
-        if (["packages.html", "people-reviews.html"].includes(pageName)) {
+        if (
+          pageName === "packages.html" ||
+          (pageName === "index.html" && /\/packages\/?$/i.test(window.location.pathname || "")) ||
+          /people-reviews\.html$/i.test(window.location.pathname || "")
+        ) {
           window.location.href = triponBlogDetailPageHref("bali-tropical-journey");
           return;
         }
@@ -3768,48 +7303,48 @@ const triponInitMain = () => {
 
         alert(`📍 ${title}\n\n${desc}`);
       });
-   });
-
-  // Play bar
-   const playBars = blogSection.querySelectorAll(".blog-video-bar");
-   playBars.forEach((bar) => {
-    bar.addEventListener("click", () => {
-       const fill = bar.querySelector(".blog-progress-fill");
-      if (fill) {
-        const current = parseInt(fill.style.width || "42", 10);
-        const next = current >= 96 ? 18 : current + 22;
-        fill.style.width = `${next}%`;
-      }
     });
-  });
 
-  // Share buttons
-  const shareButtons = blogSection.querySelectorAll(".blog-share-btn");
-
-  shareButtons.forEach((btn) => {
-    btn.addEventListener("click", (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      const card = btn.closest(".bali-card");
-      const title = card?.querySelector("h3")?.textContent?.trim() || "Tripon Blog";
-      const blogSlug = (card?.getAttribute("data-blog-slug") || "").trim();
-      const blogLink = card?.getAttribute("data-blog-link");
-      let shareUrl = window.location.href;
-      if (blogSlug) {
-        shareUrl = new URL(triponBlogDetailPageHref(blogSlug), window.location.href).toString();
-      } else if (blogLink) {
-        const m = blogLink.match(/\/blogs\/([^/?#]+?)(?:\.html|\/)/i);
-        shareUrl = m?.[1]
-          ? new URL(triponBlogDetailPageHref(m[1]), window.location.href).toString()
-          : new URL(blogLink, window.location.href).toString();
-      }
-
-      openBlogShareModal(title, shareUrl);
+    // Play bar
+    const playBars = blogSection.querySelectorAll(".blog-video-bar");
+    playBars.forEach((bar) => {
+      bar.addEventListener("click", () => {
+        const fill = bar.querySelector(".blog-progress-fill");
+        if (fill) {
+          const current = parseInt(fill.style.width || "42", 10);
+          const next = current >= 96 ? 18 : current + 22;
+          fill.style.width = `${next}%`;
+        }
+      });
     });
-  });
 
-});
+    // Share buttons
+    const shareButtons = blogSection.querySelectorAll(".blog-share-btn");
+
+    shareButtons.forEach((btn) => {
+      btn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const card = btn.closest(".bali-card, .bali-card-3d");
+        const title = card?.querySelector("h3")?.textContent?.trim() || "Tripon Blog";
+        const blogSlug = (card?.getAttribute("data-blog-slug") || "").trim();
+        const blogLink = card?.getAttribute("data-blog-link");
+        let shareUrl = window.location.href;
+        if (blogSlug) {
+          shareUrl = new URL(triponBlogDetailPageHref(blogSlug), window.location.href).toString();
+        } else if (blogLink) {
+          const m = blogLink.match(/\/blogs\/([^/?#]+?)(?:\.html|\/)/i);
+          shareUrl = m?.[1]
+            ? new URL(triponBlogDetailPageHref(m[1]), window.location.href).toString()
+            : new URL(blogLink, window.location.href).toString();
+        }
+
+        openBlogShareModal(title, shareUrl);
+      });
+    });
+
+  });
 
   // Blog page sidebar: search + category/tag filter + recent jump
   const blogMain = document.querySelector(".blog-main");
@@ -4645,6 +8180,7 @@ const triponInitMain = () => {
       strip.style.setProperty("display", "block", "important");
       strip.style.setProperty("overflow-x", "hidden", "important");
       strip.style.setProperty("overflow-y", "hidden", "important");
+      strip.style.setProperty("max-height", "256px", "important");
       strip.style.setProperty("scroll-snap-type", "none", "important");
 
       if (!strip.dataset.marqueeReady) {
@@ -4839,8 +8375,10 @@ const triponInitMain = () => {
 
     bindNameFieldNoDigits(contactFields.fullNameInput);
     bindNameFieldNoDigits(contactFields.locationInput);
+    bindPhoneFieldDigitsOnly(contactFields.phoneInput, 10);
 
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const CONTACT_PHONE_DIGITS = 10;
 
     const closeCountryMenu = () => {
       if (!countryPicker || !countryTrigger) {
@@ -4965,9 +8503,9 @@ const triponInitMain = () => {
     });
 
     contactFields.phoneInput?.addEventListener("input", () => {
-      const digitsOnly = (contactFields.phoneInput.value || "").replace(/\D/g, "").slice(0, 15);
+      const digitsOnly = (contactFields.phoneInput.value || "").replace(/\D/g, "").slice(0, CONTACT_PHONE_DIGITS);
       contactFields.phoneInput.value = digitsOnly;
-      const isPartialPhone = digitsOnly.length > 0 && digitsOnly.length < 4;
+      const isPartialPhone = digitsOnly.length > 0 && digitsOnly.length < CONTACT_PHONE_DIGITS;
       contactFields.phoneInput.classList.toggle("contact-phone-partial", isPartialPhone);
     });
 
@@ -4981,12 +8519,10 @@ const triponInitMain = () => {
       const rawPhone = contactFields.phoneInput?.value.trim() || "";
       const selectedCountryCode = contactFields.countryCodeSelect?.value || "";
       const phoneDigitsOnly = rawPhone.replace(/\D/g, "");
-      const countryCodeDigits = selectedCountryCode.replace(/\D/g, "");
-      const totalPhoneDigits = `${countryCodeDigits}${phoneDigitsOnly}`;
       const emailValue = contactFields.emailInput?.value.trim() || "";
       const locationValue = contactFields.locationInput?.value.trim() || "";
       const messageValue = contactFields.messageInput?.value.trim() || "";
-      const hasValidPhone = phoneDigitsOnly.length >= 4 && totalPhoneDigits.length >= 7 && totalPhoneDigits.length <= 15;
+      const hasValidPhone = phoneDigitsOnly.length === CONTACT_PHONE_DIGITS;
       const hasValidEmail = emailPattern.test(emailValue);
 
       Object.values(contactFields).forEach((field) => clearInvalid(field));
@@ -5004,7 +8540,10 @@ const triponInitMain = () => {
         markInvalid(contactFields.phoneInput);
         hidePopup(submitPopupSuccess);
         hidePopup(submitPopupError);
-        showContactValidationTooltip(contactFields.phoneInput, "Please enter a valid phone number.");
+        showContactValidationTooltip(
+          contactFields.phoneInput,
+          `Please enter a valid ${CONTACT_PHONE_DIGITS}-digit phone number.`
+        );
         contactFields.phoneInput?.focus();
         return;
       }
@@ -5054,8 +8593,7 @@ const triponInitMain = () => {
   const contactExploreWrap = document.querySelector(".contact-explore-wrap");
   if (contactExploreWrap) {
     const exploreGrid = contactExploreWrap.querySelector(".contact-explore-grid");
-    const favButtons = contactExploreWrap.querySelectorAll(".contact-explore-fav");
-    const cards = exploreGrid ? Array.from(exploreGrid.querySelectorAll(".contact-explore-card")) : [];
+    const cards = exploreGrid ? Array.from(exploreGrid.querySelectorAll(".package-card")) : [];
 
     let contactExploreAutoTimer = null;
     let isExploreAnimating = false;
@@ -5134,17 +8672,6 @@ const triponInitMain = () => {
       exploreGrid.addEventListener("touchend", startExploreAutoplay);
     }
 
-    favButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const icon = button.querySelector("i");
-        const isFav = button.classList.toggle("is-fav");
-        if (icon) {
-          icon.classList.remove("fa-regular", "fa-solid");
-          icon.classList.add(isFav ? "fa-solid" : "fa-regular", "fa-heart");
-        }
-      });
-    });
-
     renderExploreCards();
 
     if (contactExploreWrap && "IntersectionObserver" in window) {
@@ -5195,18 +8722,28 @@ const triponInitMain = () => {
     });
   }
   const pdRelatedCards = document.querySelectorAll(".pd-related-card");
-  if (pdRelatedCards.length) {
+  const pdRelatedTrackWired = document.querySelector(".pd-related-track")?.dataset?.triponRelatedWired === "1";
+  if (pdRelatedCards.length && !pdRelatedTrackWired) {
     const pathRaw = (window.location.pathname || "").replace(/\\/g, "/");
-    const packageDetailsHref = (() => {
-      if (pathRaw.includes("/blogs/") || pathRaw.includes("/locations/")) {
-        return "../packages/package-details.html";
+    const packageDetailsHrefFor = (placeSlug, packageSlug, durationFolder) => {
+      const rel = typeof window.triponRelPrefix === "function" ? window.triponRelPrefix() : "";
+      const slug = String(packageSlug || "honey-moon-package-in-bali").trim();
+      const dur =
+        durationFolder || document.body?.getAttribute("data-package-duration") || "";
+      if (dur) {
+        return `${rel}packages/bali/${dur}/${slug}.html`;
       }
-      if (pathRaw.includes("/packages/")) {
-        return "package-details.html";
-      }
-      return "packages/package-details.html";
-    })();
+      return `${rel}packages/bali/5-days/${slug}.html`;
+    };
+    const toPlaceSlugPd = (text) => {
+      const name = String(text || "").split(",")[0].trim();
+      return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "ubud";
+    };
     pdRelatedCards.forEach((card) => {
+      if (!card.getAttribute("data-package-place") && !card.getAttribute("data-package-slug")) {
+        card.style.cursor = "default";
+        return;
+      }
       card.style.cursor = "pointer";
       card.addEventListener("click", () => {
         const titleEl = card.querySelector("h4");
@@ -5237,13 +8774,35 @@ const triponInitMain = () => {
           gallery: "",
           detailImages,
         };
-        const slug = title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/(^-|-$)/g, "");
+        const packageSlug =
+          card.getAttribute("data-package-slug") ||
+          title
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/(^-|-$)/g, "") ||
+          "honey-moon-package-in-bali";
+        const placeSlug = card.getAttribute("data-package-place") || toPlaceSlugPd(loc);
+        const durationFolder =
+          card.getAttribute("data-package-duration") || "4-days";
+        const pageFolder =
+          document.body?.getAttribute("data-package-duration") ||
+          (pathRaw.match(/\/packages\/bali\/([^/]+)\//i) || [])[1] ||
+          "";
+        const onBaliDurationPage =
+          document.body?.classList.contains("package-details-page") &&
+          durationFolder &&
+          /\/packages\/bali\//i.test(pathRaw);
+        if (
+          onBaliDurationPage &&
+          durationFolder === pageFolder &&
+          typeof window.triponSwitchPackageDetailOnPage === "function"
+        ) {
+          window.triponSwitchPackageDetailOnPage(placeSlug, packageSlug, payload);
+          return;
+        }
         sessionStorage.setItem("tripon_selected_package", JSON.stringify(payload));
-        sessionStorage.setItem("tripon_selected_package_slug", slug);
-        window.location.href = packageDetailsHref;
+        sessionStorage.setItem("tripon_selected_package_slug", packageSlug);
+        window.location.href = packageDetailsHrefFor(placeSlug, packageSlug, durationFolder);
       });
     });
   }

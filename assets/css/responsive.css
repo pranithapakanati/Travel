@@ -32,9 +32,8 @@ body {
   .location-carousel-dot,
   .location-things-grid article,
   .location-more-card,
-  .location-things-lightbox-prev,
-  .location-things-lightbox-next,
-  .location-things-lightbox-close,
+  .location-things-lightbox__nav,
+  .location-things-lightbox__close,
   .pd-related-arrow,
   .share-btn) {
   cursor: pointer;
@@ -45,9 +44,9 @@ button:disabled,
   cursor: not-allowed;
 }
 
-/* Navbar */
+/* Navbar — legacy full-width bar (replaced by .tripon-header in components/navbar.html) */
 
-.tripon-navbar {
+.tripon-navbar:not(.tripon-header) {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -187,7 +186,7 @@ nav a {
   transform: scaleX(1);
 }
 
-.topbar {
+.topbar:not(.tripon-header):not(.tripon-header__bar) {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1240,6 +1239,152 @@ p.location i,
   width: 100%;
 }
 
+/* Package details desktop: align columns; booking card fills sidebar */
+@media (min-width: 769px) {
+  body.package-details-page .package-content-layout {
+    align-items: stretch;
+    gap: 40px;
+  }
+
+  body.package-details-page .package-main-col {
+    min-height: 100%;
+    gap: 48px;
+  }
+
+  body.package-details-page .package-body-main.left-main {
+    flex: 0 1 auto;
+    display: block;
+    min-height: 0;
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  body.package-details-page .package-body-main.left-main .accordion {
+    margin-top: 28px;
+    padding-top: 0;
+  }
+
+  body.package-details-page .package-main-col.left {
+    width: 100%;
+    max-width: none;
+  }
+
+  body.package-details-page .package-overview-cell {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  body.package-details-page .package-overview-cell h2 {
+    font-size: 40px;
+    margin: 0 0 22px;
+    line-height: 1.25;
+  }
+
+  body.package-details-page .package-overview-cell p {
+    font-size: 24px;
+    line-height: 1.75;
+    margin: 0;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  body.package-details-page .package-body-main.left-main {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  body.package-details-page .package-body-main.left-main h3 {
+    font-size: 38px;
+    margin: 0 0 22px;
+    line-height: 1.25;
+  }
+
+  body.package-details-page .package-body-main.left-main ul {
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding-left: 1.4em;
+  }
+
+  body.package-details-page .package-body-main.left-main ul li {
+    font-size: 24px;
+    line-height: 1.75;
+    margin-bottom: 12px;
+    max-width: 100%;
+  }
+
+  body.package-details-page .package-body-main.left-main .accordion {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  body.package-details-page .package-body-main.left-main .accordion-header {
+    font-size: 30px;
+    padding: 28px 0;
+    line-height: 1.25;
+  }
+
+  body.package-details-page .package-body-main.left-main .accordion-header .fa-chevron-down {
+    font-size: 18px;
+  }
+
+  body.package-details-page .package-body-main.left-main .accordion-content,
+  body.package-details-page .package-body-main.left-main .accordion-content p {
+    font-size: 24px;
+    line-height: 1.75;
+  }
+
+  body.package-details-page .package-body-main.left-main .accordion-content ul {
+    width: 100%;
+    max-width: 100%;
+    padding-left: 1.4em;
+    margin-bottom: 18px;
+  }
+
+  body.package-details-page .package-body-main.left-main .accordion-content ul li {
+    font-size: 24px;
+    line-height: 1.75;
+    margin-bottom: 10px;
+  }
+
+  body.package-details-page .package-details-faq-wrap .pd-faq-summary {
+    font-size: 24px;
+    padding: 20px 0;
+  }
+
+  body.package-details-page .package-details-faq-wrap .pd-faq-body p {
+    font-size: 22px;
+    line-height: 1.75;
+  }
+
+  body.package-details-page .package-details-faq-wrap .pd-faq-plus::before {
+    font-size: 1.75rem;
+  }
+
+  body.package-details-page .itinerary-day-box-title {
+    font-size: 22px;
+  }
+
+  body.package-details-page .itinerary-day-box-badge {
+    font-size: 16px;
+  }
+
+  body.package-details-page .itinerary-rich-chips,
+  body.package-details-page .itinerary-rich-narr .itinerary-rich-para,
+  body.package-details-page .itinerary-rich-check-item {
+    font-size: 22px;
+    line-height: 1.75;
+  }
+
+  body.package-details-page .package-booking-col {
+    align-self: flex-start;
+  }
+
+  body.package-details-page .booking-card {
+    width: 100%;
+  }
+}
+
 .package-main-col {
   flex: 1;
   min-width: 0;
@@ -1257,8 +1402,9 @@ p.location i,
 }
 
 .package-booking-col {
-  flex: 0 0 400px;
-  max-width: 400px;
+  flex: 0 0 480px;
+  max-width: 480px;
+  width: 480px;
 }
 
 .left {
@@ -1289,7 +1435,8 @@ p.location i,
 }
 
 .right {
-  flex: 0 0 400px;
+  flex: 0 0 480px;
+  max-width: 480px;
   margin-left: auto;
   margin-right: 0;
   align-self: flex-start;
@@ -1338,6 +1485,21 @@ p.location i,
 
 .accordion-header:hover {
   color: #ff7a45;
+}
+
+body.package-details-page .accordion-header:hover {
+  color: #142433;
+}
+
+.accordion-header .fa-chevron-down {
+  flex-shrink: 0;
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.accordion-header.active .fa-chevron-down,
+.accordion-item:has(.accordion-content.open) .accordion-header .fa-chevron-down {
+  transform: rotate(180deg);
 }
 
 /* Arrow */
@@ -2304,11 +2466,12 @@ body.cancellation-policy-page {
   top: 20px;
   z-index: 20;
   width: 100%;
-  max-width: 400px;
+  max-width: 480px;
   background: #fff;
-  padding: 30px;
+  padding: 28px 24px;
   border-radius: 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-sizing: border-box;
 }
 
 .booking-top {
@@ -2339,6 +2502,7 @@ body.cancellation-policy-page {
   overflow: hidden;
 }
 
+
 .input-box {
   display: flex;
   align-items: center;
@@ -2364,12 +2528,29 @@ body.cancellation-policy-page {
   flex-shrink: 0;
 }
 
-.input-box .input-box-dropdown-icon {
+.input-box .input-box-dropdown-icon,
+.input-box .input-box-picker-toggle {
   font-size: 14px;
   color: #6d7589;
   margin-left: auto;
   flex-shrink: 0;
   cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.input-box .input-box-picker-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: none;
+  background: transparent;
+  line-height: 1;
+}
+
+.input-box.is-picker-open .input-box-dropdown-icon,
+.input-box.is-picker-open .input-box-picker-toggle {
+  transform: rotate(180deg);
 }
 
 .input-box>div {
@@ -2496,6 +2677,451 @@ select:focus {
   font-size: 17px;
   font-weight: 700;
   color: #333;
+}
+
+/* Package booking — Add Extras cards
+   (override main.css `section { padding: 36px 28px }` — that was narrowing cards vs tickets) */
+.booking-card .booking-extras {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 28px 0 0;
+  padding: 0 !important;
+  box-sizing: border-box;
+}
+
+.booking-extras__head {
+  margin-bottom: 16px;
+}
+
+.booking-extras__title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+}
+
+.booking-extras__subtitle {
+  margin: 6px 0 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: #6b7280;
+  line-height: 1.35;
+}
+
+.booking-extras__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.booking-extra-card {
+  display: block;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.booking-card .booking-extra-card__label {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.booking-card .booking-extra-card__label:has(.booking-extra-card__check:checked) {
+  border-color: #fdba74;
+  box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.12);
+}
+
+.booking-extra-card__icon {
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 20px;
+}
+
+.booking-extra-card__icon--pickup {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.booking-extra-card__icon--insurance {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.booking-extra-card__icon--breakfast {
+  background: #ffedd5;
+  color: #ea580c;
+}
+
+.booking-extra-card__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: block;
+  padding-right: 8px;
+}
+
+.booking-extra-card__name {
+  display: block;
+  margin: 0 0 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.3;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.booking-extra-card__desc {
+  display: block;
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  color: #6b7280;
+  line-height: 1.4;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.booking-extra-card__actions {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.booking-extra-card__price-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 2px;
+  min-width: 72px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.booking-extra-card__price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ea580c;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.booking-extra-card__unit {
+  font-size: 11px;
+  font-weight: 400;
+  color: #9ca3af;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.booking-extra-card__check {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  flex-shrink: 0;
+  border: 2px solid #d1d5db;
+  border-radius: 4px;
+  accent-color: #f97316;
+  cursor: pointer;
+}
+
+.booking-extras__tax-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  box-sizing: border-box;
+  background: #fff7ed;
+  border: 1px dashed #fdba74;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #9a3412;
+  line-height: 1.4;
+}
+
+.booking-extras__tax-note i {
+  flex-shrink: 0;
+  font-size: 14px;
+  color: #ea580c;
+}
+
+/* Package booking — Add Extras desktop (sidebar booking card) */
+@media (min-width: 769px) {
+  body.package-details-page .package-booking-col,
+  body.package-details-page .package-booking-col.right {
+    flex: 0 0 480px;
+    max-width: 480px;
+    width: 480px;
+    min-width: 480px;
+  }
+
+  body.package-details-page .booking-card {
+    max-width: 480px;
+    width: 100%;
+  }
+
+  body.package-details-page .booking-card .booking-extras,
+  body.package-details-page .booking-card .booking-tickets-lux,
+  body.package-details-page .booking-card .booking-summary-lux {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  body.package-details-page .booking-card .booking-tickets-lux__list,
+  body.package-details-page .booking-card .ticket-row--lux {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  body.package-details-page .booking-card .booking-extras__list,
+  body.package-details-page .booking-card .booking-extra-card,
+  body.package-details-page .booking-card .booking-extra-card__label,
+  body.package-details-page .booking-card .booking-extras__tax-note {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Grid on desktop — full text visible */
+  body.package-details-page .booking-card .booking-extra-card__label {
+    display: grid !important;
+    grid-template-columns: 52px minmax(0, 1fr) max-content;
+    grid-template-rows: auto;
+    align-items: center;
+    column-gap: 14px;
+    row-gap: 0;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__body {
+    grid-column: 2;
+    grid-row: 1;
+    flex: none;
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    padding-right: 10px;
+    overflow: visible;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__actions {
+    grid-column: 3;
+    grid-row: 1;
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__name {
+    font-size: 16px;
+    line-height: 1.3;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__desc {
+    font-size: 13px;
+    line-height: 1.4;
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+    line-clamp: unset;
+    -webkit-box-orient: unset;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__price {
+    font-size: 17px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__unit {
+    font-size: 12px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__price-wrap {
+    min-width: 80px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__check {
+    width: 24px;
+    height: 24px;
+  }
+
+  body.package-details-page .booking-card .booking-extras__tax-note {
+    font-size: 14px;
+    padding: 13px 16px;
+  }
+
+  /* Scale booking card content to match card proportions (desktop) */
+  body.package-details-page .booking-card {
+    padding: 32px 28px;
+  }
+
+  body.package-details-page .booking-card .booking-top {
+    margin-bottom: 24px;
+  }
+
+  body.package-details-page .booking-card .price-label {
+    font-size: 17px;
+  }
+
+  body.package-details-page .booking-card .price-value {
+    font-size: 36px;
+  }
+
+  body.package-details-page .booking-card .input-box {
+    padding: 22px 20px;
+  }
+
+  body.package-details-page .booking-card .input-box label {
+    font-size: 17px;
+  }
+
+  body.package-details-page .booking-card .input-box input[type="date"],
+  body.package-details-page .booking-card .input-box input[type="time"] {
+    font-size: 18px;
+  }
+
+  body.package-details-page .booking-card .luxury-date-trigger {
+    font-size: 18px;
+  }
+
+  body.package-details-page .booking-card .section-title {
+    font-size: 21px;
+    margin: 30px 0 16px;
+  }
+
+  body.package-details-page .booking-card .ticket-row {
+    margin: 18px 0;
+  }
+
+  body.package-details-page .booking-card .ticket-label {
+    font-size: 18px;
+  }
+
+  body.package-details-page .booking-card .ticket-price {
+    font-size: 17px;
+  }
+
+  body.package-details-page .booking-card .ticket-counter button {
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+  }
+
+  body.package-details-page .booking-card .count {
+    font-size: 19px;
+    min-width: 32px;
+  }
+
+  body.package-details-page .booking-card .booking-extras {
+    margin-top: 32px;
+  }
+
+  body.package-details-page .booking-card .booking-extras__title {
+    font-size: 24px;
+  }
+
+  body.package-details-page .booking-card .booking-extras__subtitle {
+    font-size: 16px;
+  }
+
+  body.package-details-page .booking-card .booking-extras__list {
+    gap: 14px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__label {
+    padding: 16px 18px;
+    column-gap: 14px;
+    min-height: 76px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__icon {
+    width: 52px;
+    height: 52px;
+    font-size: 24px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__name {
+    font-size: 18px;
+    margin-bottom: 6px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__desc {
+    font-size: 15px;
+    line-height: 1.45;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__price {
+    font-size: 18px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__unit {
+    font-size: 13px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__check {
+    width: 26px;
+    height: 26px;
+  }
+
+  body.package-details-page .booking-card .booking-extras__tax-note {
+    margin-top: 18px;
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+
+  body.package-details-page .booking-card .total {
+    margin-top: 28px;
+    padding-top: 24px;
+    font-size: 22px;
+  }
+
+  body.package-details-page .booking-card .book-btn {
+    padding: 18px;
+    font-size: 18px;
+    margin-top: 22px;
+  }
 }
 
 .book-btn {
@@ -3194,38 +3820,44 @@ select:focus {
 
 .tripon-social-fab__toggle {
   position: relative;
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   display: block;
 }
 
-.tripon-social-fab__bar {
+.tripon-social-fab__icon {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 20px;
-  height: 2.5px;
-  border-radius: 2px;
-  background: currentColor;
-  transform-origin: center;
-  transition: transform 0.5s cubic-bezier(0.33, 1, 0.48, 1), opacity 0.35s ease;
-  box-shadow: 0 0 0 1px rgba(15, 36, 30, 0.08);
+  font-size: 1.35rem;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+  transition:
+    opacity 0.38s cubic-bezier(0.33, 1, 0.48, 1),
+    transform 0.5s cubic-bezier(0.33, 1, 0.48, 1);
 }
 
-.tripon-social-fab__bar--a {
-  transform: translate(-50%, -50%) rotate(0deg);
+.tripon-social-fab__icon--chat {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+  filter: invert(1) brightness(1.15);
 }
 
-.tripon-social-fab__bar--b {
-  transform: translate(-50%, -50%) rotate(90deg);
+.tripon-social-fab__icon--close {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.55) rotate(-90deg);
 }
 
-.tripon-social-fab.is-open .tripon-social-fab__bar--a {
-  transform: translate(-50%, -50%) rotate(45deg);
+.tripon-social-fab.is-open .tripon-social-fab__icon--chat {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.55) rotate(90deg);
 }
 
-.tripon-social-fab.is-open .tripon-social-fab__bar--b {
-  transform: translate(-50%, -50%) rotate(-45deg);
+.tripon-social-fab.is-open .tripon-social-fab__icon--close {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
 }
 
 .tripon-social-fab__sr {
@@ -3285,26 +3917,75 @@ select:focus {
   }
 }
 
-/* Package details: booking preferences modal (base styles live in main.css) */
-body.package-details-page .mobile-pref-modal {
-  width: min(640px, calc(100vw - 72px));
-  max-height: min(90vh, 860px);
-  background:
-    radial-gradient(circle at 10% 8%, rgba(11, 138, 86, 0.13), transparent 35%),
-    linear-gradient(160deg, #ffffff 0%, #f3fbf8 100%);
-  border-radius: 24px;
-  padding: 34px 36px 30px;
-  box-shadow: 0 30px 58px rgba(2, 12, 27, 0.3);
-  border: 1px solid rgba(16, 41, 55, 0.13);
+/* Package details: travelers, date/time, and nights are set in the booking card */
+body.package-details-page #mobilePrefModal .mobile-pref-step[data-step="1"],
+body.package-details-page #mobilePrefModal .mobile-pref-step[data-step="2"],
+body.package-details-page #mobilePrefModal .mobile-pref-step[data-step="6"] {
+  display: none !important;
 }
 
-body.package-details-page .mobile-pref-input {
-  padding: 0 20px;
-  box-sizing: border-box;
-}
+/* Package details: booking popup matches home (desktop-only tweaks; mobile uses main.css) */
+@media (min-width: 768px) {
+  body.package-details-page .mobile-pref-modal-overlay {
+    padding: 26px;
+    background:
+      radial-gradient(circle at 86% 10%, rgba(11, 138, 86, 0.25), transparent 36%),
+      rgba(6, 17, 28, 0.66);
+    backdrop-filter: blur(5px);
+  }
 
-body.package-details-page .mobile-pref-option span {
-  text-align: center;
+  body.package-details-page .mobile-pref-modal {
+    width: min(640px, calc(100vw - 72px));
+    max-height: min(90vh, 860px);
+    padding: 34px 36px 30px;
+    border-radius: 24px;
+    background:
+      radial-gradient(circle at 10% 8%, rgba(11, 138, 86, 0.13), transparent 35%),
+      linear-gradient(160deg, #ffffff 0%, #f3fbf8 100%);
+    border: 1px solid rgba(16, 41, 55, 0.13);
+    box-shadow: 0 30px 58px rgba(2, 12, 27, 0.3);
+  }
+
+  body.package-details-page .mobile-pref-close {
+    top: 16px;
+    right: 16px;
+    width: 42px;
+    height: 42px;
+    font-size: 0;
+  }
+
+  body.package-details-page .mobile-pref-close::before {
+    font-size: 24px;
+  }
+
+  body.package-details-page .mobile-pref-brand {
+    margin-top: 4px;
+    font-size: clamp(50px, 5.2vw, 68px);
+  }
+
+  body.package-details-page .mobile-pref-brand span {
+    margin-top: 8px;
+    font-size: clamp(30px, 3vw, 40px);
+    letter-spacing: 0.08em;
+  }
+
+  body.package-details-page .mobile-pref-title {
+    margin: 18px auto 18px;
+    max-width: 96%;
+    font-size: clamp(25px, 2.4vw, 34px);
+    line-height: 1.14;
+    font-weight: 650;
+    text-wrap: balance;
+  }
+
+  body.package-details-page .mobile-pref-input {
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  body.package-details-page .mobile-pref-option span {
+    text-align: left;
+  }
 }
 
 /* Package details: booking card stacks above page content, never above gallery lightbox */
@@ -3604,9 +4285,28 @@ body.package-details-page .tripon-social-fab {
     position: relative;
     max-width: none;
     width: 100%;
-    padding: 16px 14px;
+    padding: 18px 16px;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    box-sizing: border-box;
+  }
+
+  body.package-details-page .booking-card .booking-extras,
+  body.package-details-page .booking-card .booking-tickets-lux,
+  body.package-details-page .booking-card .booking-summary-lux,
+  body.package-details-page .booking-card .booking-extras__list,
+  body.package-details-page .booking-card .booking-tickets-lux__list,
+  body.package-details-page .booking-card .ticket-row--lux,
+  body.package-details-page .booking-card .booking-extra-card,
+  body.package-details-page .booking-card .booking-extra-card__label {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  body.package-details-page .booking-card .booking-tickets-lux,
+  body.package-details-page .booking-card .booking-summary-lux {
+    padding: 0 !important;
   }
 
   body.package-details-page .booking-top {
@@ -3678,6 +4378,59 @@ body.package-details-page .tripon-social-fab {
 
   body.package-details-page .checkbox-subtext {
     font-size: 10px;
+  }
+
+  body.package-details-page .booking-extras {
+    margin-top: 16px;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body.package-details-page .booking-extras__title {
+    font-size: 17px;
+  }
+
+  body.package-details-page .booking-extras__subtitle {
+    font-size: 12px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__label {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__icon {
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+
+  body.package-details-page .booking-extra-card__name {
+    font-size: 14px;
+  }
+
+  body.package-details-page .booking-extra-card__desc {
+    font-size: 12px;
+  }
+
+  body.package-details-page .booking-extra-card__price {
+    font-size: 14px;
+  }
+
+  body.package-details-page .booking-extra-card__unit {
+    font-size: 10px;
+  }
+
+  body.package-details-page .booking-extra-card__price-wrap {
+    min-width: 64px;
+  }
+
+  body.package-details-page .booking-extras__tax-note {
+    margin-top: 12px;
+    padding: 10px 12px;
+    font-size: 12px;
   }
 
   body.package-details-page .book-btn {
@@ -3765,9 +4518,29 @@ body.package-details-page .tripon-social-fab {
   }
 
   body.package-details-page .booking-card {
-    padding: 10px 8px;
+    padding: 14px 12px;
     border-radius: 10px;
     margin-bottom: 0;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__label {
+    padding: 12px 10px;
+    gap: 8px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__icon {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__price-wrap {
+    min-width: 58px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__actions {
+    gap: 8px;
   }
 
   body.package-details-page .booking-top .price-value {
@@ -4124,17 +4897,25 @@ body.package-details-page .tripon-social-fab {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding: 0 12px 16px !important;
+    padding: 20px 12px 18px !important;
     grid-template-columns: minmax(0, 1fr) !important;
     gap: 12px !important;
-    border-radius: 12px !important;
+    border-radius: 20px !important;
+    min-height: auto !important;
     box-sizing: border-box !important;
   }
 
   .home-screen .family-tour-copy {
     padding: 20px 10px 10px !important;
     width: 100% !important;
+    align-items: center !important;
+    text-align: center !important;
     box-sizing: border-box !important;
+  }
+
+  .home-screen .family-tour-plane-path {
+    width: 55% !important;
+    opacity: 0.5 !important;
   }
 
   .home-screen .family-tour-kicker {
@@ -4185,25 +4966,343 @@ body.package-details-page .tripon-social-fab {
     align-items: start !important;
   }
 
-  .why-choose-label,
-  .home-screen .why-choose-label {
+  .why-choose-header,
+  .home-screen .why-choose-header {
     grid-column: 1 / -1 !important;
     grid-row: 1 !important;
-    justify-self: start !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 24px !important;
   }
 
   .why-choose-intro,
   .home-screen .why-choose-intro {
-    grid-column: 1 / -1 !important;
-    grid-row: 2 !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .why-choose-intro h2,
+  .home-screen .why-choose-intro h2,
+  .why-choose-intro p,
+  .home-screen .why-choose-intro p {
+    text-align: center !important;
+  }
+
+  .why-choose-intro,
+  .home-screen .why-choose-intro {
     width: 100% !important;
     min-width: 0 !important;
     max-width: none !important;
+    flex: 1 1 auto !important;
   }
 
   .why-choose-grid,
   .home-screen .why-choose-grid {
     grid-column: 1 / -1 !important;
-    grid-row: 3 !important;
+    grid-row: 2 !important;
+  }
+}
+
+/* Package booking extras — mobile/tablet layout lock */
+@media (max-width: 768px) {
+  .booking-card .booking-extra-card__label {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 11px 12px !important;
+    gap: 10px !important;
+  }
+
+  .booking-card .booking-extra-card__body {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    overflow: hidden !important;
+  }
+
+  .booking-card .booking-extra-card__actions {
+    flex: 0 0 auto !important;
+    flex-shrink: 0 !important;
+  }
+
+  .booking-card .booking-extra-card__name {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .booking-card .booking-extra-card__desc {
+    display: -webkit-box !important;
+    -webkit-box-orient: vertical !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+    overflow: hidden !important;
+  }
+}
+
+/* Desktop: grid layout + full visible text (must be last) */
+@media (min-width: 769px) {
+  body.package-details-page .booking-card .booking-extras {
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__label {
+    display: grid !important;
+    grid-template-columns: 52px minmax(0, 1fr) max-content !important;
+    align-items: center !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 100% !important;
+    column-gap: 14px !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__icon {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    width: 44px !important;
+    height: 44px !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__body {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    flex: none !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__actions {
+    grid-column: 3 !important;
+    grid-row: 1 !important;
+    flex: none !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__name {
+    display: block !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__desc {
+    display: block !important;
+    overflow: visible !important;
+    -webkit-line-clamp: unset !important;
+    line-clamp: unset !important;
+    -webkit-box-orient: unset !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    white-space: normal !important;
+  }
+}
+
+/* Large desktop (1440px+) — full-width extras aligned with tickets */
+@media (min-width: 1440px) {
+  body.package-details-page .package-booking-col,
+  body.package-details-page .package-booking-col.right {
+    flex: 0 0 500px;
+    max-width: 500px;
+    width: 500px;
+    min-width: 500px;
+  }
+
+  body.package-details-page .booking-card {
+    max-width: 500px;
+  }
+
+  body.package-details-page .booking-card .booking-extras {
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__label {
+    grid-template-columns: 48px minmax(0, 1fr) max-content !important;
+    column-gap: 14px !important;
+    padding: 14px 16px !important;
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__icon {
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 22px !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__name {
+    font-size: 17px !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__desc {
+    font-size: 14px !important;
+  }
+
+  /* 1440px+ — larger booking card + content to balance sidebar height */
+  body.package-details-page .booking-card {
+    padding: 36px 32px;
+  }
+
+  body.package-details-page .booking-card .price-value {
+    font-size: 38px;
+  }
+
+  body.package-details-page .booking-card .section-title {
+    font-size: 22px;
+    margin: 32px 0 18px;
+  }
+
+  body.package-details-page .booking-card .ticket-row {
+    margin: 20px 0;
+  }
+
+  body.package-details-page .booking-card .ticket-label {
+    font-size: 19px;
+  }
+
+  body.package-details-page .booking-card .ticket-price {
+    font-size: 18px;
+  }
+
+  body.package-details-page .booking-card .booking-extras__title {
+    font-size: 26px;
+  }
+
+  body.package-details-page .booking-card .booking-extras__subtitle {
+    font-size: 17px;
+  }
+
+  body.package-details-page .booking-card .booking-extras__list {
+    gap: 16px;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__label {
+    grid-template-columns: 56px minmax(0, 1fr) max-content !important;
+    column-gap: 16px !important;
+    padding: 18px 20px !important;
+    min-height: 88px !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__icon {
+    width: 56px !important;
+    height: 56px !important;
+    font-size: 26px !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__name {
+    font-size: 19px !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__desc {
+    font-size: 16px !important;
+    line-height: 1.5 !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__price {
+    font-size: 19px !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__unit {
+    font-size: 14px !important;
+  }
+
+  body.package-details-page .booking-card .booking-extra-card__check {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  body.package-details-page .booking-card .booking-extras__tax-note {
+    padding: 16px 18px !important;
+    font-size: 16px !important;
+  }
+
+  body.package-details-page .booking-card .total {
+    font-size: 24px;
+  }
+
+  body.package-details-page .booking-card .book-btn {
+    padding: 20px;
+    font-size: 19px;
+  }
+
+  body.package-details-page .package-main-col {
+    gap: 56px;
+  }
+
+  body.package-details-page .package-body-main.left-main .accordion {
+    margin-top: 32px;
+    padding-top: 0;
+  }
+
+  body.package-details-page .package-overview-cell h2 {
+    font-size: 44px;
+    margin-bottom: 26px;
+  }
+
+  body.package-details-page .package-overview-cell p {
+    font-size: 26px;
+    line-height: 1.8;
+  }
+
+  body.package-details-page .package-body-main.left-main h3 {
+    font-size: 42px;
+    margin-bottom: 26px;
+  }
+
+  body.package-details-page .package-body-main.left-main ul li {
+    font-size: 26px;
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
+
+  body.package-details-page .package-body-main.left-main .accordion-header {
+    font-size: 32px;
+    padding: 32px 0;
+  }
+
+  body.package-details-page .package-body-main.left-main .accordion-header .fa-chevron-down {
+    font-size: 20px;
+  }
+
+  body.package-details-page .package-body-main.left-main .accordion-content,
+  body.package-details-page .package-body-main.left-main .accordion-content p,
+  body.package-details-page .package-body-main.left-main .accordion-content ul li {
+    font-size: 26px;
+    line-height: 1.8;
+  }
+
+  body.package-details-page .package-details-faq-wrap .pd-faq-summary {
+    font-size: 26px;
+    padding: 22px 0;
+  }
+
+  body.package-details-page .package-details-faq-wrap .pd-faq-body p {
+    font-size: 24px;
+    line-height: 1.8;
+  }
+
+  body.package-details-page .itinerary-day-box-title {
+    font-size: 24px;
+  }
+
+  body.package-details-page .itinerary-day-box-badge {
+    font-size: 17px;
+  }
+
+  body.package-details-page .itinerary-rich-chips,
+  body.package-details-page .itinerary-rich-narr .itinerary-rich-para,
+  body.package-details-page .itinerary-rich-check-item {
+    font-size: 24px;
+    line-height: 1.8;
   }
 }

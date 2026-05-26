@@ -1,0 +1,422 @@
+/**
+ * Default package data for detail pages (used when sessionStorage is empty or stale).
+ * Keys: "{place}/{slug}"
+ */
+(function (g) {
+  const TRIPON_PACKAGE_CATALOG = {
+    "kuta/centipede-desert-atv-tour": {
+      title: "Centipede Tour - Guided Arizona Desert Tour by ATV",
+      location: "Arizona, USA",
+      rating: "4.8",
+      reviews: "269",
+      days: "4 Days",
+      price: "₹15,700",
+      type: "friends",
+      image: "assets/images/arizona.png",
+      detailImages: "images/arizona.png,images/arizona1.png,images/arizona2.png",
+      places: "Sonoran Desert trails,Cactus Canyon viewpoints,Desert camp base",
+      activities: "Guided ATV ride,Desert photo stops,Safety briefing and gear",
+      included: "ATV rental and helmet,Safety gear,Professional desert guide,Hotel pickup and drop-off"
+    },
+    "nusa-penida/molokini-turtle-town-snorkeling": {
+      title: "Molokini and Turtle Town Snorkeling Adventure Aboard",
+      location: "Nusa Penida, Indonesia",
+      rating: "4.8",
+      reviews: "269",
+      days: "4 Days",
+      price: "₹18,700",
+      type: "family",
+      image: "assets/images/molokini.png",
+      detailImages: "images/molokini.png,images/molokini1.png,images/molokini2.png",
+      places: "Molokini Crater,Turtle Town reef,Nusa Penida coastline",
+      activities: "Snorkeling with sea turtles,Reef exploration,Boat cruise with crew",
+      included: "Boat transfers,Snorkeling equipment,Lunch on board,Professional snorkel guide"
+    },
+    "london/westminster-walking-tour-westminster-abbey-entry": {
+      title: "Westminster Walking Tour & Westminster Abbey Entry",
+      location: "London, UK",
+      rating: "4.8",
+      reviews: "269",
+      days: "4 Days",
+      price: "₹78,300",
+      type: "couple",
+      image: "assets/images/westminster.png",
+      detailImages: "images/westminster.png,images/westminster1.png,images/westminster2.png",
+      places: "Westminster Abbey,Big Ben and Parliament,St James's Park",
+      activities: "Guided walking tour,Abbey entry and highlights,River Thames photo walk",
+      included: "Westminster Abbey entry,Expert local guide,Walking tour route map,Headsets where required"
+    },
+    "lombok/ultimate-circle-island-day-tour": {
+      title: "All Inclusive Ultimate Circle Island Day Tour with Lunch",
+      location: "Lombok, Indonesia",
+      rating: "4.8",
+      reviews: "269",
+      days: "4 Days",
+      price: "₹64,000",
+      type: "family",
+      image: "assets/images/circle.png",
+      detailImages: "images/circle.png,images/circle1.png,images/circle2.png",
+      places: "Senggigi coast,Sasak villages,Waterfall viewpoints",
+      activities: "Circle island scenic drive,Traditional lunch stop,Cultural village visit",
+      included: "Private transport,English-speaking guide,Lunch,Entrance fees on route"
+    },
+    "ubud/honey-moon-package-in-bali": {
+      title: "Honey Moon Package in Bali",
+      location: "Ubud, Indonesia",
+      rating: "4.8",
+      reviews: "136",
+      days: "5 Days",
+      price: "₹45,000",
+      type: "couple",
+      image: "assets/images/couple.png",
+      detailImages: "images/couple.png,images/couple1.png,images/couple2.png",
+      places: "Tanah Lot Temple,Ubud Rice Terraces,Campuhan Ridge,Tirta Empul",
+      activities: "Balinese cooking class,Couple spa,Rice terrace walk,Traditional dance evening",
+      included: "Boutique stay with breakfast,Couple spa session,Private transfers,Selected temple entries"
+    },
+    "nusa-penida/isolated-mountains-retreat": {
+      title: "Isolated Mountains Retreat",
+      location: "Nusa Penida, Indonesia",
+      rating: "4.8",
+      reviews: "136",
+      days: "6 Days",
+      price: "₹50,000",
+      type: "couple",
+      image: "assets/images/isolated.png",
+      detailImages: "images/isolated.png,images/isolated1.png,images/isolated2.png",
+      places: "Kelingking Beach,Diamond Beach,Broken Beach,Angel Billabong,Crystal Bay",
+      activities: "Snorkel with manta rays,Island coastal drive,Cliff viewpoint hike,Sunset at the beach",
+      included: "Fast-boat transfers,Scooter or van hire support,Breakfast daily,Snorkel gear on activity days"
+    },
+    "gili-trawangan/the-white-beach-land": {
+      title: "The White Beach Land",
+      location: "Gili Trawangan, Indonesia",
+      rating: "4.8",
+      reviews: "136",
+      days: "7 Days",
+      price: "₹75,000",
+      type: "couple",
+      image: "assets/images/gilli.png",
+      detailImages: "images/gilli.png,images/gilli1.png,images/gilli2.png",
+      places: "Gili Trawangan beaches,Gili Meno sandbar,Gili Air village,Turtle snorkeling point",
+      activities: "Beach cycling,Snorkeling day trip,Sunset swing photo stop,Island café crawl",
+      included: "Island transfers,Bicycle rental,Snorkeling trip,Breakfast at stay"
+    },
+    "seminyak/family-beach-resort-stay": {
+      title: "Family Beach Resort Stay",
+      location: "Seminyak, Indonesia",
+      rating: "4.7",
+      reviews: "98",
+      days: "8 Days",
+      price: "₹1,20,000",
+      type: "family",
+      image: "assets/images/semiyak81.png",
+      detailImages: "images/semiyak81.png,images/semiyak82.png,images/semiyak83.png",
+      places: "Seminyak Beach,Petitenget Temple,Ku De Ta sunset strip",
+      activities: "Resort pool and beach time,Family dining crawl,Kids-friendly water play",
+      included: "Resort accommodation,Daily breakfast,Airport transfers,Kids club access where available"
+    },
+    "ubud/cultural-village-explorer": {
+      title: "Cultural Village Explorer",
+      location: "Ubud, Indonesia",
+      rating: "4.6",
+      reviews: "74",
+      days: "5 Days",
+      price: "₹95,000",
+      type: "family",
+      image: "assets/images/ubud51.png",
+      detailImages: "images/ubud51.png,images/ubud52.png,images/ubud53.png",
+      places: "Ubud Monkey Forest,Rice Terrace Walk,Art Market,Traditional Dance",
+      activities: "Village tour,Craft workshop,Local cuisine tasting,Temple visit",
+      included: "Village guide,Craft workshop materials,Temple sarongs,Private family transport"
+    },
+    "kuta/waterpark-temples-tour": {
+      title: "Waterpark & Temples Tour",
+      location: "Kuta, Indonesia",
+      rating: "4.9",
+      reviews: "112",
+      days: "7 Days",
+      price: "₹1,10,000",
+      type: "family",
+      image: "assets/images/kuta61.png",
+      detailImages: "images/kuta61.png,images/kuta62.png,images/kuta63.png",
+      places: "Waterbom Bali,Uluwatu Temple,Tanah Lot,Tegenungan Waterfall",
+      activities: "Waterpark day pass,Temple sunset visit,Family photo stops,Beach leisure time",
+      included: "Waterpark tickets,Temple entries,Private van with driver,Lunch on tour days"
+    },
+    "canggu/adventure-surf-camp": {
+      title: "Adventure Surf Camp",
+      location: "Canggu, Indonesia",
+      rating: "4.8",
+      reviews: "162",
+      days: "5 Days",
+      price: "₹55,000",
+      type: "friends",
+      image: "assets/images/conggu.png",
+      detailImages: "images/conggu.png,images/conggu1.png,images/conggu2.png",
+      places: "Batu Bolong Beach,Echo Beach,Canggu rice lanes",
+      activities: "Surf lessons with coach,Board rental sessions,Sunset beach barbecue,Scooter coastal loop",
+      included: "Surf lessons,Board rental,Beach transfer support,Welcome drink on arrival day"
+    },
+    "mount-batur/volcano-trekking-trip": {
+      title: "Volcano Trekking Trip",
+      location: "Mount Batur, Indonesia",
+      rating: "4.5",
+      reviews: "88",
+      days: "8 Days",
+      price: "₹40,000",
+      type: "friends",
+      image: "assets/images/volcano.png",
+      detailImages: "images/volcano.png,images/volcano1.png,images/volcano2.png",
+      places: "Mount Batur summit,Lake Batur viewpoint,Hot springs village",
+      activities: "Sunrise volcano trek,Breakfast after summit,Hot spring soak,Volcano crater photos",
+      included: "Trek guide and torch,Light breakfast after hike,Transport to trailhead,Hot spring entry"
+    },
+    "nusa-lembongan/island-hopping-tour": {
+      title: "Island Hopping Tour",
+      location: "Nusa Lembongan, Indonesia",
+      rating: "4.8",
+      reviews: "140",
+      days: "7 Days",
+      price: "₹65,000",
+      type: "friends",
+      image: "assets/images/nusa61.png",
+      detailImages: "images/nusa61.png,images/nusa62.png,images/nusa63.png",
+      places: "Nusa Lembongan mangroves,Nusa Ceningan bridge,Blue Lagoon cliff",
+      activities: "Island hopping by boat,Snorkeling stops,Cliff jumping viewpoint (optional),Beach chill time",
+      included: "Boat hops between islands,Snorkel gear,Rice lunch on Ceningan,Harbour transfers"
+    },
+    "bedugul/lakeside-family-escape": {
+      title: "Lakeside Family Escape",
+      location: "Bedugul, Indonesia",
+      rating: "4.6",
+      reviews: "84",
+      days: "6 Days",
+      price: "₹88,000",
+      type: "family",
+      image: "assets/images/bedgul.png",
+      detailImages: "images/bedgul.png,images/bedgul1.png,images/bedgul2.png",
+      places: "Ulun Danu Beratan Temple,Handara Gate,Bedugul Botanical Garden",
+      activities: "Lake temple visit,Family picnic by the lake,Garden walk,Strawberry farm stop",
+      included: "Family room stay,Breakfast,Garden and temple entries,Private driver for day trips"
+    },
+    "uluwatu/luxury-island-escape": {
+      title: "Luxury Island Escape",
+      location: "Uluwatu, Indonesia",
+      rating: "4.9",
+      reviews: "121",
+      days: "8 Days",
+      price: "₹1,35,000",
+      type: "couple",
+      image: "assets/images/luxury.png",
+      detailImages: "images/luxury.png,images/luxury1.png,images/luxury2.png",
+      places: "Uluwatu Temple,Bingin Beach clifftops,Jimbaran Bay",
+      activities: "Kecak dance at sunset,Private cliffside dining,Couple spa ritual,Infinity pool downtime",
+      included: "Luxury villa or resort stay,Private airport transfers,Couple spa session,Kecak show tickets"
+    },
+    "uluwatu/cliffside-adventure-trail": {
+      title: "Cliffside Adventure Trail",
+      location: "Uluwatu, Indonesia",
+      rating: "4.6",
+      reviews: "92",
+      days: "6 Days",
+      price: "₹76,000",
+      type: "friends",
+      image: "assets/images/lake1.png",
+      detailImages: "images/lake1.png,images/lake2.png,images/lake3.png",
+      places: "Uluwatu cliffs,Padang Padang beach,Suluban cave beach",
+      activities: "Coastal cliff trek,Surf spot check-ins,Sunset viewpoint hops,Beach barbecue evening",
+      included: "Trail guide,Transport between viewpoints,Beach barbecue dinner,Drinking water on hikes"
+    },
+  };
+
+  const TRIPON_DURATION_FOLDER_LABELS = {
+    "4-days": "4 Days",
+    "5-days": "5 Days",
+    "6-days": "6 Days",
+    "7-days": "7 Days",
+    "8-days": "8 Days"
+  };
+
+  function triponDurationLabelFromFolder(folder) {
+    const key = String(folder || "").toLowerCase().trim();
+    return TRIPON_DURATION_FOLDER_LABELS[key] || "";
+  }
+
+  function triponDurationFolderFromDaysValue(daysValue) {
+    const n = String(daysValue || "").match(/\d+/)?.[0];
+    return n ? `${n}-days` : "";
+  }
+
+  function triponCatalogEntriesForDurationFolder(folder) {
+    const label = triponDurationLabelFromFolder(folder);
+    const n = String(folder || "").match(/^(\d+)-days$/)?.[1];
+    if (!n) return [];
+    return Object.entries(TRIPON_PACKAGE_CATALOG)
+      .filter(([, entry]) => {
+        const dayNum = String(entry.days || "").match(/\d+/)?.[0];
+        return dayNum === n;
+      })
+      .map(([key, entry]) => {
+        const [place, slug] = key.split("/");
+        return { place, slug, ...entry };
+      });
+  }
+
+  function triponGetCatalogEntry(place, slug) {
+    const p = String(place || "").toLowerCase().trim();
+    const s = String(slug || "").toLowerCase().trim();
+    if (!p || !s) return null;
+    return TRIPON_PACKAGE_CATALOG[`${p}/${s}`] || null;
+  }
+
+  /** Same order and offers as packages/index.html — single source for location package strips. */
+  const TRIPON_PACKAGE_SCREEN_ORDER = [
+    { place: "kuta", slug: "centipede-desert-atv-tour", offer: "10% off" },
+    { place: "nusa-penida", slug: "molokini-turtle-town-snorkeling", offer: "10% off" },
+    { place: "london", slug: "westminster-walking-tour-westminster-abbey-entry", offer: "10% off" },
+    { place: "lombok", slug: "ultimate-circle-island-day-tour", offer: "10% off" },
+    { place: "ubud", slug: "honey-moon-package-in-bali", offer: "10% off" },
+    { place: "nusa-penida", slug: "isolated-mountains-retreat", offer: "15% off" },
+    { place: "gili-trawangan", slug: "the-white-beach-land", offer: "12% off" },
+    { place: "seminyak", slug: "family-beach-resort-stay", offer: "8% off" },
+    { place: "ubud", slug: "cultural-village-explorer", offer: "10% off" },
+    { place: "kuta", slug: "waterpark-temples-tour", offer: "18% off" },
+    { place: "canggu", slug: "adventure-surf-camp", offer: "20% off" },
+    { place: "mount-batur", slug: "volcano-trekking-trip", offer: "5% off" },
+    { place: "nusa-lembongan", slug: "island-hopping-tour", offer: "13% off" },
+    { place: "bedugul", slug: "lakeside-family-escape", offer: "11% off" },
+    { place: "uluwatu", slug: "luxury-island-escape", offer: "9% off" },
+    { place: "uluwatu", slug: "cliffside-adventure-trail", offer: "10% off" }
+  ];
+
+  function triponEscapeHtml(text) {
+    return String(text || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function triponPackageAssetUrl(path) {
+    let p = String(path || "").trim().replace(/\\/g, "/");
+    if (!p) {
+      return "";
+    }
+    if (/^(https?:)?\/\//i.test(p) || p.startsWith("data:")) {
+      return p;
+    }
+    if (p.startsWith("/")) {
+      return p;
+    }
+    if (p.startsWith("images/")) {
+      return `/assets/images/${p.slice("images/".length)}`;
+    }
+    if (p.startsWith("assets/images/")) {
+      return `/${p}`;
+    }
+    return `/assets/images/${p}`;
+  }
+
+  function triponPackageCsvAssetUrls(csv) {
+    return String(csv || "")
+      .split(",")
+      .map((piece) => triponPackageAssetUrl(piece.trim()))
+      .filter(Boolean)
+      .join(",");
+  }
+
+  function triponPackageRatingStarsHtml(ratingStr) {
+    const rating = parseFloat(ratingStr) || 0;
+    const full = Math.min(5, Math.max(0, Math.round(rating)));
+    let html = "";
+    for (let i = 0; i < 5; i += 1) {
+      html +=
+        i < full
+          ? '<i class="fa-solid fa-star"></i>'
+          : '<i class="fa-regular fa-star"></i>';
+    }
+    return html;
+  }
+
+  function triponBuildPackageScreenCardHtml(item) {
+    const entry = triponGetCatalogEntry(item.place, item.slug);
+    if (!entry) {
+      return "";
+    }
+    const dayNum = String(entry.days || "").match(/\d+/)?.[0] || "";
+    const durationFolder = dayNum ? `${dayNum}-days` : "";
+    const thumb = triponPackageAssetUrl(entry.image);
+    const detailUrls = triponPackageCsvAssetUrls(entry.detailImages);
+    const hoverUrls = detailUrls || triponPackageCsvAssetUrls(entry.detailImages);
+    const placesAttr = entry.places
+      ? ` data-package-places="${triponEscapeHtml(entry.places)}"`
+      : "";
+    const activitiesAttr = entry.activities
+      ? ` data-package-activities="${triponEscapeHtml(entry.activities)}"`
+      : "";
+    const durationAttr = durationFolder
+      ? ` data-package-duration="${triponEscapeHtml(durationFolder)}"`
+      : "";
+
+    return `<article class="package-card"${durationAttr} data-package-place="${triponEscapeHtml(item.place)}" data-package-slug="${triponEscapeHtml(item.slug)}" data-type="${triponEscapeHtml(entry.type)}" data-days="${triponEscapeHtml(dayNum)}"${placesAttr}${activitiesAttr} data-package-detail-images="${triponEscapeHtml(detailUrls)}" data-package-hover-images="${triponEscapeHtml(hoverUrls)}">
+            <div class="package-thumb"><span class="offer">${triponEscapeHtml(item.offer)}</span><img src="${triponEscapeHtml(thumb)}" alt="${triponEscapeHtml(entry.title)}" /></div>
+            <p class="location"><i class="fa-solid fa-location-dot"></i> ${triponEscapeHtml(entry.location)}</p>
+            <h4>${triponEscapeHtml(entry.title)}</h4>
+            <p class="rating">${triponPackageRatingStarsHtml(entry.rating)} <span>${triponEscapeHtml(entry.rating)} (${triponEscapeHtml(entry.reviews)})</span></p>
+            <div class="meta"><span class="package-meta-duration"><i class="fa-regular fa-clock package-meta-duration-icon" aria-hidden="true"></i><span class="package-meta-days-text">${triponEscapeHtml(entry.days)}</span></span><span>From ${triponEscapeHtml(entry.price)}</span></div>
+          </article>`;
+  }
+
+  function triponRenderPackageScreenGrid(gridEl) {
+    if (!gridEl) {
+      return;
+    }
+    const html = TRIPON_PACKAGE_SCREEN_ORDER.map((item) => triponBuildPackageScreenCardHtml(item)).join("");
+    gridEl.innerHTML = html;
+    gridEl.dataset.triponPackageScreenRendered = "1";
+  }
+
+  function triponRenderContactExploreGrid(gridEl) {
+    if (!gridEl || gridEl.dataset.triponContactExploreRendered === "1") {
+      return;
+    }
+    const picks = TRIPON_PACKAGE_SCREEN_ORDER.slice(0, 4);
+    gridEl.innerHTML = picks.map((item) => triponBuildPackageScreenCardHtml(item)).join("");
+    gridEl.dataset.triponContactExploreRendered = "1";
+  }
+
+  function triponSyncPackageScreenFilters(filterSection) {
+    if (!filterSection || filterSection.dataset.triponFiltersSynced === "1") {
+      return;
+    }
+    const prevArrow = filterSection.querySelector(".package-day-arrow-prev");
+    const nextArrow = filterSection.querySelector(".package-day-arrow-next");
+    const chipMarkup = `
+            <button class="chip" type="button">4 Days</button>
+            <button class="chip chip-active" type="button">4 Nights 5 Days</button>
+            <button class="chip" type="button">5 Nights 6 Days</button>
+            <button class="chip" type="button">6 Nights 7 Days</button>
+            <button class="chip" type="button">7 Nights 8 Days</button>
+            <button class="chip chip-custom" type="button">Ask Custom Packages</button>`;
+    filterSection.innerHTML = chipMarkup;
+    if (prevArrow) {
+      filterSection.insertBefore(prevArrow, filterSection.firstChild);
+    }
+    if (nextArrow) {
+      filterSection.append(nextArrow);
+    }
+    filterSection.dataset.triponFiltersSynced = "1";
+  }
+
+  g.TRIPON_PACKAGE_CATALOG = TRIPON_PACKAGE_CATALOG;
+  g.TRIPON_PACKAGE_SCREEN_ORDER = TRIPON_PACKAGE_SCREEN_ORDER;
+  g.TRIPON_DURATION_FOLDER_LABELS = TRIPON_DURATION_FOLDER_LABELS;
+  g.triponDurationLabelFromFolder = triponDurationLabelFromFolder;
+  g.triponDurationFolderFromDaysValue = triponDurationFolderFromDaysValue;
+  g.triponCatalogEntriesForDurationFolder = triponCatalogEntriesForDurationFolder;
+  g.triponGetCatalogEntry = triponGetCatalogEntry;
+  g.triponBuildPackageScreenCardHtml = triponBuildPackageScreenCardHtml;
+  g.triponRenderPackageScreenGrid = triponRenderPackageScreenGrid;
+  g.triponRenderContactExploreGrid = triponRenderContactExploreGrid;
+  g.triponSyncPackageScreenFilters = triponSyncPackageScreenFilters;
+})(typeof window !== "undefined" ? window : globalThis);
