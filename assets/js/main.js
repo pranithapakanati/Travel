@@ -1084,7 +1084,7 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
     };
 
     const bindMouseParallax = () => {
-      if (!mediaInner) {
+      if (!mediaInner || g.matchMedia("(max-width: 768px)").matches) {
         return;
       }
       gsap.set(mediaInner, { transformPerspective: 900, transformStyle: "preserve-3d" });
@@ -1356,7 +1356,8 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
     };
 
     resize();
-    const count = reduceMotion ? 0 : 48;
+    const mobile = g.matchMedia("(max-width: 768px)").matches;
+    const count = reduceMotion ? 0 : mobile ? 18 : 48;
     const dots = Array.from({ length: count }, () => ({
       x: Math.random() * (canvas.width / (g.devicePixelRatio || 1)),
       y: Math.random() * (canvas.height / (g.devicePixelRatio || 1)),
@@ -2554,40 +2555,46 @@ const triponInitMain = () => {
     });
   };
 
+  const triponScheduleGsapBoot = (bootFn) => {
+    const run = () => bootFn();
+    const mobile = window.matchMedia("(max-width: 768px)").matches;
+    if (mobile && typeof window.triponRunWhenIdle === "function") {
+      window.triponRunWhenIdle(run, 2600);
+      return;
+    }
+    run();
+  };
+
+  const triponWaitForGsap = (onReady, attempt = 0) => {
+    if (window.gsap && window.ScrollTrigger) {
+      onReady();
+      return;
+    }
+    if (attempt > 80) {
+      return;
+    }
+    window.setTimeout(() => triponWaitForGsap(onReady, attempt + 1), 40);
+  };
+
   const homeRoot = document.querySelector("#homeScreen");
   if (homeRoot) {
     if (typeof window.triponInitHomeAmbient === "function") {
       window.triponInitHomeAmbient();
     }
     if (document.querySelector("[data-tripon-reasons-gsap], .reasons--gsap")) {
-      const bootReasonsGsap = () => {
-        if (window.gsap && window.ScrollTrigger) {
-          window.triponInitReasonsGsap();
-        } else {
-          window.setTimeout(bootReasonsGsap, 40);
-        }
-      };
-      bootReasonsGsap();
+      triponScheduleGsapBoot(() => {
+        triponWaitForGsap(() => window.triponInitReasonsGsap());
+      });
     }
     if (document.querySelector("[data-tripon-family-tour-gsap]")) {
-      const bootFamilyTourGsap = () => {
-        if (window.gsap && window.ScrollTrigger) {
-          window.triponInitFamilyTourGsap();
-        } else {
-          window.setTimeout(bootFamilyTourGsap, 40);
-        }
-      };
-      bootFamilyTourGsap();
+      triponScheduleGsapBoot(() => {
+        triponWaitForGsap(() => window.triponInitFamilyTourGsap());
+      });
     }
     if (document.querySelector("[data-tripon-why-choose-gsap]")) {
-      const bootWhyChooseGsap = () => {
-        if (window.gsap && window.ScrollTrigger) {
-          window.triponInitWhyChooseGsap();
-        } else {
-          window.setTimeout(bootWhyChooseGsap, 40);
-        }
-      };
-      bootWhyChooseGsap();
+      triponScheduleGsapBoot(() => {
+        triponWaitForGsap(() => window.triponInitWhyChooseGsap());
+      });
     }
   }
 
@@ -3809,7 +3816,8 @@ const triponInitMain = () => {
         return;
       }
 
-      const duration = animate && gsap && !reduceMotion ? 0.72 : 0;
+      const mobile3d = window.matchMedia("(max-width: 768px)").matches;
+      const duration = animate && gsap && !reduceMotion && !mobile3d ? 0.72 : 0;
       const ease = "power3.out";
 
       items.forEach((item, i) => {
