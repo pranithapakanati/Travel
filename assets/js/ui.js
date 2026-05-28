@@ -152,7 +152,7 @@ const closeHomeMobileDrawer = () => {
   document.body.style.overflow = "";
 };
 
-if (!window.triponNavbarHandlesMobile) {
+if (!window.triponNavbarHandlesMobile && !document.querySelector(".tripon-mobile-nav__item")) {
 homeMobileMenuToggle?.addEventListener("click", () => {
   const isOpen = homeMobileMenuOverlay?.classList.contains("active");
   if (isOpen) {
@@ -178,14 +178,16 @@ homeMobileMenuOverlay?.addEventListener("click", (event) => {
 });
 }
 
-homeMobileLocationToggle?.addEventListener("click", () => {
-  const isOpen = homeMobileLocationList?.classList.contains("active");
-  homeMobileLocationList?.classList.toggle("active", !isOpen);
-  homeMobileLocationToggle.setAttribute("aria-expanded", String(!isOpen));
-  if (homeMobileLocationIcon) {
-    homeMobileLocationIcon.textContent = isOpen ? "+" : "−";
-  }
-});
+if (!document.querySelector(".tripon-mobile-nav__item")) {
+  homeMobileLocationToggle?.addEventListener("click", () => {
+    const isOpen = homeMobileLocationList?.classList.contains("active");
+    homeMobileLocationList?.classList.toggle("active", !isOpen);
+    homeMobileLocationToggle.setAttribute("aria-expanded", String(!isOpen));
+    if (homeMobileLocationIcon) {
+      homeMobileLocationIcon.textContent = isOpen ? "+" : "−";
+    }
+  });
+}
 
 // close dropdown when clicking outside
 document.addEventListener('click', () => {

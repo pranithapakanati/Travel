@@ -1,10 +1,7 @@
 /* Global contact-style ambient background (all pages) */
 
 body.has-tripon-site-ambient {
-  background:
-    radial-gradient(ellipse 70% 55% at 15% 20%, rgba(186, 235, 210, 0.45) 0%, transparent 58%),
-    radial-gradient(ellipse 55% 45% at 88% 12%, rgba(56, 189, 248, 0.12) 0%, transparent 52%),
-    linear-gradient(180deg, #f4fbf7 0%, #eef8f2 38%, #f8fcfa 100%);
+  background: #f6f7f9;
 }
 
 body.has-tripon-site-ambient .page {
@@ -24,12 +21,7 @@ body.has-tripon-site-ambient .page {
 }
 
 .tripon-site-ambient__photo {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(105deg, rgba(244, 251, 247, 0.62) 0%, rgba(238, 248, 242, 0.45) 42%, rgba(248, 252, 250, 0.28) 100%),
-    url("../images/insta_pic6.png") center 30% / cover no-repeat;
-  opacity: 0.38;
+  display: none !important;
 }
 
 .tripon-site-ambient__orb {
@@ -91,16 +83,6 @@ body.has-tripon-site-ambient .page {
   bottom: 80px;
   transform: rotate(18deg);
   animation-delay: -3s;
-}
-
-.tripon-site-ambient__balloon {
-  position: absolute;
-  right: clamp(12px, 8vw, 120px);
-  top: clamp(80px, 12vw, 160px);
-  font-size: clamp(42px, 5vw, 64px);
-  filter: drop-shadow(0 12px 24px rgba(13, 122, 79, 0.15));
-  animation: triponSiteAmbientFloat 7s ease-in-out infinite;
-  opacity: 0.85;
 }
 
 .tripon-site-ambient__plane-path {
@@ -288,7 +270,6 @@ body.has-tripon-site-ambient .page a:not(.tripon-header__link):not(.btn):not(.ch
 @media (prefers-reduced-motion: reduce) {
   .tripon-site-ambient__orb,
   .tripon-site-ambient__leaf,
-  .tripon-site-ambient__balloon,
   .tripon-site-ambient__plane,
   .tripon-site-ambient__plane-path line {
     animation: none;

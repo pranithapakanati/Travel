@@ -98,7 +98,7 @@ body.has-tripon-navbar:not(.tripon-home-page) > .container {
   margin-top: 0 !important;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   html {
     scroll-padding-top: var(--th-nav-offset-mobile);
   }
@@ -481,6 +481,8 @@ header.tripon-header {
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+  justify-self: end;
+  margin-left: auto;
 }
 
 .tripon-header__cta {
@@ -698,6 +700,15 @@ header.tripon-header {
   cursor: pointer;
 }
 
+.home-mobile-location-toggle,
+.home-mobile-location-toggle:hover,
+.home-mobile-location-toggle:focus-visible,
+.home-mobile-location-toggle:active {
+  box-shadow: none !important;
+  filter: none !important;
+  transform: none !important;
+}
+
 .home-mobile-location-list a {
   display: block;
   padding: 8px 0;
@@ -735,7 +746,7 @@ header.tripon-header {
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .tripon-header,
   .tripon-navbar.topbar {
     width: 92%;
@@ -753,8 +764,33 @@ header.tripon-header {
   }
 
   .tripon-header__bar {
+    position: relative;
     grid-template-columns: 1fr auto;
-    padding-right: 8px;
+    padding-right: 58px;
+  }
+
+  .tripon-header__actions {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    justify-content: flex-end;
+    width: auto;
+    gap: 0;
+  }
+
+  .tripon-header__actions .tripon-header__burger.home-mobile-menu-toggle span {
+    margin: 0 !important;
+  }
+
+  /* Override legacy main.css absolute toggle positioning inside pill navbar */
+  .tripon-header__actions .home-mobile-menu-toggle {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    bottom: auto !important;
+    z-index: auto !important;
   }
 }
 
@@ -766,6 +802,68 @@ header.tripon-header {
 
   .tripon-header__logo-img {
     height: 26px;
+  }
+
+  .tripon-header__bar {
+    padding-left: 16px;
+    padding-right: 56px;
+  }
+
+  .tripon-header__actions {
+    right: 7px;
+  }
+
+  .tripon-header__burger,
+  .tripon-header__actions .tripon-header__burger {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 320px) {
+  .tripon-header__bar {
+    padding-right: 34px;
+  }
+
+  .tripon-header__actions {
+    top: 0 !important;
+    bottom: 0;
+    right: 10px;
+    transform: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+  }
+
+  .tripon-header__actions .home-mobile-menu-toggle {
+    position: static !important;
+  }
+
+  .tripon-header__burger,
+  .tripon-header__actions .tripon-header__burger,
+  .tripon-header__actions .tripon-header__burger.home-mobile-menu-toggle {
+    display: flex !important;
+    width: 22px;
+    height: 18px;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .tripon-header__burger span,
+  .tripon-header__actions .tripon-header__burger span,
+  .tripon-header__actions .tripon-header__burger.home-mobile-menu-toggle span {
+    width: 18px;
+    height: 2px;
+    margin: 0 !important;
+    border-radius: 2px;
+    background: #1a2830 !important;
   }
 }
 

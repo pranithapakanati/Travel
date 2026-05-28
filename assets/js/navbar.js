@@ -57,10 +57,11 @@
     if (!key) return;
 
     document.querySelectorAll(`[data-nav-key="${key}"]`).forEach((el) => {
+      if (el.closest(".tripon-footer")) return;
       el.classList.add("is-active");
     });
 
-    if (key === "contact" || key === "people-reviews") {
+    if (key === "contact" || key === "people-reviews" || key === "about") {
       document.querySelector('[data-nav-key="company"]')?.classList.add("is-active");
     }
   }
@@ -157,19 +158,86 @@
     const overlay = document.getElementById("homeMobileMenuOverlay");
     const toggle = document.getElementById("homeMobileMenuToggle");
     const closeBtn = document.getElementById("homeMobileDrawerClose");
+    const panel = document.getElementById("homeMobileDrawer");
+    const locationToggle = document.getElementById("homeMobileLocationToggle");
+    const locationList = document.getElementById("homeMobileLocationList");
+    const locationIcon = locationToggle?.querySelector(".home-mobile-location-icon");
+    const mobileNav = overlay?.querySelector(".home-mobile-drawer-nav");
+    const socialFab = document.getElementById("triponSocialFab");
+    const socialFabPointerEvents = socialFab?.style?.pointerEvents || "";
     if (!overlay || !toggle) return;
+
+    const setLocationExpanded = (expanded) => {
+      if (!locationToggle || !locationList) {
+        return;
+      }
+      locationToggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+      locationList.classList.toggle("active", expanded);
+      if (locationIcon) {
+        locationIcon.textContent = expanded ? "−" : "+";
+      }
+    };
+
+    let savedScrollY = 0;
+    let savedBodyPosition = "";
+    let savedBodyTop = "";
+    let savedBodyWidth = "";
+    let savedHtmlOverflow = "";
+    let savedBodyOverflow = "";
+
+    const lockBackgroundScroll = () => {
+      savedScrollY = g.scrollY || g.pageYOffset || 0;
+      savedBodyPosition = document.body.style.position || "";
+      savedBodyTop = document.body.style.top || "";
+      savedBodyWidth = document.body.style.width || "";
+      savedHtmlOverflow = document.documentElement.style.overflow || "";
+      savedBodyOverflow = document.body.style.overflow || "";
+
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${savedScrollY}px`;
+      document.body.style.width = "100%";
+    };
+
+    const unlockBackgroundScroll = () => {
+      document.documentElement.style.overflow = savedHtmlOverflow;
+      document.body.style.overflow = savedBodyOverflow;
+      document.body.style.position = savedBodyPosition;
+      document.body.style.top = savedBodyTop;
+      document.body.style.width = savedBodyWidth;
+      g.scrollTo(0, savedScrollY);
+    };
+
+    const preventBackgroundMove = (event) => {
+      const target = event.target;
+      const insidePanel = target instanceof Element && panel && panel.contains(target);
+      if (!insidePanel) {
+        event.preventDefault();
+      }
+    };
 
     const close = () => {
       overlay.classList.remove("active");
       overlay.setAttribute("aria-hidden", "true");
       toggle.setAttribute("aria-expanded", "false");
-      document.body.style.overflow = "";
+      overlay.removeEventListener("touchmove", preventBackgroundMove);
+      overlay.removeEventListener("wheel", preventBackgroundMove);
+      if (socialFab) {
+        socialFab.style.pointerEvents = socialFabPointerEvents;
+      }
+      unlockBackgroundScroll();
     };
     const open = () => {
       overlay.classList.add("active");
       overlay.setAttribute("aria-hidden", "false");
       toggle.setAttribute("aria-expanded", "true");
-      document.body.style.overflow = "hidden";
+      lockBackgroundScroll();
+      overlay.addEventListener("touchmove", preventBackgroundMove, { passive: false });
+      overlay.addEventListener("wheel", preventBackgroundMove, { passive: false });
+      if (socialFab) {
+        socialFab.style.pointerEvents = "none";
+      }
     };
 
     toggle.addEventListener("click", () => (overlay.classList.contains("active") ? close() : open()));
@@ -178,9 +246,48 @@
     overlay.addEventListener("click", (e) => {
       if (e.target === overlay || e.target.classList.contains("tripon-mobile-menu__backdrop")) close();
     });
-    overlay.querySelectorAll(".tripon-mobile-nav__item, .home-mobile-drawer-nav a").forEach((a) => {
-      a.addEventListener("click", close);
-    });
+    if (locationToggle && locationList) {
+      const initialExpanded =
+        locationToggle.getAttribute("aria-expanded") === "true" ||
+        locationList.classList.contains("active");
+      setLocationExpanded(initialExpanded);
+      locationToggle.addEventListener("click", () => {
+        const expanded = locationToggle.getAttribute("aria-expanded") === "true";
+        setLocationExpanded(!expanded);
+      });
+    }
+    const mobileNavHrefByKey = {
+      home: `${triponResolveRelPrefix()}index.html`,
+      locations: `${triponResolveRelPrefix()}locations/`,
+      packages: `${triponResolveRelPrefix()}packages/`,
+      contact: `${triponResolveRelPrefix()}company/contact-us.html`,
+      "people-reviews": `${triponResolveRelPrefix()}company/people-reviews.html`,
+    };
+
+    mobileNav?.addEventListener("click", (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) {
+        return;
+      }
+      const a = target.closest(".tripon-mobile-nav__item");
+      if (!(a instanceof HTMLAnchorElement)) {
+        return;
+      }
+      if (!mobileNav.contains(a)) {
+        return;
+      }
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        const navKey = (a.getAttribute("data-nav-key") || "").trim();
+        const mappedHref = navKey ? mobileNavHrefByKey[navKey] : "";
+        const href = mappedHref || a.getAttribute("href") || "";
+        if (!href) {
+          return;
+        }
+        const targetUrl = new URL(href, g.location.href).toString();
+        g.location.assign(targetUrl);
+      }, true);
     document.addEventListener("keydown", (e) => e.key === "Escape" && close());
   }
 
@@ -339,11 +446,23 @@
     };
 
     picker.querySelectorAll("[data-tripon-dest-label]").forEach((link) => {
-      link.addEventListener("click", () => onPick(link));
+      link.addEventListener("click", (event) => {
+        const label = (link.getAttribute("data-tripon-dest-label") || "").trim().toLowerCase();
+        onPick(link);
+        if (label && label !== "bali") {
+          event.preventDefault();
+        }
+      });
     });
 
     document.querySelectorAll("#homeMobileLocationList [data-tripon-dest-label]").forEach((link) => {
-      link.addEventListener("click", () => onPick(link));
+      link.addEventListener("click", (event) => {
+        const label = (link.getAttribute("data-tripon-dest-label") || "").trim().toLowerCase();
+        onPick(link);
+        if (label && label !== "bali") {
+          event.preventDefault();
+        }
+      });
     });
 
     g.addEventListener("hashchange", () => {

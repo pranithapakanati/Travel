@@ -106,6 +106,7 @@
         </button>
       </section>
 
+      <!-- Adventure 3D carousel — source of truth; sync to inner pages via scripts/sync-3d-sections.js -->
       <section class="adventure adventure--3d" data-tripon-adventure-3d aria-label="Adventure destinations in Bali">
         <div class="adventure__ambient" aria-hidden="true">
           <span class="adventure__foliage adventure__foliage--l"></span>
@@ -204,10 +205,7 @@
                   <div class="place-item__glow" aria-hidden="true"></div>
                   <div class="place-content">
                     <div class="place-content__pill">
-                      <h3 class="place-content__title">
-                        <span class="place-content__line">Kuta,</span>
-                        <span class="place-content__line">Bali</span>
-                      </h3>
+                      <h3 class="place-content__title"><span class="place-content__line">Kuta, Bali</span></h3>
                     </div>
                     <p class="place-content__meta">
                       <span class="place-meta__line">15+ Activities</span>
@@ -258,10 +256,7 @@
                   <div class="place-item__glow" aria-hidden="true"></div>
                   <div class="place-content">
                     <div class="place-content__pill">
-                      <h3 class="place-content__title">
-                        <span class="place-content__line">Nusa</span>
-                        <span class="place-content__line">Penida</span>
-                      </h3>
+                      <h3 class="place-content__title"><span class="place-content__line">Nusa Penida</span></h3>
                     </div>
                     <p class="place-content__meta">
                       <span class="place-meta__line">14+ Activities</span>
@@ -775,74 +770,45 @@
         </div>
       </section>
 
-      <section class="why-choose-section" data-tripon-why-choose-gsap aria-label="Why choose us">
+      <section class="why-choose-section" aria-label="Why choose us">
         <div class="why-choose-header">
-          <div class="why-choose-slot" data-wc-slot>
-            <div class="why-choose-stage" data-wc-stage>
-              <div class="why-choose-hero-stack" data-wc-hero-stack>
-                <p class="why-choose-hero why-choose-hero--ghost" data-wc-hero aria-hidden="true">
-                  <span class="why-choose-hero-line" data-wc-hero-line>WHY</span>
-                  <span class="why-choose-hero-line" data-wc-hero-line>CHOOSE</span>
-                  <span class="why-choose-hero-line" data-wc-hero-line>US</span>
-                </p>
-                <p class="why-choose-hero why-choose-hero--reveal" data-wc-hero-reveal aria-hidden="true">
-                  <span class="why-choose-hero-line">WHY</span>
-                  <span class="why-choose-hero-line">CHOOSE</span>
-                  <span class="why-choose-hero-line">US</span>
-                </p>
+          <div class="why-choose-slot">
+            <div class="why-choose-settled">
+              <div class="why-choose-pill-wrap">
+                <p class="why-choose-label">WHY CHOOSE US</p>
               </div>
-              <span class="why-choose-magnifier" data-wc-magnifier aria-hidden="true">
-                <svg class="why-choose-mag-unit" viewBox="0 0 260 260" xmlns="http://www.w3.org/2000/svg"
-                  aria-hidden="true" focusable="false">
-                  <circle class="why-choose-mag-lens" data-wc-lens-ring cx="102" cy="102" r="84" fill="none"
-                    stroke="#0a7a52" stroke-width="9" />
-                  <path class="why-choose-mag-handle" d="M162 162 L248 248" fill="none" stroke="#0a7a52"
-                    stroke-width="13" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </span>
-            </div>
-            <div class="why-choose-settled" data-wc-settled>
-              <div class="why-choose-pill-wrap" data-wc-pill-wrap>
-                <p class="why-choose-label" data-wc-pill>WHY CHOOSE US</p>
-              </div>
-              <div class="why-choose-intro" data-wc-intro>
-                <h2 data-wc-headline>
-                  <span class="wc-word" data-wc-word>Finding</span>
-                  <span class="wc-word" data-wc-word>your</span>
-                  <span class="wc-word" data-wc-word>dream</span>
-                  <span class="wc-word" data-wc-word>destination</span>
-                  <span class="wc-word" data-wc-word>is</span>
-                  <span class="wc-word" data-wc-word>our</span>
-                  <span class="wc-word wc-word--priority" data-wc-word data-wc-priority>priority</span>
+              <div class="why-choose-intro">
+                <h2>
+                  Finding your dream destination is our <span class="wc-word--priority">priority</span>
                 </h2>
-                <p data-wc-subtext>With a collection of destinations that include stunning natural landscapes,<br>vibrant cosmopolitan cities and enchanting tropical islands, we take you to the world&apos;s most stunning places.</p>
+                <p>With a collection of destinations that include stunning natural landscapes,<br>vibrant cosmopolitan cities and enchanting tropical islands, we take you to the world&apos;s most stunning places.</p>
               </div>
             </div>
           </div>
         </div>
-        <div class="why-choose-grid" data-wc-grid>
-          <article class="why-card why-card--icon-lg" data-wc-card>
+        <div class="why-choose-grid">
+          <article class="why-card why-card--icon-lg">
             <div class="why-icon">
               <img src="assets/images/why_choose3.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
             </div>
             <h3>Lots of choices</h3>
             <p>Thousands of the best<br> destinations are ready to <br>spoil your eyes.</p>
           </article>
-          <article class="why-card why-card--icon-lg" data-wc-card>
+          <article class="why-card why-card--icon-lg">
             <div class="why-icon">
               <img src="assets/images/why_choose2.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
             </div>
             <h3>Easy Booking</h3>
             <p>No need to be<br> complicated in ordering<br> tickets, order now with a<br> few taps.</p>
           </article>
-          <article class="why-card why-card--icon-lg" data-wc-card>
+          <article class="why-card why-card--icon-lg">
             <div class="why-icon">
               <img src="assets/images/why_chosse1.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
             </div>
             <h3>Accomodation</h3>
             <p>There are many choices of<br> interesting destinations to<br> make stories on your trip.</p>
           </article>
-          <article class="why-card why-card--icon-lg" data-wc-card>
+          <article class="why-card why-card--icon-lg">
             <div class="why-icon">
               <img src="assets/images/why_choose.png" alt="" width="36" height="36" decoding="async" loading="lazy" />
             </div>
@@ -1166,113 +1132,103 @@
         </div>
       </section>
 
-      <!-- Blogs All About Bali — 3D carousel -->
-      <section class="bali-blogs bali-blogs--3d" data-tripon-blogs-gsap aria-label="Blogs All About Bali">
-        <header class="bali-blogs-head">
-          <h2 data-blog-title>Blogs All About <span class="bali-blogs-accent">Bali</span></h2>
-          <p class="bali-blogs-sub" data-blog-sub>Stories, travel tips, and hidden gems from the Island of Gods.</p>
-        </header>
+      <!-- Blogs All About Bali — grid (source of truth; sync via scripts/sync-3d-sections.js) -->
+      <section class="bali-blogs" aria-label="Blogs All About Bali">
+        <h2>Blogs All About Bali</h2>
+        <div class="bali-blogs-grid">
 
-        <div class="bali-blogs-stage" data-blog-stage>
-          <div class="bali-blogs-deco" aria-hidden="true">
-            <span class="bali-blogs-leaf bali-blogs-leaf--tl"></span>
-            <span class="bali-blogs-leaf bali-blogs-leaf--tr"></span>
-          </div>
-
-          <div class="bali-blogs-carousel" data-blog-carousel>
-            <article class="bali-card-3d" data-blog-card data-blog-enter="left" data-blog-tilt="wing-right"
-              data-blog-slug="bali-ubud-secrets">
-              <div class="bali-card-3d__media">
-                <img src="assets/images/blog_card2.png" alt="Secrets of Ubud" />
-                <span class="blog-tag-pill">Culture</span>
-              </div>
-              <div class="bali-card-3d__body">
-                <h3>Secrets of Ubud: Culture and Nature</h3>
-                <p>Explore the heart of Bali where traditions, art, and nature come together.</p>
-                <div class="blog-author">
-                  <img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram" class="author-avatar" />
-                  <div class="author-info">
-                    <strong>Leo Vikram</strong>
-                    <span>Software Engineer</span>
-                  </div>
-                  <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
-                      class="fa-solid fa-share-nodes"></i></button>
+          <article class="bali-card bali-card--featured" data-blog-slug="bali-tropical-journey">
+            <div class="bali-card-media">
+              <span class="blog-tag">Vlogger</span>
+              <img src="assets/images/blog_card.png" alt="Exploring Bali" />
+              <div class="blog-video-bar">
+                <span class="blog-play">&#9654;</span>
+                <div class="blog-progress">
+                  <div class="blog-progress-fill"></div>
                 </div>
               </div>
-            </article>
-
-            <article class="bali-card-3d bali-card-3d--featured" data-blog-card data-blog-enter="top"
-              data-blog-tilt="center" data-blog-slug="bali-tropical-journey">
-              <div class="bali-card-3d__media">
-                <img src="assets/images/blog_card.png" alt="Exploring Bali" />
-                <span class="blog-tag-pill blog-tag-pill--featured">Featured</span>
-                <div class="bali-card-3d__shade"></div>
-              </div>
-              <div class="bali-card-3d__body bali-card-3d__body--featured">
-                <h3>Exploring Bali: A Tropical Journey</h3>
-                <p>From majestic temples to vibrant beaches, discover the real magic of Bali with our travel stories.</p>
-                <div class="blog-author blog-author--light">
-                  <img src="https://i.pravatar.cc/40?img=5" alt="Janna Auniman" class="author-avatar" />
-                  <div class="author-info">
-                    <strong>Janna Auniman</strong>
-                    <span>I'm A World Traveller</span>
-                  </div>
-                  <button class="blog-share-btn blog-share-btn--light tripon-no-neon" type="button" aria-label="Share"><i
-                      class="fa-solid fa-share-nodes"></i></button>
+            </div>
+            <div class="bali-card-body">
+              <h3>Exploring Bali: A Tropical Journey</h3>
+              <p>Dive into the heart of Bali with our travel tales — from majestic temples and lush rice terraces to vibrant
+                festivals and sun-kissed beaches. Discover the island's rich heritage, unforgettable cuisine, and the warm
+                hospitality of its people through stories written for curious explorers.</p>
+              <div class="blog-author">
+                <img src="https://i.pravatar.cc/40?img=5" alt="Janna Auniman" class="author-avatar" />
+                <div class="author-info">
+                  <strong>Janna Auniman</strong>
+                  <span>I'm A World Traveller</span>
                 </div>
-                <a class="bali-card-3d__read" href="blogs/">Read More <i class="fa-solid fa-arrow-right"
-                    aria-hidden="true"></i></a>
+                <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
+                    class="fa-solid fa-share-nodes"></i></button>
               </div>
-            </article>
+            </div>
+          </article>
 
-            <article class="bali-card-3d" data-blog-card data-blog-enter="bottom" data-blog-tilt="wing-left"
-              data-blog-slug="bali-tech-nomad">
-              <div class="bali-card-3d__media">
-                <img src="assets/images/blog_card1.png" alt="Tech Nomad" />
-                <span class="blog-tag-pill">Travel Guide</span>
-              </div>
-              <div class="bali-card-3d__body">
-                <h3>Tech Nomad's Guide to Bali Templates</h3>
-                <p>The ultimate guide for remote workers travelling and working in Bali.</p>
-                <div class="blog-author">
-                  <img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram" class="author-avatar" />
-                  <div class="author-info">
-                    <strong>Leo Vikram</strong>
-                    <span>Software Engineer</span>
-                  </div>
-                  <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
-                      class="fa-solid fa-share-nodes"></i></button>
+          <article class="bali-card bali-card--img-only" data-blog-slug="bali-tech-nomad">
+            <img src="assets/images/blog_card1.png" alt="Tech Nomad" class="bali-card-img" />
+            <div class="bali-card-body">
+              <h3>Tech Nomad's Guide to Bali Templates</h3>
+              <p>Plan your remote-work escape with coworking hubs, visa tips, cost-of-living breakdowns, and neighbourhood guides
+                for Canggu, Ubud, and Seminyak — everything you need to stay productive while living the Bali dream.</p>
+              <div class="blog-author">
+                <img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram" class="author-avatar" />
+                <div class="author-info">
+                  <strong>Leo Vikram</strong>
+                  <span>Software Engineer</span>
                 </div>
+                <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
+                    class="fa-solid fa-share-nodes"></i></button>
               </div>
-            </article>
+            </div>
+          </article>
 
-            <article class="bali-card-3d" data-blog-card data-blog-enter="right" data-blog-tilt="wing-far"
-              data-blog-slug="bali-beyond-beach">
-              <div class="bali-card-3d__media">
-                <img src="assets/images/blog_card3.png" alt="Beyond the Beach" />
-                <span class="blog-tag-pill">Adventure</span>
+          <article class="bali-card bali-card--img-only" data-blog-slug="bali-ubud-secrets">
+            <img src="assets/images/blog_card2.png" alt="Secrets of Ubud" class="bali-card-img" />
+            <div class="bali-card-body">
+              <h3>Secrets of Ubud: Culture and Nature</h3>
+              <p>Walk ancient monkey forests, join sunrise ceremonies, and find quiet rice-field trails beyond the crowds — our
+                Ubud guide shares the rituals, artisans, and viewpoints locals love most.</p>
+              <div class="blog-author">
+                <img src="https://i.pravatar.cc/40?img=12" alt="Leo Vikram" class="author-avatar" />
+                <div class="author-info">
+                  <strong>Leo Vikram</strong>
+                  <span>Software Engineer</span>
+                </div>
+                <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
+                    class="fa-solid fa-share-nodes"></i></button>
               </div>
-              <div class="bali-card-3d__body">
-                <h3>Adventures in Bali: Beyond the Beach</h3>
-                <p>Uncover hidden waterfalls, volcano treks and secret islands in Bali.</p>
-                <div class="blog-author">
-                  <img src="https://i.pravatar.cc/40?img=47" alt="Sara Kumari" class="author-avatar" />
-                  <div class="author-info">
-                    <strong>Sara Kumari</strong>
-                    <span>Adventure Traveller</span>
-                  </div>
-                  <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
-                      class="fa-solid fa-share-nodes"></i></button>
+            </div>
+          </article>
+
+          <article class="bali-card bali-card--featured" data-blog-slug="bali-beyond-beach">
+            <div class="bali-card-media">
+              <span class="blog-tag">Vlogger</span>
+              <img src="assets/images/blog_card3.png" alt="Bali adventure" />
+              <div class="blog-video-bar">
+                <span class="blog-play">&#9654;</span>
+                <div class="blog-progress">
+                  <div class="blog-progress-fill"></div>
                 </div>
               </div>
-            </article>
-          </div>
+            </div>
+            <div class="bali-card-body">
+              <h3>Adventures in Bali: Beyond the Beach</h3>
+              <p>Venture past the shoreline to Mount Batur at sunrise, the emerald Jatiluwih rice terraces, and cliff temples
+                where the island's wild side comes alive — hikes, snorkel days, and village routes for true adventure seekers.</p>
+              <div class="blog-author">
+                <img src="https://i.pravatar.cc/40?img=47" alt="Sara Kumari" class="author-avatar" />
+                <div class="author-info">
+                  <strong>Sara Kumari</strong>
+                  <span>Adventure Traveller</span>
+                </div>
+                <button class="blog-share-btn tripon-no-neon" type="button" aria-label="Share"><i
+                    class="fa-solid fa-share-nodes"></i></button>
+              </div>
+            </div>
+          </article>
+
         </div>
-
-        <div class="bali-blogs-dots" aria-hidden="true">
-          <span></span><span class="is-active"></span><span></span>
-        </div>
-
         <div class="bali-blogs-footer">
           <button class="want-more-btn tripon-neon-btn" type="button">Want to know more!</button>
         </div>

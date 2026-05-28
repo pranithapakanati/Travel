@@ -44,7 +44,6 @@
     const fields = section.querySelectorAll(".contact-cl-field");
     const submitBtn = section.querySelector(".contact-submit");
     const socialCards = section.querySelectorAll(".contact-social .social-card");
-    const balloon = section.querySelector(".contact-luxury__balloon");
     const plane = section.querySelector(".contact-luxury__plane");
     const orbs = section.querySelectorAll(".contact-luxury__orb");
     const leaves = section.querySelectorAll(".contact-luxury__leaf");
@@ -140,7 +139,7 @@
       });
     }
 
-    [balloon, plane, ...orbs, ...leaves].filter(Boolean).forEach((el, i) => {
+    [plane, ...orbs, ...leaves].filter(Boolean).forEach((el, i) => {
       gsap.to(el, {
         y: "+=12",
         duration: 3.5 + i * 0.4,

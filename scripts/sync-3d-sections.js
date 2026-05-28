@@ -1,5 +1,6 @@
 /**
- * Sync 3D adventure + blog sections from homepage templates to all pages.
+ * Sync adventure + blog sections from index.html to inner pages.
+ * Adventure and blogs markup live only in index.html (no component partials).
  * Run: node scripts/sync-3d-sections.js
  */
 const fs = require("fs");
@@ -7,7 +8,6 @@ const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
 const INDEX = path.join(ROOT, "index.html");
-const COMP_DIR = path.join(ROOT, "components");
 
 function relPrefix(filePath) {
   const rel = path.relative(ROOT, filePath).replace(/\\/g, "/");
@@ -46,10 +46,7 @@ function applyTemplate(template, prefix, opts = {}) {
     .join(prefix)
     .split("__ADVENTURE_HEADING__")
     .join(heading)
-    .replace(
-      'class="bali-blogs bali-blogs--3d"',
-      `class="bali-blogs bali-blogs--3d${blogsExtra}"`
-    );
+    .replace('class="bali-blogs"', `class="bali-blogs${blogsExtra}"`);
 }
 
 function indentBlock(block, spaces) {
@@ -76,7 +73,7 @@ function replaceAdventure(html, replacement, indent = 6) {
 
 function replaceBlogs(html, replacement, indent = 6) {
   const block = indentBlock(replacement, indent);
-  const re = /<section class="bali-blogs[^"]*">[\s\S]*?<\/section>/;
+  const re = /<section[^>]*class="bali-blogs[^"]*"[^>]*>[\s\S]*?<\/section>/;
   if (re.test(html)) {
     return html.replace(re, block);
   }
@@ -128,13 +125,13 @@ function main() {
   const blogsTpl = toTemplate(
     extractBlock(
       indexHtml,
-      '<!-- Blogs All About Bali — 3D carousel -->',
+      "<!-- Blogs All About Bali — grid -->",
       '\n\n      <section class="subscribe-showcase">'
-    ).replace(/<!-- Blogs All About Bali — 3D carousel -->\n\s*/, "")
+    ).replace(/<!-- Blogs All About Bali — grid -->\n\s*/, "")
   );
 
   if (!adventureTpl || !blogsTpl) {
-    console.error("Could not extract 3D sections from index.html");
+    console.error("Could not extract adventure/blog sections from index.html");
     process.exit(1);
   }
 
@@ -142,10 +139,6 @@ function main() {
     "<h2>Let\u2019s go on an adventure</h2>",
     "<h2>__ADVENTURE_HEADING__</h2>"
   );
-
-  fs.mkdirSync(COMP_DIR, { recursive: true });
-  fs.writeFileSync(path.join(COMP_DIR, "adventure-3d.html"), adventureTemplate, "utf8");
-  fs.writeFileSync(path.join(COMP_DIR, "blogs-3d.html"), blogsTpl, "utf8");
 
   const files = walkHtmlFiles(ROOT).filter((f) => {
     const rel = path.relative(ROOT, f).replace(/\\/g, "/");
@@ -163,10 +156,15 @@ function main() {
     const opts = pageOptions(file);
     const hasLegacyAdventureSection =
       html.includes('class="adventure"') && !html.includes("data-tripon-adventure-3d");
-    const hasLegacyBlogs =
-      html.includes("bali-blogs-grid") || (html.includes('class="bali-blogs') && !html.includes("bali-blogs--3d"));
+    const hasBlogsSection = html.includes('class="bali-blogs');
+    const needsBlogGridSync =
+      hasBlogsSection &&
+      (html.includes("bali-blogs--3d") ||
+        html.includes("bali-card-3d") ||
+        !html.includes("bali-blogs-grid"));
     const needsAssetPathFix =
-      html.includes("../assets/images/") && (html.includes("data-tripon-adventure-3d") || html.includes("bali-blogs--3d"));
+      html.includes("../assets/images/") &&
+      (html.includes("data-tripon-adventure-3d") || html.includes("bali-blogs--3d") || html.includes("bali-card-3d"));
 
     if (needsAssetPathFix) {
       html = html.split("../assets/images/").join(`${prefix}assets/images/`);
@@ -174,9 +172,8 @@ function main() {
     if (hasLegacyAdventureSection) {
       html = replaceAdventure(html, applyTemplate(adventureTemplate, prefix, opts), rel.includes("locations/bali/") ? 8 : 6);
     }
-    if (hasLegacyBlogs) {
-      const blogIndent =
-        rel.includes("locations/bali/") && html.includes('<section class="bali-blogs location-blogs">') ? 4 : 6;
+    if (needsBlogGridSync) {
+      const blogIndent = rel.includes("locations/bali/") ? 8 : 6;
       html = replaceBlogs(html, applyTemplate(blogsTpl, prefix, opts), blogIndent);
     }
 

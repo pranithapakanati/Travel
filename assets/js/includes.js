@@ -38,6 +38,18 @@
     document.head.appendChild(link);
   }
 
+  function triponEnsureFooterStyles() {
+    const id = "tripon-footer-luxury-css";
+    if (document.getElementById(id)) {
+      return;
+    }
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = `${triponRelPrefix()}assets/css/footer-luxury.css`;
+    document.head.appendChild(link);
+  }
+
   /** Contact-style ambient background on every page */
   function triponEnsureSiteAmbientStyles() {
     const id = "tripon-site-ambient-stylesheet";
@@ -82,13 +94,11 @@
         wrap.id = "triponSiteAmbient";
         wrap.setAttribute("aria-hidden", "true");
         wrap.innerHTML =
-          '<div class="tripon-site-ambient__photo"></div>' +
           '<span class="tripon-site-ambient__orb tripon-site-ambient__orb--1"></span>' +
           '<span class="tripon-site-ambient__orb tripon-site-ambient__orb--2"></span>' +
           '<span class="tripon-site-ambient__orb tripon-site-ambient__orb--3"></span>' +
           '<span class="tripon-site-ambient__leaf tripon-site-ambient__leaf--tl"></span>' +
           '<span class="tripon-site-ambient__leaf tripon-site-ambient__leaf--br"></span>' +
-          '<span class="tripon-site-ambient__balloon">🎈</span>' +
           '<svg class="tripon-site-ambient__plane-path" viewBox="0 0 220 80" aria-hidden="true"><line x1="10" y1="60" x2="200" y2="20" /></svg>' +
           '<span class="tripon-site-ambient__plane" aria-hidden="true"><i class="fa-solid fa-paper-plane"></i></span>';
         document.body.insertBefore(wrap, document.body.firstChild);
@@ -129,13 +139,14 @@
     }
     document
       .querySelectorAll(
-        ".tripon-header__link, .tripon-header__panel a, .tripon-nav__link, .main-nav a, .tripon-mobile-nav__item, .home-mobile-drawer-nav a, .tripon-footer-nav__link, .tripon-links a"
+        ".tripon-header__link, .tripon-header__panel a, .tripon-nav__link, .main-nav a, .tripon-mobile-nav__item, .home-mobile-drawer-nav a, .tripon-footer-nav__link, .tripon-footer__link-list a, .tripon-footer__sitemap-title a"
       )
       .forEach((el) => el.classList.remove("is-active"));
     document.querySelectorAll(`[data-nav-key="${key}"]`).forEach((el) => {
+      if (el.closest(".tripon-footer")) return;
       el.classList.add("is-active");
     });
-    if (key === "contact" || key === "people-reviews") {
+    if (key === "contact" || key === "people-reviews" || key === "about") {
       document.querySelector('[data-nav-key="company"]')?.classList.add("is-active");
     }
     if (key === "people-reviews") {
@@ -158,6 +169,7 @@
   function triponInjectIncludes() {
     const base = `${triponRelPrefix()}components/`;
     triponEnsureNavbarStyles();
+    triponEnsureFooterStyles();
 
     return Promise.all([
       fetch(`${base}navbar.html`).then((r) => {
@@ -237,7 +249,7 @@
 
   function triponPageNeedsGsap() {
     return !!document.querySelector(
-      "[data-tripon-blogs-gsap], [data-tripon-why-choose-gsap], [data-tripon-family-tour-gsap], [data-tripon-trip-days], [data-tripon-reasons-gsap]"
+      "[data-tripon-blogs-gsap], [data-tripon-family-tour-gsap], [data-tripon-trip-days], [data-tripon-reasons-gsap]"
     );
   }
 
@@ -278,6 +290,13 @@
   g.triponBootMain = triponBootMain;
   g.triponEnsureNavbarStyles = triponEnsureNavbarStyles;
 
+  function triponEnsureFooterStylesEarly() {
+    if (!document.getElementById("tripon-footer-zone")) {
+      return;
+    }
+    triponEnsureFooterStyles();
+  }
+
   function triponMarkNavbarLayoutEarly() {
     if (!document.getElementById("tripon-navbar-zone")) {
       return;
@@ -313,6 +332,7 @@
   function triponBootstrapNavbarAssets() {
     triponMarkNavbarLayoutEarly();
     triponEnsureNavbarStyles();
+    triponEnsureFooterStylesEarly();
     triponEnsureSiteAmbientStyles();
     triponEnsurePackageDetailsStylesEarly();
   }

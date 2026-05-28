@@ -928,7 +928,8 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
     const appendChar = (parent, char) => {
       const span = document.createElement("span");
       span.className = charClass;
-      span.textContent = char === " " ? "\u00a0" : char;
+      /* Keep regular spaces so small screens can wrap heading text naturally. */
+      span.textContent = char;
       parent.appendChild(span);
       chars.push(span);
     };
@@ -1746,7 +1747,9 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
       });
     };
 
-    if (reduceMotion || !isHomeBlogs) {
+    const is3dCarousel = section.classList.contains("bali-blogs--3d");
+
+    if (reduceMotion || !isHomeBlogs || !is3dCarousel) {
       try {
         if (gsap) {
           showAll();
@@ -2044,6 +2047,8 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
       played = true;
       section.classList.add("is-wc-inview");
 
+      const sp = 0.48;
+
       masterTl = gsap.timeline({
         defaults: { ease: EASE },
         onComplete: () => section.classList.add("is-wc-revealed"),
@@ -2060,23 +2065,23 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
           {
             x: () => lineTargets[index]?.x ?? 0,
             y: () => lineTargets[index]?.y ?? 0,
-            duration: 1.05,
+            duration: 1.05 * sp,
             ease: "power2.inOut",
             onUpdate: syncLensClip,
             onComplete: syncLensClip,
           },
-          "+=0.02"
+          `+=${0.02 * sp}`
         );
         if (hold > 0) {
-          masterTl.to({}, { duration: hold, onUpdate: syncLensClip });
+          masterTl.to({}, { duration: hold * sp, onUpdate: syncLensClip });
         }
       };
 
       /* 1 — Big faded three-line WHY / CHOOSE / US only */
       masterTl
-        .to(heroStack, { scale: 1.08, duration: 0.85 })
-        .to(hero, { opacity: 1, duration: 0.6 }, "-=0.85")
-        .to(magnifier, { opacity: 1, scale: 1, duration: 0.55 }, "-=0.45");
+        .to(heroStack, { scale: 1.08, duration: 0.85 * sp })
+        .to(hero, { opacity: 1, duration: 0.6 * sp }, `-=${0.85 * sp}`)
+        .to(magnifier, { opacity: 1, scale: 1, duration: 0.55 * sp }, `-=${0.45 * sp}`);
 
       /* 2 — Magnifier sweeps WHY → CHOOSE → US (clip follows lens every frame) */
       masterTl.add(() => {
@@ -2094,8 +2099,8 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
       moveMagnifierToLine(0, 0.5);
       moveMagnifierToLine(1, 0.5);
       moveMagnifierToLine(2, 0.55);
-      masterTl.to(heroStack, { opacity: 0.35, duration: 0.45 });
-      masterTl.to(hero, { opacity: 0.14, filter: "blur(4px)", duration: 0.45 }, "-=0.45");
+      masterTl.to(heroStack, { opacity: 0.35, duration: 0.45 * sp });
+      masterTl.to(hero, { opacity: 0.14, filter: "blur(4px)", duration: 0.45 * sp }, `-=${0.45 * sp}`);
 
       /* 3 — Magnifier zooms in and disappears; pill returns to original spot */
       masterTl
@@ -2104,31 +2109,31 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
           {
             scale: 2.4,
             opacity: 0,
-            duration: 0.8,
+            duration: 0.8 * sp,
             ease: "power2.in",
             onUpdate: syncLensClip,
           },
-          "+=0.05"
+          `+=${0.05 * sp}`
         )
-        .to(heroReveal, { clipPath: "circle(0px at 50% 50%)", duration: 0.35 }, "-=0.5")
+        .to(heroReveal, { clipPath: "circle(0px at 50% 50%)", duration: 0.35 * sp }, `-=${0.5 * sp}`)
         .set(magnifier, { visibility: "hidden" })
-        .to(heroStack, { opacity: 0, scale: 0.9, duration: 0.5 }, "-=0.45")
+        .to(heroStack, { opacity: 0, scale: 0.9, duration: 0.5 * sp }, `-=${0.45 * sp}`)
         .to(
           pillWrap,
           {
             y: 0,
             scale: 1,
-            duration: 0.95,
+            duration: 0.95 * sp,
             ease: "back.out(1.2)",
           },
-          "-=0.35"
+          `-=${0.35 * sp}`
         )
         .add(() => section.classList.add("is-wc-cinema-done"))
-        .to(slot, { minHeight: 0, duration: 0.7, ease: "power2.inOut" })
+        .to(slot, { minHeight: 0, duration: 0.7 * sp, ease: "power2.inOut" })
         .set(settled, { visibility: "visible" })
-        .to(settled, { opacity: 1, y: 0, duration: 0.45 }, "-=0.55")
+        .to(settled, { opacity: 1, y: 0, duration: 0.45 * sp }, `-=${0.55 * sp}`)
         .set(pill, { visibility: "visible" })
-        .to(pill, { opacity: 1, duration: 0.5 }, "-=0.4");
+        .to(pill, { opacity: 1, duration: 0.5 * sp }, `-=${0.4 * sp}`);
 
       /* 4 — Priority gradient fill */
       masterTl.add(() => section.classList.add("is-wc-priority-glow"));
@@ -2141,14 +2146,14 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
             rotationX: 0,
             scale: 0.88,
           })
-          .to(priorityWord, { scale: 1.08, duration: 0.45, ease: "back.out(2)" })
-          .to(priorityWord, { scale: 1, duration: 0.35 })
+          .to(priorityWord, { scale: 1.08, duration: 0.45 * sp, ease: "back.out(2)" })
+          .to(priorityWord, { scale: 1, duration: 0.35 * sp })
           .fromTo(
             priorityWord,
             { backgroundPosition: "0% 50%" },
-            { backgroundPosition: "220% 50%", duration: 1.4, ease: "none" }
+            { backgroundPosition: "220% 50%", duration: 1.4 * sp, ease: "none" }
           )
-          .to(priorityWord, { backgroundPosition: "100% 50%", duration: 0.55 });
+          .to(priorityWord, { backgroundPosition: "100% 50%", duration: 0.55 * sp });
       }
 
       /* 5 — Full headline: each word 3D drop */
@@ -2166,10 +2171,10 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
             y: 0,
             z: 0,
             rotationX: 0,
-            duration: 0.62,
+            duration: 0.62 * sp,
             ease: "back.out(1.55)",
           },
-          index === 0 ? "+=0.12" : "-=0.38"
+          index === 0 ? `+=${0.12 * sp}` : `-=${0.38 * sp}`
         );
       });
 
@@ -2177,8 +2182,8 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
         masterTl.fromTo(
           priorityWord,
           { y: -42, rotationX: -55, z: -80 },
-          { y: 0, rotationX: 0, z: 0, duration: 0.55, ease: "bounce.out" },
-          "-=0.2"
+          { y: 0, rotationX: 0, z: 0, duration: 0.55 * sp, ease: "bounce.out" },
+          `-=${0.2 * sp}`
         );
       }
 
@@ -2189,10 +2194,10 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
           opacity: 1,
           scale: 1,
           filter: "blur(0px)",
-          duration: 1,
+          duration: 1 * sp,
           ease: "power2.out",
         },
-        "+=0.08"
+        `+=${0.08 * sp}`
       );
 
       /* 7 — Cards jump in from sides */
@@ -2203,28 +2208,33 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
           .fromTo(
             card,
             { opacity: 0, x: fromX, y: 52, scale: 0.78, rotation: fromX < 0 ? -10 : 10 },
-            { opacity: 1, x: 0, y: 0, scale: 1, rotation: 0, duration: 0.88, ease: "bounce.out" },
+            { opacity: 1, x: 0, y: 0, scale: 1, rotation: 0, duration: 0.88 * sp, ease: "bounce.out" },
             at
           )
-          .to(card, { y: -14, duration: 0.2, ease: "power2.out" }, at + 0.5)
-          .to(card, { y: 0, duration: 0.45, ease: "bounce.out" }, at + 0.68);
+          .to(card, { y: -14, duration: 0.2 * sp, ease: "power2.out" }, `-=${0.38 * sp}`)
+          .to(card, { y: 0, duration: 0.45 * sp, ease: "bounce.out" }, `-=${0.25 * sp}`);
         if (icon) {
-          masterTl.fromTo(icon, { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(2)" }, at + 0.28);
+          masterTl.fromTo(
+            icon,
+            { scale: 0.5, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.45 * sp, ease: "back.out(2)" },
+            `-=${0.6 * sp}`
+          );
         }
       };
 
-      masterTl.add(() => section.classList.add("is-wc-cards-live"), "+=0.05");
+      masterTl.add(() => section.classList.add("is-wc-cards-live"), `+=${0.05 * sp}`);
       if (cards[0]) {
-        jumpCard(cards[0], -g.innerWidth * 0.38, "+=0.02");
+        jumpCard(cards[0], -g.innerWidth * 0.38, `+=${0.02 * sp}`);
       }
       if (cards[1]) {
-        jumpCard(cards[1], g.innerWidth * 0.38, "-=0.55");
+        jumpCard(cards[1], g.innerWidth * 0.38, `-=${0.55 * sp}`);
       }
       if (cards[2]) {
-        jumpCard(cards[2], -g.innerWidth * 0.34, "-=0.15");
+        jumpCard(cards[2], -g.innerWidth * 0.34, `-=${0.15 * sp}`);
       }
       if (cards[3]) {
-        jumpCard(cards[3], g.innerWidth * 0.34, "-=0.55");
+        jumpCard(cards[3], g.innerWidth * 0.34, `-=${0.55 * sp}`);
       }
     };
 
@@ -2696,7 +2706,7 @@ const triponInitMain = () => {
   const homeMobileLocationList = document.querySelector("#homeMobileLocationList");
   const homeMobileLocationIcon = homeMobileLocationToggle?.querySelector(".home-mobile-location-icon");
 
-  if (!window.triponNavbarHandlesMobile) {
+  if (!window.triponNavbarHandlesMobile && !document.querySelector(".tripon-mobile-nav__item")) {
     const hideHomeMobileMenu = () => {
       if (!homeMobileMenuOverlay) {
         return;
@@ -3730,13 +3740,13 @@ const triponInitMain = () => {
   };
 
   const ADVENTURE_3D_SLOTS = {
-    "-3": { x: -620, rotateY: 48, z: -90, scale: 0.58, opacity: 0 },
-    "-2": { x: -480, rotateY: 34, z: -10, scale: 0.74, opacity: 0.82 },
-    "-1": { x: -280, rotateY: 20, z: 55, scale: 0.9, opacity: 1 },
-    0: { x: 0, rotateY: 0, z: 150, scale: 1.1, opacity: 1 },
-    1: { x: 280, rotateY: -20, z: 55, scale: 0.9, opacity: 1 },
-    2: { x: 480, rotateY: -34, z: -10, scale: 0.74, opacity: 0.82 },
-    3: { x: 620, rotateY: -48, z: -90, scale: 0.58, opacity: 0 },
+    "-3": { x: -440, rotateY: 48, z: -90, scale: 0.58, opacity: 0 },
+    "-2": { x: -360, rotateY: 34, z: -10, scale: 0.74, opacity: 0.82 },
+    "-1": { x: -210, rotateY: 20, z: 55, scale: 0.9, opacity: 1 },
+    0: { x: 0, rotateY: 0, z: 150, scale: 1.05, opacity: 1 },
+    1: { x: 210, rotateY: -20, z: 55, scale: 0.9, opacity: 1 },
+    2: { x: 360, rotateY: -34, z: -10, scale: 0.74, opacity: 0.82 },
+    3: { x: 440, rotateY: -48, z: -90, scale: 0.58, opacity: 0 },
   };
 
   const getAdventure3dSlot = (offset) => {
@@ -3773,6 +3783,19 @@ const triponInitMain = () => {
     let activeIndex = startItem >= 0 ? startItem : 0;
     let isAnimating = false;
     let autoplayId = null;
+    let userInteracted = false;
+
+    const scrollMobileCarouselToActive = (animate) => {
+      const active = items[activeIndex];
+      if (!active) {
+        return;
+      }
+      const targetLeft = Math.max(
+        0,
+        active.offsetLeft - (carousel.clientWidth - active.offsetWidth) / 2
+      );
+      carousel.scrollTo({ left: targetLeft, behavior: animate ? "smooth" : "auto" });
+    };
 
     const applyLayout = (animate) => {
       if (isMobileCarousel()) {
@@ -3782,10 +3805,7 @@ const triponInitMain = () => {
             gsap.set(item, { clearProps: "all" });
           }
         });
-        const active = items[activeIndex];
-        if (active) {
-          active.scrollIntoView({ behavior: animate ? "smooth" : "auto", inline: "center", block: "nearest" });
-        }
+        scrollMobileCarouselToActive(animate);
         return;
       }
 
@@ -3801,7 +3821,7 @@ const triponInitMain = () => {
 
         const isSeeAll = item.classList.contains("place-item-see-all");
         /* See All: no extra Y nudge or scale — size comes from CSS; avoids top/bottom clip when front */
-        const activeYOffset = isActive && !isSeeAll ? 18 : 0;
+        const activeYOffset = isActive && !isSeeAll ? 6 : 0;
         const activeScale = isSeeAll && isActive ? 1 : slot.scale;
 
         const vars = {
@@ -3853,17 +3873,19 @@ const triponInitMain = () => {
       if (reduceMotion || items.length < 2) {
         return;
       }
-      autoplayId = window.setInterval(() => step(1), 3400);
+      autoplayId = window.setInterval(() => step(1), isMobileCarousel() ? 2800 : 3400);
     };
 
     section.querySelector("[data-adventure-prev]")?.addEventListener("click", (e) => {
       e.preventDefault();
+      userInteracted = true;
       step(-1);
       syncAutoplay();
     });
 
     section.querySelector("[data-adventure-next]")?.addEventListener("click", (e) => {
       e.preventDefault();
+      userInteracted = true;
       step(1);
       syncAutoplay();
     });
@@ -3889,12 +3911,15 @@ const triponInitMain = () => {
           activeIndex = nearest;
           items.forEach((item, i) => item.classList.toggle("is-active", i === activeIndex));
         }
+        userInteracted = true;
       },
       { passive: true }
     );
 
     applyLayout(false);
-    syncAutoplay();
+    if (!userInteracted) {
+      syncAutoplay();
+    }
 
     window.addEventListener("resize", () => {
       applyLayout(false);
