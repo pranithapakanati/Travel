@@ -31,32 +31,10 @@
     if (document.getElementById(id)) {
       return;
     }
-    const href = `${triponRelPrefix()}assets/css/navbar.css`;
     const link = document.createElement("link");
     link.id = id;
     link.rel = "stylesheet";
-    link.href = href;
-    document.head.appendChild(link);
-  }
-
-  function triponLoadStylesheetAsync(href, id) {
-    if (id && document.getElementById(id)) {
-      return;
-    }
-    if (document.querySelector(`link[rel="stylesheet"][href="${href}"]`)) {
-      return;
-    }
-    const link = document.createElement("link");
-    if (id) {
-      link.id = id;
-    }
-    link.rel = "stylesheet";
-    link.href = href;
-    link.media = "print";
-    link.onload = function () {
-      this.media = "all";
-      this.onload = null;
-    };
+    link.href = `${triponRelPrefix()}assets/css/navbar.css`;
     document.head.appendChild(link);
   }
 
@@ -65,7 +43,11 @@
     if (document.getElementById(id)) {
       return;
     }
-    triponLoadStylesheetAsync(`${triponRelPrefix()}assets/css/footer-luxury.css`, id);
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href = `${triponRelPrefix()}assets/css/footer-luxury.css`;
+    document.head.appendChild(link);
   }
 
   /** Contact-style ambient background on every page */
@@ -112,13 +94,13 @@
         wrap.id = "triponSiteAmbient";
         wrap.setAttribute("aria-hidden", "true");
         wrap.innerHTML =
-          '<span class="tripon-site-ambient__orb tripon-site-ambient__orb--1"></span>' +
-          '<span class="tripon-site-ambient__orb tripon-site-ambient__orb--2"></span>' +
-          '<span class="tripon-site-ambient__orb tripon-site-ambient__orb--3"></span>' +
-          '<span class="tripon-site-ambient__leaf tripon-site-ambient__leaf--tl"></span>' +
-          '<span class="tripon-site-ambient__leaf tripon-site-ambient__leaf--br"></span>' +
-          '<svg class="tripon-site-ambient__plane-path" viewBox="0 0 220 80" aria-hidden="true"><line x1="10" y1="60" x2="200" y2="20" /></svg>' +
-          '<span class="tripon-site-ambient__plane" aria-hidden="true"><i class="fa-solid fa-paper-plane"></i></span>';
+          '<svg class="home-ambient__routes tripon-site-ambient__routes" viewBox="0 0 520 200" preserveAspectRatio="none" aria-hidden="true">' +
+          '<path class="home-ambient__route" d="M20,120 C120,40 200,160 320,80 S480,140 500,60" />' +
+          '<path class="home-ambient__route home-ambient__route--alt" d="M40,160 C160,100 280,180 400,100 S500,30 510,90" />' +
+          '<circle class="home-ambient__node" cx="120" cy="72" r="4" />' +
+          '<circle class="home-ambient__node home-ambient__node--alt" cx="320" cy="88" r="4" />' +
+          '<circle class="home-ambient__node" cx="480" cy="58" r="4" />' +
+          "</svg>";
         document.body.insertBefore(wrap, document.body.firstChild);
         document.body.classList.add("has-tripon-site-ambient");
       });
@@ -188,6 +170,9 @@
     const base = `${triponRelPrefix()}components/`;
     triponEnsureNavbarStyles();
     triponEnsureFooterStyles();
+    if (triponIsPackageDetailsPage()) {
+      triponEnsureFontAwesome();
+    }
 
     return Promise.all([
       fetch(`${base}navbar.html`).then((r) => {
@@ -251,60 +236,23 @@
       });
   }
 
-  function triponLoadScript(src, opts) {
-    const options = opts || {};
+  function triponLoadScript(src) {
     return new Promise((resolve, reject) => {
-      const existing = document.querySelector(`script[src="${src}"]`);
-      if (existing) {
-        if (existing.dataset.triponLoaded === "1") {
-          resolve();
-          return;
-        }
-        existing.addEventListener("load", () => resolve(), { once: true });
-        existing.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)), {
-          once: true,
-        });
+      if (document.querySelector(`script[src="${src}"]`)) {
+        resolve();
         return;
       }
       const s = document.createElement("script");
       s.src = src;
-      if (options.defer !== false) {
-        s.defer = true;
-      }
-      s.onload = () => {
-        s.dataset.triponLoaded = "1";
-        resolve();
-      };
+      s.onload = () => resolve();
       s.onerror = () => reject(new Error(`Failed to load ${src}`));
       document.body.appendChild(s);
     });
   }
 
-  function triponRunWhenIdle(fn, timeout) {
-    if (typeof g.triponRunWhenIdle === "function") {
-      g.triponRunWhenIdle(fn, timeout);
-      return;
-    }
-    if (typeof g.requestIdleCallback === "function") {
-      g.requestIdleCallback(fn, { timeout: timeout || 2200 });
-      return;
-    }
-    g.setTimeout(fn, 1);
-  }
-
   function triponPageNeedsGsap() {
     return !!document.querySelector(
-      "[data-tripon-blogs-gsap], [data-tripon-family-tour-gsap], [data-tripon-trip-days], [data-tripon-reasons-gsap], [data-tripon-why-choose-gsap], [data-tripon-adventure-3d], .contact-luxury"
-    );
-  }
-
-  function triponPageNeedsMotionPath() {
-    return !!document.querySelector("[data-tripon-family-tour-gsap]");
-  }
-
-  function triponPageNeedsLuxuryPickers() {
-    return !!document.querySelector(
-      ".luxury-date-trigger, .luxury-guests-trigger, .input-box--luxury-date, .input-box--luxury-guests, .hero-booking-modal__form"
+      "[data-tripon-blogs-gsap], [data-tripon-family-tour-gsap], [data-tripon-trip-days], [data-tripon-reasons-gsap], [data-tripon-adventure-3d]"
     );
   }
 
@@ -315,63 +263,29 @@
     if (!triponPageNeedsGsap()) {
       return Promise.resolve();
     }
-
-    const load = () => {
-      const gsapSrc = "https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js";
-      const stSrc = "https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js";
-      const mpSrc = "https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/MotionPathPlugin.min.js";
-      return triponLoadScript(gsapSrc)
-        .then(() => triponLoadScript(stSrc))
-        .then(() => (triponPageNeedsMotionPath() ? triponLoadScript(mpSrc) : Promise.resolve()));
-    };
-
-    const mobile = g.matchMedia("(max-width: 768px)").matches;
-    const reduced = g.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (mobile || reduced) {
-      return new Promise((resolve) => {
-        triponRunWhenIdle(() => {
-          load().then(resolve).catch(resolve);
-        }, 2800);
-      });
-    }
-
-    return load();
-  }
-
-  function triponEnsurePerfScript() {
-    const prefix = triponRelPrefix();
-    const src = `${prefix}assets/js/perf.js`;
-    if (document.querySelector(`script[src="${src}"]`)) {
-      return Promise.resolve();
-    }
-    return triponLoadScript(src, { defer: false });
+    const gsapSrc = "https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js";
+    const stSrc = "https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js";
+    return triponLoadScript(gsapSrc).then(() => triponLoadScript(stSrc));
   }
 
   function triponBootMain() {
     const prefix = triponRelPrefix();
     const loadLuxuryPickers = () => {
-      if (!triponPageNeedsLuxuryPickers()) {
-        return Promise.resolve();
-      }
       if (g.TriponLuxuryCalendar) {
         return Promise.resolve();
       }
       return triponLoadScript(`${prefix}assets/js/package-details.js`);
     };
 
-    return triponEnsurePerfScript()
-      .catch(() => Promise.resolve())
-      .then(() => triponInjectSiteAmbient())
-      .then(() => triponInjectIncludes())
-      .then(() => {
-        return triponEnsureGsapBundle().then(() => {
-          return loadLuxuryPickers().then(() => {
-            return triponLoadScript(`${prefix}assets/js/packages-catalog.js`).then(() => {
-              return triponLoadScript(`${prefix}assets/js/main.js`);
-            });
+    return triponInjectSiteAmbient().then(() => triponInjectIncludes()).then(() => {
+      return triponEnsureGsapBundle().then(() => {
+        return loadLuxuryPickers().then(() => {
+          return triponLoadScript(`${prefix}assets/js/packages-catalog.js`).then(() => {
+            return triponLoadScript(`${prefix}assets/js/main.js`);
           });
         });
       });
+    });
   }
 
   g.triponRelPrefix = triponRelPrefix;
@@ -401,10 +315,35 @@
     }
   }
 
-  function triponEnsurePackageDetailsStylesEarly() {
-    if (!document.body?.classList.contains("package-details-page")) {
+  function triponIsPackageDetailsPage() {
+    if (document.body?.classList.contains("package-details-page")) {
+      return true;
+    }
+    const path = (g.location.pathname || "").replace(/\\/g, "/");
+    return /\/packages\/[^/]+\/[^/]+\/[^/]+\.html?$/i.test(path);
+  }
+
+  function triponEnsureFontAwesome() {
+    if (
+      document.getElementById("tripon-font-awesome-css") ||
+      document.querySelector('link[href*="font-awesome"], link[href*="fontawesome"]')
+    ) {
       return;
     }
+    const link = document.createElement("link");
+    link.id = "tripon-font-awesome-css";
+    link.rel = "stylesheet";
+    link.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css";
+    link.crossOrigin = "anonymous";
+    link.referrerPolicy = "no-referrer";
+    document.head.appendChild(link);
+  }
+
+  function triponEnsurePackageDetailsStylesEarly() {
+    if (!triponIsPackageDetailsPage()) {
+      return;
+    }
+    triponEnsureFontAwesome();
     const id = "tripon-package-details-css";
     if (document.getElementById(id)) {
       return;

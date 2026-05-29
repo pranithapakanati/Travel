@@ -1084,7 +1084,7 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
     };
 
     const bindMouseParallax = () => {
-      if (!mediaInner || g.matchMedia("(max-width: 768px)").matches) {
+      if (!mediaInner) {
         return;
       }
       gsap.set(mediaInner, { transformPerspective: 900, transformStyle: "preserve-3d" });
@@ -1356,8 +1356,7 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
     };
 
     resize();
-    const mobile = g.matchMedia("(max-width: 768px)").matches;
-    const count = reduceMotion ? 0 : mobile ? 18 : 48;
+    const count = reduceMotion ? 0 : 48;
     const dots = Array.from({ length: count }, () => ({
       x: Math.random() * (canvas.width / (g.devicePixelRatio || 1)),
       y: Math.random() * (canvas.height / (g.devicePixelRatio || 1)),
@@ -2555,46 +2554,40 @@ const triponInitMain = () => {
     });
   };
 
-  const triponScheduleGsapBoot = (bootFn) => {
-    const run = () => bootFn();
-    const mobile = window.matchMedia("(max-width: 768px)").matches;
-    if (mobile && typeof window.triponRunWhenIdle === "function") {
-      window.triponRunWhenIdle(run, 2600);
-      return;
-    }
-    run();
-  };
-
-  const triponWaitForGsap = (onReady, attempt = 0) => {
-    if (window.gsap && window.ScrollTrigger) {
-      onReady();
-      return;
-    }
-    if (attempt > 80) {
-      return;
-    }
-    window.setTimeout(() => triponWaitForGsap(onReady, attempt + 1), 40);
-  };
-
   const homeRoot = document.querySelector("#homeScreen");
   if (homeRoot) {
     if (typeof window.triponInitHomeAmbient === "function") {
       window.triponInitHomeAmbient();
     }
     if (document.querySelector("[data-tripon-reasons-gsap], .reasons--gsap")) {
-      triponScheduleGsapBoot(() => {
-        triponWaitForGsap(() => window.triponInitReasonsGsap());
-      });
+      const bootReasonsGsap = () => {
+        if (window.gsap && window.ScrollTrigger) {
+          window.triponInitReasonsGsap();
+        } else {
+          window.setTimeout(bootReasonsGsap, 40);
+        }
+      };
+      bootReasonsGsap();
     }
     if (document.querySelector("[data-tripon-family-tour-gsap]")) {
-      triponScheduleGsapBoot(() => {
-        triponWaitForGsap(() => window.triponInitFamilyTourGsap());
-      });
+      const bootFamilyTourGsap = () => {
+        if (window.gsap && window.ScrollTrigger) {
+          window.triponInitFamilyTourGsap();
+        } else {
+          window.setTimeout(bootFamilyTourGsap, 40);
+        }
+      };
+      bootFamilyTourGsap();
     }
     if (document.querySelector("[data-tripon-why-choose-gsap]")) {
-      triponScheduleGsapBoot(() => {
-        triponWaitForGsap(() => window.triponInitWhyChooseGsap());
-      });
+      const bootWhyChooseGsap = () => {
+        if (window.gsap && window.ScrollTrigger) {
+          window.triponInitWhyChooseGsap();
+        } else {
+          window.setTimeout(bootWhyChooseGsap, 40);
+        }
+      };
+      bootWhyChooseGsap();
     }
   }
 
@@ -3145,17 +3138,13 @@ const triponInitMain = () => {
     const heroImage = heroSection.querySelector("img");
     if (heroImage) {
       const heroSlides = [
-        { src: "/assets/images/img1.png", alt: "Bali beach" },
-        { src: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?auto=format&fit=max&w=1600&q=80", alt: "Bali cliffside coast" },
-        { src: "https://images.unsplash.com/photo-1537953773345-d172ccf13cf1?auto=format&fit=max&w=1600&q=80", alt: "Tropical Bali island view" },
-        { src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=max&w=1600&q=80", alt: "Sunset beach in Bali" }
+        { src: "/assets/images/home1.webp", alt: "Bali beach" },
+        { src: "/assets/images/home2.webp", alt: "Bali cliffside coast" },
+        { src: "/assets/images/home3.webp", alt: "Tropical Bali island view" }
       ];
       const FADE_DURATION_MS = 1800;
       const SLIDE_INTERVAL_MS = 6500;
-      let activeSlideIndex = Math.max(
-        0,
-        heroSlides.findIndex((slide) => (slide.src || "").includes("img1.png"))
-      );
+      let activeSlideIndex = 0;
       let isSlideTransitioning = false;
 
       heroImage.style.transition = `opacity ${FADE_DURATION_MS}ms ease-in-out`;
@@ -3783,9 +3772,9 @@ const triponInitMain = () => {
       return;
     }
 
-    const gsap = window.gsap;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const isMobileCarousel = () => window.matchMedia("(max-width: 620px)").matches;
+    const getGsap = () => window.gsap;
     const startItem = items.findIndex((item) => item.hasAttribute("data-adventure-start"));
     let activeIndex = startItem >= 0 ? startItem : 0;
     let isAnimating = false;
@@ -3797,14 +3786,16 @@ const triponInitMain = () => {
       if (!active) {
         return;
       }
-      const targetLeft = Math.max(
-        0,
-        active.offsetLeft - (carousel.clientWidth - active.offsetWidth) / 2
-      );
+      const isFullWidthSlide =
+        carousel.clientWidth > 0 && active.offsetWidth >= carousel.clientWidth * 0.92;
+      const targetLeft = isFullWidthSlide
+        ? active.offsetLeft
+        : Math.max(0, active.offsetLeft - (carousel.clientWidth - active.offsetWidth) / 2);
       carousel.scrollTo({ left: targetLeft, behavior: animate ? "smooth" : "auto" });
     };
 
     const applyLayout = (animate) => {
+      const gsap = getGsap();
       if (isMobileCarousel()) {
         items.forEach((item, i) => {
           item.classList.toggle("is-active", i === activeIndex);
@@ -3816,8 +3807,7 @@ const triponInitMain = () => {
         return;
       }
 
-      const mobile3d = window.matchMedia("(max-width: 768px)").matches;
-      const duration = animate && gsap && !reduceMotion && !mobile3d ? 0.72 : 0;
+      const duration = animate && gsap && !reduceMotion ? 0.72 : 0;
       const ease = "power3.out";
 
       items.forEach((item, i) => {
@@ -3828,8 +3818,10 @@ const triponInitMain = () => {
         item.style.pointerEvents = slot.opacity < 0.2 ? "none" : "";
 
         const isSeeAll = item.classList.contains("place-item-see-all");
+        const isTabletAdventure =
+          window.matchMedia("(min-width: 621px) and (max-width: 900px)").matches;
         /* See All: no extra Y nudge or scale — size comes from CSS; avoids top/bottom clip when front */
-        const activeYOffset = isActive && !isSeeAll ? 6 : 0;
+        const activeYOffset = isActive && !isSeeAll ? (isTabletAdventure ? 24 : 6) : 0;
         const activeScale = isSeeAll && isActive ? 1 : slot.scale;
 
         const vars = {
@@ -3927,6 +3919,15 @@ const triponInitMain = () => {
     applyLayout(false);
     if (!userInteracted) {
       syncAutoplay();
+    }
+
+    if (!getGsap() && !isMobileCarousel() && !reduceMotion) {
+      window.setTimeout(() => {
+        if (getGsap()) {
+          applyLayout(false);
+          syncAutoplay();
+        }
+      }, 150);
     }
 
     window.addEventListener("resize", () => {

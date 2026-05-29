@@ -1,6 +1,46 @@
 /**
  * TRIPON Package Details Page — booking card, calendar, time picker, tickets
  */
+
+/* Gap below fixed pill navbar (badges/title must not touch nav) */
+body.package-details-page {
+  padding-top: calc(var(--th-nav-offset, 128px) + clamp(28px, 4.5vw, 44px)) !important;
+  box-sizing: border-box;
+}
+
+body.package-details-page > .container {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+body.package-details-page .title-section,
+body.package-details-page .title-section .top-bar {
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+body.package-details-page .title-section .top-bar {
+  border-bottom: none !important;
+}
+
+body.package-details-page .title-section {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 768px) {
+  body.package-details-page {
+    padding-top: calc(var(--th-nav-offset-mobile, 112px) + clamp(24px, 5vw, 36px)) !important;
+  }
+
+  body.package-details-page > .container {
+    padding: 0 16px 24px !important;
+  }
+}
+
 /* Booking popups: thanks illustration */
 body.package-details-page #mobilePrefModal .mobile-pref-step-final .mobile-pref-avatar img {
   width: 160px;

@@ -1,4 +1,4 @@
-/* Global contact-style ambient background (all pages) */
+/* Sitewide ambient — homepage uses .home-ambient; inner pages use dashed routes only */
 
 body.has-tripon-site-ambient {
   background: #f6f7f9;
@@ -16,143 +16,20 @@ body.has-tripon-site-ambient .page {
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
-  --tsa-mx: 50%;
-  --tsa-my: 42%;
 }
 
-.tripon-site-ambient__photo {
-  display: none !important;
-}
-
-.tripon-site-ambient__orb {
+/* Inner pages: routes only (no green gradient orbs/leaves) */
+body.has-tripon-site-ambient:not([data-tripon-nav="home"]) #triponSiteAmbient .tripon-site-ambient__routes {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(56px);
-  opacity: 0.55;
-  animation: triponSiteAmbientOrb 16s ease-in-out infinite;
+  inset: 6% 3% 8% 3%;
+  width: auto;
+  height: auto;
+  opacity: 0.42;
+  filter: drop-shadow(0 0 6px rgba(13, 122, 79, 0.12));
 }
 
-.tripon-site-ambient__orb--1 {
-  width: min(48vw, 340px);
-  height: min(48vw, 340px);
-  left: var(--tsa-mx);
-  top: var(--tsa-my);
-  transform: translate(-50%, -50%);
-  background: rgba(13, 122, 79, 0.28);
-}
-
-.tripon-site-ambient__orb--2 {
-  width: min(34vw, 240px);
-  height: min(34vw, 240px);
-  right: 8%;
-  top: 18%;
-  background: rgba(56, 189, 248, 0.18);
-  animation-delay: -4s;
-}
-
-.tripon-site-ambient__orb--3 {
-  width: min(28vw, 180px);
-  height: min(28vw, 180px);
-  left: 12%;
-  bottom: 14%;
-  background: rgba(186, 235, 210, 0.42);
-  animation-delay: -8s;
-}
-
-.tripon-site-ambient__leaf {
-  position: absolute;
-  border-radius: 50% 60% 40% 70%;
-  filter: blur(2px);
-  opacity: 0.35;
-  background: linear-gradient(135deg, rgba(13, 122, 79, 0.35), rgba(74, 222, 128, 0.2));
-  animation: triponSiteAmbientFloat 9s ease-in-out infinite;
-}
-
-.tripon-site-ambient__leaf--tl {
-  width: 180px;
-  height: 220px;
-  top: -40px;
-  left: -30px;
-  transform: rotate(-24deg);
-}
-
-.tripon-site-ambient__leaf--br {
-  width: 140px;
-  height: 180px;
-  right: -20px;
-  bottom: 80px;
-  transform: rotate(18deg);
-  animation-delay: -3s;
-}
-
-.tripon-site-ambient__plane-path {
-  position: absolute;
-  right: 6%;
-  bottom: 22%;
-  width: min(220px, 28vw);
-  height: 80px;
-  opacity: 0.5;
-}
-
-.tripon-site-ambient__plane-path line {
-  stroke: rgba(13, 122, 79, 0.35);
-  stroke-width: 2;
-  stroke-dasharray: 6 10;
-  animation: triponSiteAmbientRoute 12s linear infinite;
-}
-
-.tripon-site-ambient__plane {
-  position: absolute;
-  right: 8%;
-  bottom: 24%;
-  color: #0a8b53;
-  font-size: 22px;
-  transform: rotate(-18deg);
-  filter: drop-shadow(0 4px 12px rgba(13, 122, 79, 0.25));
-  animation: triponSiteAmbientPlane 6s ease-in-out infinite;
-}
-
-@keyframes triponSiteAmbientOrb {
-  0%,
-  100% {
-    transform: translate(-50%, -50%) scale(1);
-  }
-
-  50% {
-    transform: translate(calc(-50% + 20px), calc(-50% - 16px)) scale(1.08);
-  }
-}
-
-@keyframes triponSiteAmbientFloat {
-  0%,
-  100% {
-    transform: translateY(0) rotate(var(--tsa-rot, 0deg));
-  }
-
-  50% {
-    transform: translateY(-14px) rotate(calc(var(--tsa-rot, 0deg) + 4deg));
-  }
-}
-
-@keyframes triponSiteAmbientRoute {
-  to {
-    stroke-dashoffset: -160;
-  }
-}
-
-@keyframes triponSiteAmbientPlane {
-  0%,
-  100% {
-    transform: translate(0, 0) rotate(-18deg);
-  }
-
-  50% {
-    transform: translate(-8px, -10px) rotate(-22deg);
-  }
-}
-
+/* Homepage: global layer hidden — .home-screen > .home-ambient handles routes */
 body.has-tripon-site-ambient[data-tripon-nav="home"] #triponSiteAmbient {
-  /* Global ambient is behind .page; homepage uses .home-ambient inside .home-screen */
   display: none;
 }
 
@@ -174,7 +51,6 @@ body.has-tripon-site-ambient[data-tripon-nav="home"] .subscribe-showcase {
   border: none;
 }
 
-/* Let homepage ambient show through content sections (blog, subscribe, etc.) */
 body.has-tripon-site-ambient[data-tripon-nav="home"] .home-screen--has-ambient {
   background: transparent;
 }
@@ -187,7 +63,12 @@ body.has-tripon-site-ambient .contact-luxury {
   background: transparent;
 }
 
-/* Stronger, fuller text on ambient background */
+body.has-tripon-site-ambient.package-details-page,
+body.has-tripon-site-ambient.package-details-page > .container {
+  background: transparent !important;
+}
+
+/* Readable text on neutral canvas */
 body.has-tripon-site-ambient {
   --text: #0c1612;
   color: var(--text);
@@ -225,7 +106,6 @@ body.has-tripon-site-ambient .page :where(h1, h2, h3, h4, h5, h6) {
   color: #0a1a14;
 }
 
-/* Hero stays light-on-image (ambient must not force dark heading text) */
 body.has-tripon-site-ambient .hero h1,
 body.has-tripon-site-ambient .hero h1 .hero-t-line__inner:not(.hero-t-line__text--accent) {
   color: #ffffff;
@@ -239,7 +119,6 @@ body.has-tripon-site-ambient .hero .hero-subtext {
   color: rgba(255, 255, 255, 0.9);
 }
 
-/* Video banner — light text on dark video overlay */
 body.has-tripon-site-ambient .video-banner .banner-content,
 body.has-tripon-site-ambient .video-banner h2,
 body.has-tripon-site-ambient .video-banner .spotlight-kicker {
@@ -268,10 +147,8 @@ body.has-tripon-site-ambient .page a:not(.tripon-header__link):not(.btn):not(.ch
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tripon-site-ambient__orb,
-  .tripon-site-ambient__leaf,
-  .tripon-site-ambient__plane,
-  .tripon-site-ambient__plane-path line {
+  body.has-tripon-site-ambient .home-ambient__route,
+  body.has-tripon-site-ambient .home-ambient__node {
     animation: none;
   }
 }

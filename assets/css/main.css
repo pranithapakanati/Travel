@@ -166,7 +166,14 @@ button:disabled,
 }
 
 .all-locations-main--gallery::before {
-  display: none;
+  content: "";
+  position: absolute;
+  inset: -8%;
+  z-index: -2;
+  background: url("../images/background.png") center / cover no-repeat;
+  filter: blur(1px);
+  transform: scale(1.06);
+  pointer-events: none;
 }
 
 .all-locations-main--gallery::after {
@@ -174,7 +181,12 @@ button:disabled,
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: #f6f7f9;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.52) 0%,
+    rgba(255, 255, 255, 0.38) 45%,
+    rgba(246, 247, 249, 0.48) 100%
+  );
   pointer-events: none;
 }
 
@@ -4977,7 +4989,8 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 /* Keep 3D adventure safe from legacy `.home-screen .adventure` list rules */
 @media (max-width: 430px) {
   .home-screen .adventure--3d .adventure__carousel.place-row,
-  .packages-screen .adventure--3d .adventure__carousel.place-row {
+  .packages-screen .adventure--3d .adventure__carousel.place-row,
+  .location-page .adventure--3d .adventure__carousel.place-row {
     display: flex !important;
     flex-wrap: nowrap !important;
     grid-template-columns: none !important;
@@ -4990,7 +5003,8 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
   }
 
   .home-screen .adventure--3d .place-item--3d,
-  .packages-screen .adventure--3d .place-item--3d {
+  .packages-screen .adventure--3d .place-item--3d,
+  .location-page .adventure--3d .place-item--3d {
     display: block !important;
     grid-template-columns: none !important;
     flex: 0 0 min(82vw, 280px) !important;
@@ -5006,31 +5020,36 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
   }
 
   .home-screen .adventure--3d .place-item__panel,
-  .packages-screen .adventure--3d .place-item__panel {
+  .packages-screen .adventure--3d .place-item__panel,
+  .location-page .adventure--3d .place-item__panel {
     border-radius: 20px !important;
   }
 
   .home-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-content,
-  .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-content {
+  .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-content,
+  .location-page .adventure--3d .place-item--3d:not(.place-item-see-all) .place-content {
     position: absolute !important;
     display: flex !important;
     flex-direction: column !important;
   }
 
   .home-screen .adventure--3d .place-content__pill,
-  .packages-screen .adventure--3d .place-content__pill {
+  .packages-screen .adventure--3d .place-content__pill,
+  .location-page .adventure--3d .place-content__pill {
     background: rgba(255, 255, 255, 0.9) !important;
     border-radius: 999px !important;
   }
 
   .home-screen .adventure--3d .place-content__pill .place-content__line,
-  .packages-screen .adventure--3d .place-content__pill .place-content__line {
+  .packages-screen .adventure--3d .place-content__pill .place-content__line,
+  .location-page .adventure--3d .place-content__pill .place-content__line {
     color: #0f2e22 !important;
     display: block !important;
   }
 
   .home-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-meta__line,
-  .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-meta__line {
+  .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-meta__line,
+  .location-page .adventure--3d .place-item--3d:not(.place-item-see-all) .place-meta__line {
     background: none !important;
     color: rgba(255, 255, 255, 0.95) !important;
     padding: 0 !important;
@@ -16192,16 +16211,18 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
   object-fit: cover !important;
 }
 
-/* Packages page: 3D carousel track must not use legacy flex row */
-.packages-screen .adventure--3d .adventure__carousel,
-.packages-screen .adventure--3d .adventure__carousel.place-row {
-  margin-top: 0 !important;
-  display: block !important;
-  flex-wrap: unset !important;
-  gap: 0 !important;
-  overflow: visible !important;
-  overflow-x: visible !important;
-  scroll-snap-type: none !important;
+/* Packages page: 3D carousel track — desktop/tablet ring only (mobile uses horizontal scroll) */
+@media (min-width: 621px) {
+  .packages-screen .adventure--3d .adventure__carousel,
+  .packages-screen .adventure--3d .adventure__carousel.place-row {
+    margin-top: 0 !important;
+    display: block !important;
+    flex-wrap: unset !important;
+    gap: 0 !important;
+    overflow: visible !important;
+    overflow-x: visible !important;
+    scroll-snap-type: none !important;
+  }
 }
 
 .packages-screen .adventure--3d {
@@ -20064,12 +20085,14 @@ body.tripon-home-page .page:not(.packages-active):not(.contact-active):not(.revi
     margin-bottom: 10px !important;
   }
 
-  .home-screen .adventure--3d .adventure__ring-wrap {
+  .home-screen .adventure--3d .adventure__ring-wrap,
+  .location-page .adventure--3d .adventure__ring-wrap {
     min-height: 0 !important;
     padding-bottom: 12px !important;
   }
 
-  .home-screen .adventure--3d .adventure__carousel.place-row {
+  .home-screen .adventure--3d .adventure__carousel.place-row,
+  .location-page .adventure--3d .adventure__carousel.place-row {
     position: relative !important;
     left: auto !important;
     top: auto !important;
@@ -20087,11 +20110,13 @@ body.tripon-home-page .page:not(.packages-active):not(.contact-active):not(.revi
     touch-action: pan-x pan-y !important;
   }
 
-  .home-screen .adventure--3d .adventure__carousel.place-row::-webkit-scrollbar {
+  .home-screen .adventure--3d .adventure__carousel.place-row::-webkit-scrollbar,
+  .location-page .adventure--3d .adventure__carousel.place-row::-webkit-scrollbar {
     display: none !important;
   }
 
-  .home-screen .adventure--3d .place-item--3d {
+  .home-screen .adventure--3d .place-item--3d,
+  .location-page .adventure--3d .place-item--3d {
     position: relative !important;
     left: auto !important;
     top: auto !important;
@@ -20107,7 +20132,8 @@ body.tripon-home-page .page:not(.packages-active):not(.contact-active):not(.revi
     scroll-snap-align: start !important;
   }
 
-  .home-screen .adventure--3d .place-item--3d.is-active {
+  .home-screen .adventure--3d .place-item--3d.is-active,
+  .location-page .adventure--3d .place-item--3d.is-active {
     flex-basis: min(86vw, 278px) !important;
     width: min(86vw, 278px) !important;
     max-width: min(86vw, 278px) !important;
@@ -20147,26 +20173,31 @@ body.tripon-home-page .page:not(.packages-active):not(.contact-active):not(.revi
 
 @media (max-width: 620px) {
   .home-screen .adventure--3d .adventure__ring-wrap,
-  .packages-screen .adventure--3d .adventure__ring-wrap {
+  .packages-screen .adventure--3d .adventure__ring-wrap,
+  .location-page .adventure--3d .adventure__ring-wrap {
     overflow: hidden !important;
     background: transparent !important;
     box-shadow: none !important;
   }
 
   .home-screen .adventure--3d .adventure__carousel.place-row,
-  .packages-screen .adventure--3d .adventure__carousel.place-row {
+  .packages-screen .adventure--3d .adventure__carousel.place-row,
+  .location-page .adventure--3d .adventure__carousel.place-row {
     width: 100% !important;
     gap: 0 !important;
     padding: 8px 0 14px !important;
     background: transparent !important;
     scroll-snap-type: x mandatory !important;
     scroll-padding-inline: 0 !important;
+    pointer-events: auto !important;
   }
 
   .home-screen .adventure--3d .adventure__carousel.place-row > .place-item--3d,
   .packages-screen .adventure--3d .adventure__carousel.place-row > .place-item--3d,
+  .location-page .adventure--3d .adventure__carousel.place-row > .place-item--3d,
   .home-screen .adventure--3d .adventure__carousel.place-row > .place-item--3d.is-active,
-  .packages-screen .adventure--3d .adventure__carousel.place-row > .place-item--3d.is-active {
+  .packages-screen .adventure--3d .adventure__carousel.place-row > .place-item--3d.is-active,
+  .location-page .adventure--3d .adventure__carousel.place-row > .place-item--3d.is-active {
     flex: 0 0 100% !important;
     flex-basis: 100% !important;
     width: 100% !important;
@@ -20177,13 +20208,16 @@ body.tripon-home-page .page:not(.packages-active):not(.contact-active):not(.revi
 
   .home-screen .adventure--3d .place-item__overlay,
   .packages-screen .adventure--3d .place-item__overlay,
+  .location-page .adventure--3d .place-item__overlay,
   .home-screen .adventure--3d .place-item__glow,
-  .packages-screen .adventure--3d .place-item__glow {
+  .packages-screen .adventure--3d .place-item__glow,
+  .location-page .adventure--3d .place-item__glow {
     display: none !important;
   }
 
   .home-screen .adventure--3d .place-item__panel:not(.place-item__panel--see-all),
-  .packages-screen .adventure--3d .place-item__panel:not(.place-item__panel--see-all) {
+  .packages-screen .adventure--3d .place-item__panel:not(.place-item__panel--see-all),
+  .location-page .adventure--3d .place-item__panel:not(.place-item__panel--see-all) {
     background: transparent !important;
     box-shadow: none !important;
   }

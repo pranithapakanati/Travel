@@ -8,17 +8,13 @@
   <title>Tripon - Contact Us</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="preload" as="style"
-    href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Poppins:wght@400;500;600;700&display=swap"
-    onload="this.onload=null;this.rel='stylesheet'" />
-  <noscript>
-    <link rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Poppins:wght@400;500;600;700&display=swap" />
-  </noscript>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="../assets/css/main.css" />
   <link rel="stylesheet" href="../assets/css/contact-luxury.css" />
   <link rel="stylesheet" href="../assets/css/responsive.css" />
-  <script src="../assets/js/perf.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
 <body class="contact-page" data-tripon-nav="contact">
@@ -274,23 +270,12 @@
       </div>
     </div>
   </div>
-  <script src="../assets/js/includes.js" defer></script>
+  <script src="../assets/js/includes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js" defer></script>
   <script src="../assets/js/contact-gsap.js" defer></script>
-  <script defer>
-    document.addEventListener("DOMContentLoaded", function () {
-      const boot = () => {
-        if (window.gsap && window.ScrollTrigger && typeof window.triponInitContactGsap === "function") {
-          window.triponInitContactGsap();
-          return;
-        }
-        window.setTimeout(boot, 40);
-      };
-      if (typeof window.triponBootMain === "function") {
-        window.triponBootMain().then(boot).catch(boot);
-      } else {
-        boot();
-      }
-    });
+  <script>
+    window.triponBootMain();
   </script>
 </body>
 
