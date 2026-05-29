@@ -1,4 +1,29 @@
 (function (g) {
+  function triponMinCss(path) {
+    return path.replace(/\.css(\?.*)?$/i, ".min.css$1");
+  }
+
+  function triponAppendStylesheet(href, options) {
+    const opts = options || {};
+    if (opts.id && document.getElementById(opts.id)) {
+      return;
+    }
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = href;
+    if (opts.id) {
+      link.id = opts.id;
+    }
+    if (opts.async) {
+      link.media = "print";
+      link.onload = function onCssLoad() {
+        link.media = "all";
+        link.onload = null;
+      };
+    }
+    document.head.appendChild(link);
+  }
+
   function triponRelPrefix() {
     const path = (g.location.pathname || "").replace(/\\/g, "/");
     if (/\/packages\/bali\/[^/]+\/[^/]+\.html?$/i.test(path)) {
@@ -27,40 +52,30 @@
 
   /** Inject navbar.css once per page */
   function triponEnsureNavbarStyles() {
-    const id = "tripon-navbar-stylesheet";
-    if (document.getElementById(id)) {
-      return;
-    }
-    const link = document.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    link.href = `${triponRelPrefix()}assets/css/navbar.css`;
-    document.head.appendChild(link);
+    triponAppendStylesheet(`${triponRelPrefix()}${triponMinCss("assets/css/navbar.css")}`, {
+      id: "tripon-navbar-stylesheet",
+    });
   }
 
   function triponEnsureFooterStyles() {
-    const id = "tripon-footer-luxury-css";
-    if (document.getElementById(id)) {
-      return;
-    }
-    const link = document.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    link.href = `${triponRelPrefix()}assets/css/footer-luxury.css`;
-    document.head.appendChild(link);
+    triponAppendStylesheet(`${triponRelPrefix()}${triponMinCss("assets/css/footer-luxury.css")}`, {
+      id: "tripon-footer-luxury-css",
+      async: true,
+    });
   }
 
   /** Contact-style ambient background on every page */
   function triponEnsureSiteAmbientStyles() {
-    const id = "tripon-site-ambient-stylesheet";
-    if (document.getElementById(id)) {
+    if (document.getElementById("tripon-site-ambient-stylesheet")) {
       return;
     }
-    const link = document.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    link.href = `${triponRelPrefix()}assets/css/site-ambient.css`;
-    document.head.appendChild(link);
+    if (document.querySelector('link[href*="site-ambient"]')) {
+      return;
+    }
+    triponAppendStylesheet(`${triponRelPrefix()}${triponMinCss("assets/css/site-ambient.css")}`, {
+      id: "tripon-site-ambient-stylesheet",
+      async: true,
+    });
   }
 
   function triponInjectSiteAmbient() {
@@ -323,6 +338,14 @@
     return /\/packages\/[^/]+\/[^/]+\/[^/]+\.html?$/i.test(path);
   }
 
+  /** Homepage hero booking bar uses TriponLuxuryCalendar / TriponLuxuryGuestsPicker styles */
+  function triponPageNeedsLuxuryPickerStyles() {
+    return (
+      triponIsPackageDetailsPage() ||
+      !!document.querySelector(".home-screen .search-box input[type='date'], .hero .search-box")
+    );
+  }
+
   function triponEnsureFontAwesome() {
     if (
       document.getElementById("tripon-font-awesome-css") ||
@@ -336,11 +359,19 @@
     link.href = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css";
     link.crossOrigin = "anonymous";
     link.referrerPolicy = "no-referrer";
+    link.media = "print";
+    link.onload = function onFaLoad() {
+      link.media = "all";
+      link.onload = null;
+    };
     document.head.appendChild(link);
   }
 
   function triponEnsurePackageDetailsStylesEarly() {
-    if (!triponIsPackageDetailsPage()) {
+    if (!triponPageNeedsLuxuryPickerStyles()) {
+      return;
+    }
+    if (document.querySelector('link[href*="package-details"]')) {
       return;
     }
     triponEnsureFontAwesome();
@@ -352,7 +383,7 @@
     const link = document.createElement("link");
     link.id = id;
     link.rel = "stylesheet";
-    link.href = `${prefix}assets/css/package-details.css`;
+    link.href = `${prefix}${triponMinCss("assets/css/package-details.css")}`;
     document.head.appendChild(link);
   }
 

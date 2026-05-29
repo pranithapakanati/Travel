@@ -179,14 +179,14 @@ homeMobileMenuOverlay?.addEventListener("click", (event) => {
 }
 
 if (!document.querySelector(".tripon-mobile-nav__item")) {
-  homeMobileLocationToggle?.addEventListener("click", () => {
-    const isOpen = homeMobileLocationList?.classList.contains("active");
-    homeMobileLocationList?.classList.toggle("active", !isOpen);
-    homeMobileLocationToggle.setAttribute("aria-expanded", String(!isOpen));
-    if (homeMobileLocationIcon) {
-      homeMobileLocationIcon.textContent = isOpen ? "+" : "−";
-    }
-  });
+homeMobileLocationToggle?.addEventListener("click", () => {
+  const isOpen = homeMobileLocationList?.classList.contains("active");
+  homeMobileLocationList?.classList.toggle("active", !isOpen);
+  homeMobileLocationToggle.setAttribute("aria-expanded", String(!isOpen));
+  if (homeMobileLocationIcon) {
+    homeMobileLocationIcon.textContent = isOpen ? "+" : "−";
+  }
+});
 }
 
 // close dropdown when clicking outside
