@@ -7125,8 +7125,33 @@ const triponInitMain = () => {
   // FAQ section: tab + accordion with category filtering
   const dealsSection = document.querySelector(".deals");
   if (dealsSection) {
-    const faqTabs = Array.from(dealsSection.querySelectorAll(".faq-tabs button"));
+    const faqTabs = Array.from(dealsSection.querySelectorAll('.faq-tabs [role="tab"]'));
+    const faqTabpanel = dealsSection.querySelector("#faq-tabpanel");
     const faqItems = Array.from(dealsSection.querySelectorAll(".faq-item"));
+
+    const activateFaqTab = (tab) => {
+      if (!tab || !faqTabs.includes(tab)) {
+        return;
+      }
+      setActive(faqTabs, tab);
+      const selectedCategory =
+        tab.dataset.faqCategory || (tab.textContent || "").trim().toLowerCase();
+      faqTabs.forEach((node) => {
+        const isSelected = node === tab;
+        node.setAttribute("aria-selected", isSelected ? "true" : "false");
+        node.tabIndex = isSelected ? 0 : -1;
+      });
+      if (faqTabpanel && tab.id) {
+        faqTabpanel.setAttribute("aria-labelledby", tab.id);
+      }
+      faqItems.forEach((item) => {
+        const itemCategory = item.dataset.category || "";
+        const isVisible =
+          selectedCategory === "general" || itemCategory === selectedCategory;
+        item.style.display = isVisible ? "block" : "none";
+        item.classList.remove("active");
+      });
+    };
 
     // Handle individual FAQ item toggle
     faqItems.forEach((item) => {
@@ -7142,25 +7167,33 @@ const triponInitMain = () => {
       });
     });
 
-    // Handle category tab filtering
-    faqTabs.forEach((tab) => {
-      tab.addEventListener("click", () => {
-        setActive(faqTabs, tab);
-        const selectedCategory = (tab.textContent || "").trim().toLowerCase();
-        faqItems.forEach((item) => {
-          const itemCategory = item.dataset.category || "";
-          const isVisible = selectedCategory === "general" || itemCategory === selectedCategory;
-          item.style.display = isVisible ? "block" : "none";
-          item.classList.remove("active");
-        });
+    // Category tabs (ARIA tablist / tab / tabpanel)
+    faqTabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => activateFaqTab(tab));
+      tab.addEventListener("keydown", (e) => {
+        let targetIndex = index;
+        if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+          e.preventDefault();
+          targetIndex = (index + 1) % faqTabs.length;
+        } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+          e.preventDefault();
+          targetIndex = (index - 1 + faqTabs.length) % faqTabs.length;
+        } else if (e.key === "Home") {
+          e.preventDefault();
+          targetIndex = 0;
+        } else if (e.key === "End") {
+          e.preventDefault();
+          targetIndex = faqTabs.length - 1;
+        } else {
+          return;
+        }
+        const nextTab = faqTabs[targetIndex];
+        activateFaqTab(nextTab);
+        nextTab.focus();
       });
     });
 
-    // Show only general category on load
-    const defaultCategory = "general";
-    faqItems.forEach((item) => {
-      item.style.display = item.dataset.category === defaultCategory ? "block" : "none";
-    });
+    activateFaqTab(faqTabs.find((tab) => tab.classList.contains("active")) || faqTabs[0]);
   }
 
   // Bali blogs: fake play controls + custom share modal

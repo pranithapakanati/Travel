@@ -17,6 +17,13 @@
   /* Tighter gap between the four feature cards */
   --why-choose-card-gap: clamp(6px, 0.55vw, 10px);
   --why-choose-cards-max: min(1320px, 96vw);
+  /* WCAG AA contrast (≥4.5:1 on white) */
+  --a11y-text-muted: #4b5563;
+  --a11y-brand-green: #066b40;
+  --a11y-btn-green: #0d6b38;
+  --a11y-btn-green-alt: #0a7044;
+  --a11y-faq-active-bg: #d4ebe2;
+  --a11y-faq-active-text: #065a38;
 }
 
 /* Consistent pointer cursor for all clickable/interactive UI */
@@ -1608,7 +1615,7 @@ a.contact-btn {
   color: #7f8897;
 }
 
-.contact-explore-grid .package-card h4 {
+.contact-explore-grid .package-card h3 {
   margin: 0;
   font-size: 22px;
   line-height: 1.35;
@@ -1801,7 +1808,7 @@ a.contact-btn {
   font-size: 15px;
 }
 
-.packages-screen .package-card h4 {
+.packages-screen .package-card h3 {
   margin-top: 6px;
   margin-bottom: 5px;
   font-size: 1.05rem;
@@ -2286,7 +2293,7 @@ a.contact-btn {
   display: inline-flex;
   align-items: center;
   margin-top: 0;
-  background: #1db256;
+  background: var(--a11y-btn-green);
   color: #fff;
   text-decoration: none;
   padding: 10px 18px;
@@ -3861,13 +3868,13 @@ a.place-item {
   transition: top 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.reason-text h4 {
+.reasons__topic {
   margin: 0 0 14px;
   font-size: 24px;
   color: #2e3642;
 }
 
-.reason-text h4.active {
+.reasons__topic.active {
   font-weight: 700;
 }
 
@@ -3875,7 +3882,7 @@ a.place-item {
   margin: 10px 0 22px;
 }
 
-.reason-text h3 {
+.reasons__article-title {
   margin: 0 0 10px;
   font-size: 42px;
 }
@@ -3914,8 +3921,8 @@ a.place-item {
 .popular-packages .label {
   display: inline-block;
   margin: 0;
-  border: 1px solid #c8d1dc;
-  color: #0b8b54;
+  border: 1px solid #9cb8a8;
+  color: var(--a11y-brand-green);
   font-size: 18px;
   letter-spacing: 0.1em;
   border-radius: 12px;
@@ -4009,7 +4016,7 @@ a.place-item {
   font-size: 0.95em;
 }
 
-.popular-packages .package-card h4 {
+.popular-packages .package-card h3 {
   margin: 0.7rem 0 0.5rem;
   font-size: 1.125rem;
   font-weight: 600;
@@ -4381,7 +4388,7 @@ a.place-item {
   color: #495465;
 }
 
-.package-card h4 {
+.package-card h3 {
   margin: 0.625rem 0 0.375rem;
   font-size: 0.875rem;
   font-weight: 500;
@@ -4470,7 +4477,7 @@ a.place-item {
 .see-all {
   margin-top: 40px;
   border: none;
-  background: #0a8b53;
+  background: var(--a11y-btn-green-alt);
   color: #fff;
   border-radius: 999px;
   padding: 10px 22px;
@@ -4760,7 +4767,7 @@ h2 {
   background: #e8ecef;
 }
 
-.review-head h4 {
+.review-head h3 {
   margin: 0;
   font-size: 17px;
   line-height: 1.22;
@@ -6745,7 +6752,7 @@ h2 {
   line-height: 1.45;
   letter-spacing: 0;
   word-spacing: 0.02em;
-  color: #697283;
+  color: var(--a11y-text-muted);
   text-align: center;
   white-space: pre-line;
 }
@@ -6877,7 +6884,7 @@ h2 {
   max-width: 100%;
   font-size: clamp(17px, 1.1vw, 20px);
   line-height: 1.5;
-  color: #7b8699;
+  color: var(--a11y-text-muted);
   white-space: normal;
 }
 
@@ -6916,7 +6923,7 @@ h2 {
 .faq-tabs button {
   border: none;
   background: transparent;
-  color: #757f92;
+  color: var(--a11y-text-muted);
   font-size: 19px;
   font-weight: 600;
   padding: 10px 20px;
@@ -6924,8 +6931,8 @@ h2 {
 }
 
 .faq-tabs button.active {
-  background: #b7d8cd;
-  color: #0c8a57;
+  background: var(--a11y-faq-active-bg);
+  color: var(--a11y-faq-active-text);
 }
 
 .faq-list {
@@ -6950,11 +6957,11 @@ h2 {
   font-size: 34px;
   font-weight: 600;
   line-height: 1;
-  color: #8c96a8;
+  color: var(--a11y-text-muted);
 }
 
 .faq-item.active .faq-number {
-  color: #0b9661;
+  color: var(--a11y-brand-green);
 }
 
 .faq-question {
@@ -6965,14 +6972,14 @@ h2 {
   font-weight: 500;
   line-height: 1.38;
   text-align: left;
-  color: rgba(63, 67, 77, 0.82);
+  color: var(--a11y-text-muted);
 }
 
 .faq-toggle {
   font-size: 19px;
   line-height: 1;
   text-align: center;
-  color: #7b8597;
+  color: var(--a11y-text-muted);
   cursor: pointer;
   transition: transform 0.3s ease;
 }
@@ -7041,7 +7048,7 @@ h2 {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: #7f8a9c;
+  color: var(--a11y-text-muted);
 }
 
 .subscribe-showcase h2 {
@@ -7057,7 +7064,7 @@ h2 {
   margin: 20px 0 24px;
   font-size: 13px;
   line-height: 1.7;
-  color: #9299a9;
+  color: var(--a11y-text-muted);
 }
 
 .subscribe-showcase-form {
@@ -7175,11 +7182,11 @@ h2 {
 .instagram-head p {
   margin: 20px 0 0;
   font-size: 20px;
-  color: #8d93a6;
+  color: var(--a11y-text-muted);
 }
 
 .instagram-head p .instagram-handle {
-  color: #8d93a6;
+  color: var(--a11y-text-muted);
   text-decoration: none;
   transition: color 0.18s ease;
 }
@@ -7187,11 +7194,11 @@ h2 {
 .instagram-head p .instagram-handle:hover,
 .instagram-head p .instagram-handle:focus-visible,
 .instagram-head p .instagram-handle:active {
-  color: #0f5c3f;
+  color: var(--a11y-brand-green);
 }
 
 .instagram-head p .instagram-handle:visited {
-  color: #8d93a6;
+  color: var(--a11y-text-muted);
 }
 
 .instagram-strip {
@@ -7656,7 +7663,7 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     gap: 24px;
   }
 
-  .review-head h4 {
+  .review-head h3 {
     font-size: 18px;
   }
 
@@ -8045,11 +8052,11 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     height: 320px;
   }
 
-  .reason-text h3 {
+  .reasons__article-title {
     font-size: 30px;
   }
 
-  .reason-text h4 {
+  .reasons__topic {
     font-size: 20px;
   }
 
@@ -8066,11 +8073,11 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     max-width: 100% !important;
   }
 
-  .home-screen .reasons .reason-text h3 {
+  .home-screen .reasons .reasons__article-title {
     font-size: 30px;
   }
 
-  .home-screen .reasons .reason-text h4 {
+  .home-screen .reasons .reasons__topic {
     font-size: 20px;
   }
 
@@ -8147,7 +8154,7 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     gap: 20px;
   }
 
-  .review-head h4 {
+  .review-head h3 {
     font-size: 16px;
   }
 
@@ -9083,7 +9090,7 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     font-size: 28px;
   }
 
-  .reason-text h3 {
+  .reasons__article-title {
     font-size: 26px;
   }
 
@@ -9091,11 +9098,11 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     font-size: 28px;
   }
 
-  .home-screen .reasons .reason-text h3 {
+  .home-screen .reasons .reasons__article-title {
     font-size: 26px;
   }
 
-  .home-screen .reasons .reason-text h4 {
+  .home-screen .reasons .reasons__topic {
     font-size: 17px;
   }
 
@@ -10236,11 +10243,11 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     height: 260px;
   }
 
-  .reason-text h3 {
+  .reasons__article-title {
     font-size: 20px;
   }
 
-  .reason-text h4 {
+  .reasons__topic {
     font-size: 14px;
   }
 
@@ -10249,11 +10256,11 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     line-height: 1.48;
   }
 
-  .home-screen .reasons .reason-text h3 {
+  .home-screen .reasons .reasons__article-title {
     font-size: 20px;
   }
 
-  .home-screen .reasons .reason-text h4 {
+  .home-screen .reasons .reasons__topic {
     font-size: 14px;
   }
 
@@ -10278,7 +10285,7 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     height: 6.2rem;
   }
 
-  .package-card h4 {
+  .package-card h3 {
     font-size: 0.62rem;
   }
 
@@ -10298,7 +10305,7 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     line-height: 1.35;
   }
 
-  .review-head h4 {
+  .review-head h3 {
     font-size: 11px;
   }
 
@@ -11075,7 +11082,7 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     gap: 24px;
   }
 
-  .review-head h4 {
+  .review-head h3 {
     font-size: 18px;
   }
 
@@ -13215,7 +13222,7 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     flex-wrap: wrap !important;
   }
 
-  .home-screen .review-head h4,
+  .home-screen .review-head h3,
   .home-screen .review-head p,
   .home-screen .review-text {
     margin: 0 !important;
@@ -13472,7 +13479,7 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     object-fit: cover !important;
   }
 
-  .home-screen .package-card h4 {
+  .home-screen .package-card h3 {
     font-size: 1rem !important;
   }
 
@@ -13549,7 +13556,7 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
     box-sizing: border-box !important;
   }
 
-  .home-screen .review-head h4 {
+  .home-screen .review-head h3 {
     font-size: 15px !important;
   }
 
@@ -13946,12 +13953,12 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
   line-height: 1.22;
 }
 
-.home-screen .reasons .reason-text h4 {
+.home-screen .reasons .reasons__topic {
   font-size: 26px;
   margin-bottom: 14px;
 }
 
-.home-screen .reasons .reason-text h3 {
+.home-screen .reasons .reasons__article-title {
   font-size: 48px;
   margin-bottom: 12px;
 }
@@ -17786,5 +17793,42 @@ body.tripon-home-page .page:not(.packages-active):not(.contact-active):not(.revi
   .home-screen .reasons--gsap .reasons__title .reasons__char {
     display: inline !important;
   }
+}
+
+/* WCAG AA contrast — homepage (inherits tokens from :root) */
+.home-screen .why-card p,
+.home-screen .why-choose-intro p,
+.home-screen .faq-tabs button,
+.home-screen .faq-number,
+.home-screen .faq-question,
+.home-screen .faq-toggle,
+.home-screen .subscribe-showcase-kicker,
+.home-screen .subscribe-showcase-text,
+.home-screen .instagram-head p,
+.home-screen .instagram-head p .instagram-handle,
+.home-screen .instagram-head p .instagram-handle:visited {
+  color: var(--a11y-text-muted);
+}
+
+.home-screen .faq-tabs button.active {
+  background: var(--a11y-faq-active-bg);
+  color: var(--a11y-faq-active-text);
+}
+
+.home-screen .faq-item.active .faq-number {
+  color: var(--a11y-brand-green);
+}
+
+.home-screen .popular-packages .label {
+  color: var(--a11y-brand-green);
+  border-color: #9cb8a8;
+}
+
+.home-screen .whatsapp-btn {
+  background: var(--a11y-btn-green);
+}
+
+.home-screen .see-all {
+  background: var(--a11y-btn-green-alt);
 }
 

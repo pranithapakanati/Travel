@@ -154,6 +154,49 @@
     }
   }
 
+  function triponFooterA11ySync() {
+    const footerNav = document.querySelector(".tripon-footer-nav");
+    if (footerNav) {
+      footerNav.setAttribute("aria-hidden", "true");
+    }
+
+    const headerNav = document.querySelector("#triponNavbar .tripon-header__nav");
+    const footerDupKeys = new Set([
+      "home",
+      "locations",
+      "packages",
+      "contact",
+      "people-reviews",
+    ]);
+    const mq = window.matchMedia("(min-width: 769px)");
+
+    const sync = () => {
+      const headerNavVisible =
+        mq.matches &&
+        headerNav &&
+        getComputedStyle(headerNav).display !== "none";
+      document
+        .querySelectorAll(".tripon-footer__link-list a[data-nav-key]")
+        .forEach((link) => {
+          const key = (link.getAttribute("data-nav-key") || "").trim();
+          if (headerNavVisible && footerDupKeys.has(key)) {
+            link.setAttribute("aria-hidden", "true");
+            link.setAttribute("tabindex", "-1");
+          } else {
+            link.removeAttribute("aria-hidden");
+            link.removeAttribute("tabindex");
+          }
+        });
+    };
+
+    sync();
+    if (typeof mq.addEventListener === "function") {
+      mq.addEventListener("change", sync);
+    } else if (typeof mq.addListener === "function") {
+      mq.addListener(sync);
+    }
+  }
+
   function triponApplyFooterExtraClass() {
     const extra = document.body?.dataset?.triponFooterClass || "";
     if (!extra) {
@@ -220,12 +263,14 @@
         }
 
         triponApplyFooterExtraClass();
+        triponFooterA11ySync();
         return triponLoadNavbarScript().then(() => {
           if (typeof g.triponInitNavbar === "function") {
             g.triponInitNavbar();
           } else {
             triponPaintNavActiveFallback();
           }
+          triponFooterA11ySync();
         });
       })
       .catch((e) => {

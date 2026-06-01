@@ -5533,13 +5533,13 @@ body.package-details-page .tripon-social-fab {
     border-radius: 16px !important;
   }
 
-  .home-screen .reasons .reason-text h3,
-  .reasons .reason-text h3 {
+  .home-screen .reasons .reasons__article-title,
+  .reasons .reasons__article-title {
     font-size: 22px;
   }
 
-  .home-screen .reasons .reason-text h4,
-  .reasons .reason-text h4 {
+  .home-screen .reasons .reasons__topic,
+  .reasons .reasons__topic {
     font-size: 15px;
     margin-bottom: 10px;
   }
