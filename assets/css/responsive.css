@@ -6182,22 +6182,19 @@ body.package-details-page .tripon-social-fab {
 
 /* Packages + location detail pages — adventure 3D: one-by-one horizontal scroll + edge arrows (320px–620px) */
 @media (max-width: 620px) {
-  body.packages-page .packages-screen .adventure--3d,
-  .location-page .adventure--3d {
+  body.packages-page .packages-screen .adventure--3d {
     padding-bottom: 14px !important;
     margin-bottom: 10px !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .adventure__stage,
-  .location-page .adventure--3d .adventure__stage {
+  body.packages-page .packages-screen .adventure--3d .adventure__stage {
     position: relative !important;
     display: block !important;
     padding-inline: 40px !important;
     overflow: visible !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .adventure__nav,
-  .location-page .adventure--3d .adventure__nav {
+  body.packages-page .packages-screen .adventure--3d .adventure__nav {
     display: inline-flex !important;
     position: absolute !important;
     top: 50% !important;
@@ -6216,18 +6213,15 @@ body.package-details-page .tripon-social-fab {
     cursor: pointer !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .adventure__nav--prev,
-  .location-page .adventure--3d .adventure__nav--prev {
+  body.packages-page .packages-screen .adventure--3d .adventure__nav--prev {
     left: 2px !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .adventure__nav--next,
-  .location-page .adventure--3d .adventure__nav--next {
+  body.packages-page .packages-screen .adventure--3d .adventure__nav--next {
     right: 2px !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .adventure__ring-wrap,
-  .location-page .adventure--3d .adventure__ring-wrap {
+  body.packages-page .packages-screen .adventure--3d .adventure__ring-wrap {
     min-height: 0 !important;
     padding-bottom: 12px !important;
     overflow: hidden !important;
@@ -6237,9 +6231,7 @@ body.package-details-page .tripon-social-fab {
   }
 
   body.packages-page .packages-screen .adventure--3d .adventure__carousel,
-  body.packages-page .packages-screen .adventure--3d .adventure__carousel.place-row,
-  .location-page .adventure--3d .adventure__carousel,
-  .location-page .adventure--3d .adventure__carousel.place-row {
+  body.packages-page .packages-screen .adventure--3d .adventure__carousel.place-row {
     position: relative !important;
     left: auto !important;
     top: auto !important;
@@ -6263,15 +6255,12 @@ body.package-details-page .tripon-social-fab {
     pointer-events: auto !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .adventure__carousel.place-row::-webkit-scrollbar,
-  .location-page .adventure--3d .adventure__carousel.place-row::-webkit-scrollbar {
+  body.packages-page .packages-screen .adventure--3d .adventure__carousel.place-row::-webkit-scrollbar {
     display: none !important;
   }
 
   body.packages-page .packages-screen .adventure--3d .adventure__carousel.place-row > .place-item--3d,
-  body.packages-page .packages-screen .adventure--3d .adventure__carousel.place-row > .place-item--3d.is-active,
-  .location-page .adventure--3d .adventure__carousel.place-row > .place-item--3d,
-  .location-page .adventure--3d .adventure__carousel.place-row > .place-item--3d.is-active {
+  body.packages-page .packages-screen .adventure--3d .adventure__carousel.place-row > .place-item--3d.is-active {
     position: relative !important;
     left: auto !important;
     top: auto !important;
@@ -6288,21 +6277,17 @@ body.package-details-page .tripon-social-fab {
   }
 
   body.packages-page .packages-screen .adventure--3d .place-item__overlay,
-  .location-page .adventure--3d .place-item__overlay,
-  body.packages-page .packages-screen .adventure--3d .place-item__glow,
-  .location-page .adventure--3d .place-item__glow {
+  body.packages-page .packages-screen .adventure--3d .place-item__glow {
     display: none !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .place-item__panel:not(.place-item__panel--see-all),
-  .location-page .adventure--3d .place-item__panel:not(.place-item__panel--see-all) {
+  body.packages-page .packages-screen .adventure--3d .place-item__panel:not(.place-item__panel--see-all) {
     background: transparent !important;
     box-shadow: none !important;
   }
 
   /* Title + sub-text: white pill labels (match homepage mobile) */
-  body.packages-page .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-content,
-  .location-page .adventure--3d .place-item--3d:not(.place-item-see-all) .place-content {
+  body.packages-page .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-content {
     width: 100% !important;
     padding: 0 12px 12px !important;
     align-items: flex-start !important;
@@ -6311,8 +6296,7 @@ body.package-details-page .tripon-social-fab {
     flex-direction: column !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .place-content__pill,
-  .location-page .adventure--3d .place-content__pill {
+  body.packages-page .packages-screen .adventure--3d .place-content__pill {
     width: auto !important;
     max-width: 88% !important;
     background: rgba(255, 255, 255, 0.92) !important;
@@ -6321,9 +6305,7 @@ body.package-details-page .tripon-social-fab {
   }
 
   body.packages-page .packages-screen .adventure--3d .place-content__pill .place-content__line,
-  body.packages-page .packages-screen .adventure--3d .place-content__pill .place-content__title,
-  .location-page .adventure--3d .place-content__pill .place-content__line,
-  .location-page .adventure--3d .place-content__pill .place-content__title {
+  body.packages-page .packages-screen .adventure--3d .place-content__pill .place-content__title {
     color: #0f2e22 !important;
     background: transparent !important;
     text-shadow: none !important;
@@ -6332,8 +6314,7 @@ body.package-details-page .tripon-social-fab {
     font-weight: 700 !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .place-content__meta,
-  .location-page .adventure--3d .place-content__meta {
+  body.packages-page .packages-screen .adventure--3d .place-content__meta {
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-start !important;
@@ -6342,8 +6323,7 @@ body.package-details-page .tripon-social-fab {
     gap: 5px !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-meta__line,
-  .location-page .adventure--3d .place-item--3d:not(.place-item-see-all) .place-meta__line {
+  body.packages-page .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-meta__line {
     display: inline-block !important;
     width: auto !important;
     max-width: 100% !important;
@@ -6363,42 +6343,34 @@ body.package-details-page .tripon-social-fab {
 }
 
 @media (max-width: 360px) {
-  body.packages-page .packages-screen .adventure--3d .adventure__stage,
-  .location-page .adventure--3d .adventure__stage {
+  body.packages-page .packages-screen .adventure--3d .adventure__stage {
     padding-inline: 36px !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .adventure__nav,
-  .location-page .adventure--3d .adventure__nav {
+  body.packages-page .packages-screen .adventure--3d .adventure__nav {
     width: 30px !important;
     height: 30px !important;
     font-size: 12px !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-content,
-  .location-page .adventure--3d .place-item--3d:not(.place-item-see-all) .place-content {
+  body.packages-page .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-content {
     gap: 5px !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .place-content__pill,
-  .location-page .adventure--3d .place-content__pill {
+  body.packages-page .packages-screen .adventure--3d .place-content__pill {
     padding: 6px 11px !important;
   }
 
   body.packages-page .packages-screen .adventure--3d .place-content__pill .place-content__line,
-  body.packages-page .packages-screen .adventure--3d .place-content__pill .place-content__title,
-  .location-page .adventure--3d .place-content__pill .place-content__line,
-  .location-page .adventure--3d .place-content__pill .place-content__title {
+  body.packages-page .packages-screen .adventure--3d .place-content__pill .place-content__title {
     font-size: 15px !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .place-content__meta,
-  .location-page .adventure--3d .place-content__meta {
+  body.packages-page .packages-screen .adventure--3d .place-content__meta {
     gap: 4px !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-meta__line,
-  .location-page .adventure--3d .place-item--3d:not(.place-item-see-all) .place-meta__line {
+  body.packages-page .packages-screen .adventure--3d .place-item--3d:not(.place-item-see-all) .place-meta__line {
     padding: 5px 11px !important;
     font-size: 11px !important;
   }
@@ -6460,8 +6432,7 @@ body.package-details-page .tripon-social-fab {
     height: clamp(300px, 42vw, 380px) !important;
   }
 
-  body.packages-page .packages-screen .adventure--3d .adventure__stage,
-  .location-page .adventure--3d .adventure__stage {
+  body.packages-page .packages-screen .adventure--3d .adventure__stage {
     margin-top: 0 !important;
     padding-top: clamp(64px, 14vw, 96px) !important;
   }

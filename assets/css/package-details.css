@@ -56,7 +56,7 @@ body.package-details-page #bookingSubmitPopup .submit-popup-box-success::before 
   height: 88px;
   border-radius: 0;
   margin-bottom: 8px;
-  background: url("../images/thanks1.png") center / contain no-repeat;
+  background: url("../images/thanks1.webp") center / contain no-repeat;
   box-shadow: none;
 }
 

@@ -4537,8 +4537,8 @@ const triponInitMain = () => {
       cover: "/assets/images/location1.webp",
       gallery: [
         "/assets/images/location1.webp",
-        "/assets/images/insta_pic7.png",
-        "/assets/images/places.png",
+        "/assets/images/insta_pic7.webp",
+        "/assets/images/places.webp",
       ],
     },
     {
@@ -4549,7 +4549,7 @@ const triponInitMain = () => {
       gallery: [
         "/assets/images/location2.webp",
         "/assets/images/insta_pic1.webp",
-        "/assets/images/insta_pic4.png",
+        "/assets/images/insta_pic4.webp",
       ],
     },
     {
@@ -4560,7 +4560,7 @@ const triponInitMain = () => {
       gallery: [
         "/assets/images/location4.webp",
         "/assets/images/insta_pic2.webp",
-        "/assets/images/insta_pic5.png",
+        "/assets/images/insta_pic5.webp",
       ],
     },
     {
@@ -4571,7 +4571,7 @@ const triponInitMain = () => {
       gallery: [
         "/assets/images/location3.webp",
         "/assets/images/insta_pic3.webp",
-        "/assets/images/insta_pic6.png",
+        "/assets/images/insta_pic6.webp",
       ],
     },
     {
@@ -4582,7 +4582,7 @@ const triponInitMain = () => {
       gallery: [
         "/assets/images/location5.webp",
         "/assets/images/insta_pic1.webp",
-        "/assets/images/insta_pic7.png",
+        "/assets/images/insta_pic7.webp",
       ],
     },
     {
@@ -4592,8 +4592,8 @@ const triponInitMain = () => {
       cover: "/assets/images/location6.webp",
       gallery: [
         "/assets/images/location6.webp",
-        "/assets/images/insta_pic4.png",
-        "/assets/images/insta_pic5.png",
+        "/assets/images/insta_pic4.webp",
+        "/assets/images/insta_pic5.webp",
       ],
     },
   ];
@@ -4941,11 +4941,14 @@ const triponInitMain = () => {
   if (locationPageRoot) {
     const alternateImageExtension = (path) => {
       if (!path || typeof path !== "string") return "";
+      if (/\.webp(\?.*)?$/i.test(path)) {
+        return path.replace(/\.webp(\?.*)?$/i, ".png$1");
+      }
       if (/\.png(\?.*)?$/i.test(path)) {
-        return path.replace(/\.png(\?.*)?$/i, ".jpg$1");
+        return path.replace(/\.png(\?.*)?$/i, ".webp$1");
       }
       if (/\.jpe?g(\?.*)?$/i.test(path)) {
-        return path.replace(/\.jpe?g(\?.*)?$/i, ".png$1");
+        return path.replace(/\.jpe?g(\?.*)?$/i, ".webp$1");
       }
       return "";
     };
@@ -4974,76 +4977,76 @@ const triponInitMain = () => {
       const locationKey = (locationFromPath || "ubud").toLowerCase();
       const locationThingsOverrides = {
         ubud: [
-          { image: "/assets/images/ubud1.png", title: "Monkey Forest" }, { image: "/assets/images/ubud2.png", title: "Tegallalang Rice Terrace" },
-          { image: "/assets/images/ubud3.png", title: "Tirta Empul Temple" }, { image: "/assets/images/ubud4.png", title: "Ubud Art Market" },
-          { image: "/assets/images/ubud5.png", title: "Campuhan Ridge Walk" }, { image: "/assets/images/ubud6.png", title: "Tegenungan Waterfall" },
-          { image: "/assets/images/ubud7.png", title: "Goa Gajah Elephant Cave" }, { image: "/assets/images/ubud8.png", title: "Ubud Royal Palace" },
-          { image: "/assets/images/ubud9.png", title: "Saraswati Temple" }, { image: "/assets/images/ubud10.png", title: "Bali Swing" },
-          { image: "/assets/images/ubud11.png", title: "Tukad Cepung Waterfall" }, { image: "/assets/images/ubud12.png", title: "Kanto Lampo Waterfall" },
-          { image: "/assets/images/ubud13.png", title: "Ubud Cooking Class" }, { image: "/assets/images/ubud14.png", title: "Gunung Kawi Temple" },
-          { image: "/assets/images/ubud15.png", title: "Traditional Dance Show" }, { image: "/assets/images/ubud16.png", title: "Yoga Retreat" },
-          { image: "/assets/images/ubud17.png", title: "Cycling Through Villages" }, { image: "/assets/images/ubud18.png", title: "Pura Taman Saraswati" },
-          { image: "/assets/images/ubud19.png", title: "Jatiluwih Rice Fields" }, { image: "/assets/images/ubud20.png", title: "Ubud Night Market" }
+          { image: "/assets/images/ubud1.webp", title: "Monkey Forest" }, { image: "/assets/images/ubud2.webp", title: "Tegallalang Rice Terrace" },
+          { image: "/assets/images/ubud3.webp", title: "Tirta Empul Temple" }, { image: "/assets/images/ubud4.webp", title: "Ubud Art Market" },
+          { image: "/assets/images/ubud5.webp", title: "Campuhan Ridge Walk" }, { image: "/assets/images/ubud6.webp", title: "Tegenungan Waterfall" },
+          { image: "/assets/images/ubud7.webp", title: "Goa Gajah Elephant Cave" }, { image: "/assets/images/ubud8.webp", title: "Ubud Royal Palace" },
+          { image: "/assets/images/ubud9.webp", title: "Saraswati Temple" }, { image: "/assets/images/ubud10.webp", title: "Bali Swing" },
+          { image: "/assets/images/ubud11.webp", title: "Tukad Cepung Waterfall" }, { image: "/assets/images/ubud12.webp", title: "Kanto Lampo Waterfall" },
+          { image: "/assets/images/ubud13.webp", title: "Ubud Cooking Class" }, { image: "/assets/images/ubud14.webp", title: "Gunung Kawi Temple" },
+          { image: "/assets/images/ubud15.webp", title: "Traditional Dance Show" }, { image: "/assets/images/ubud16.webp", title: "Yoga Retreat" },
+          { image: "/assets/images/ubud17.webp", title: "Cycling Through Villages" }, { image: "/assets/images/ubud18.webp", title: "Pura Taman Saraswati" },
+          { image: "/assets/images/ubud19.webp", title: "Jatiluwih Rice Fields" }, { image: "/assets/images/ubud20.webp", title: "Ubud Night Market" }
         ],
         kuta: [
-          { image: "/assets/images/kuta1.png", title: "Kuta Beach" }, { image: "/assets/images/kuta2.png", title: "Waterbom Bali" },
-          { image: "/assets/images/kuta3.png", title: "Beachwalk Shopping" }, { image: "/assets/images/kuta4.png", title: "Surf Lessons" },
-          { image: "/assets/images/kuta5.png", title: "Kuta Night Market" }, { image: "/assets/images/kuta6.png", title: "Sea Turtle Conservation" },
-          { image: "/assets/images/kuta7.png", title: "Discovery Mall" }, { image: "/assets/images/kuta8.png", title: "Kuta Beach Sunset" },
-          { image: "/assets/images/kuta9.png", title: "Dream Museum Zone" }, { image: "/assets/images/kuta10.png", title: "Circus Waterpark" },
-          { image: "/assets/images/kuta11.png", title: "Tuban Beach" }, { image: "/assets/images/kuta12.png", title: "Hard Rock Hotel Area" },
-          { image: "/assets/images/kuta13.png", title: "Vihara Dharmayana Temple" }, { image: "/assets/images/kuta14.png", title: "Ground Zero Monument" },
-          { image: "/assets/images/kuta15.png", title: "Kuta Square" }, { image: "/assets/images/kuta16.png", title: "Beach Volleyball" },
-          { image: "/assets/images/kuta17.png", title: "Parasailing Adventure" }, { image: "/assets/images/kuta18.png", title: "Legian Street Walk" },
-          { image: "/assets/images/kuta19.png", title: "Kuta Art Market" }, { image: "/assets/images/kuta20.png", title: "Massage on the Beach" }
+          { image: "/assets/images/kuta1.webp", title: "Kuta Beach" }, { image: "/assets/images/kuta2.webp", title: "Waterbom Bali" },
+          { image: "/assets/images/kuta3.webp", title: "Beachwalk Shopping" }, { image: "/assets/images/kuta4.webp", title: "Surf Lessons" },
+          { image: "/assets/images/kuta5.webp", title: "Kuta Night Market" }, { image: "/assets/images/kuta6.webp", title: "Sea Turtle Conservation" },
+          { image: "/assets/images/kuta7.webp", title: "Discovery Mall" }, { image: "/assets/images/kuta8.webp", title: "Kuta Beach Sunset" },
+          { image: "/assets/images/kuta9.webp", title: "Dream Museum Zone" }, { image: "/assets/images/kuta10.webp", title: "Circus Waterpark" },
+          { image: "/assets/images/kuta11.webp", title: "Tuban Beach" }, { image: "/assets/images/kuta12.webp", title: "Hard Rock Hotel Area" },
+          { image: "/assets/images/kuta13.webp", title: "Vihara Dharmayana Temple" }, { image: "/assets/images/kuta14.webp", title: "Ground Zero Monument" },
+          { image: "/assets/images/kuta15.webp", title: "Kuta Square" }, { image: "/assets/images/kuta16.webp", title: "Beach Volleyball" },
+          { image: "/assets/images/kuta17.webp", title: "Parasailing Adventure" }, { image: "/assets/images/kuta18.webp", title: "Legian Street Walk" },
+          { image: "/assets/images/kuta19.webp", title: "Kuta Art Market" }, { image: "/assets/images/kuta20.webp", title: "Massage on the Beach" }
         ],
         seminyak: [
-          { image: "/assets/images/seminyak1.png", title: "Seminyak Beach Sunset" }, { image: "/assets/images/seminyak2.png", title: "Potato Head Beach Club" },
-          { image: "/assets/images/seminyak3.png", title: "Petitenget Temple" }, { image: "/assets/images/seminyak4.png", title: "Eat Street Dining" },
-          { image: "/assets/images/seminyak5.png", title: "Ku De Ta Beach Club" }, { image: "/assets/images/seminyak6.png", title: "Seminyak Flea Market" },
-          { image: "/assets/images/seminyak7.png", title: "Boutique Shopping" }, { image: "/assets/images/seminyak8.png", title: "Bodywork Spa" },
-          { image: "/assets/images/seminyak9.png", title: "Double Six Beach" }, { image: "/assets/images/seminyak10.png", title: "La Plancha Beach Bar" },
-          { image: "/assets/images/seminyak11.png", title: "Bali Riding Stables" }, { image: "/assets/images/seminyak12.png", title: "Oberoi Street Walk" },
-          { image: "/assets/images/seminyak13.png", title: "Mrs Sippy Bali" }, { image: "/assets/images/seminyak14.png", title: "Motel Mexicola" },
-          { image: "/assets/images/seminyak15.png", title: "Echo Beach Trip" }, { image: "/assets/images/seminyak16.png", title: "Sunset Yoga Session" },
-          { image: "/assets/images/seminyak17.png", title: "Cocoon Beach Club" }, { image: "/assets/images/seminyak18.png", title: "Villa Pool Day" },
-          { image: "/assets/images/seminyak19.png", title: "Gallery Hopping" }, { image: "/assets/images/seminyak20.png", title: "Night Street Food" }
+          { image: "/assets/images/seminyak1.webp", title: "Seminyak Beach Sunset" }, { image: "/assets/images/seminyak2.webp", title: "Potato Head Beach Club" },
+          { image: "/assets/images/seminyak3.webp", title: "Petitenget Temple" }, { image: "/assets/images/seminyak4.webp", title: "Eat Street Dining" },
+          { image: "/assets/images/seminyak5.webp", title: "Ku De Ta Beach Club" }, { image: "/assets/images/seminyak6.webp", title: "Seminyak Flea Market" },
+          { image: "/assets/images/seminyak7.webp", title: "Boutique Shopping" }, { image: "/assets/images/seminyak8.webp", title: "Bodywork Spa" },
+          { image: "/assets/images/seminyak9.webp", title: "Double Six Beach" }, { image: "/assets/images/seminyak10.webp", title: "La Plancha Beach Bar" },
+          { image: "/assets/images/seminyak11.webp", title: "Bali Riding Stables" }, { image: "/assets/images/seminyak12.webp", title: "Oberoi Street Walk" },
+          { image: "/assets/images/seminyak13.webp", title: "Mrs Sippy Bali" }, { image: "/assets/images/seminyak14.webp", title: "Motel Mexicola" },
+          { image: "/assets/images/seminyak15.webp", title: "Echo Beach Trip" }, { image: "/assets/images/seminyak16.webp", title: "Sunset Yoga Session" },
+          { image: "/assets/images/seminyak17.webp", title: "Cocoon Beach Club" }, { image: "/assets/images/seminyak18.webp", title: "Villa Pool Day" },
+          { image: "/assets/images/seminyak19.webp", title: "Gallery Hopping" }, { image: "/assets/images/seminyak20.webp", title: "Night Street Food" }
         ],
         lombok: [
-          { image: "/assets/images/lambok1.png", title: "Mount Rinjani Trek" }, { image: "/assets/images/lambok2.png", title: "Gili Trawangan" },
-          { image: "/assets/images/lambok3.png", title: "Tanjung Aan Beach" }, { image: "/assets/images/lambok4.png", title: "Sendang Gile Waterfall" },
-          { image: "/assets/images/lambok5.png", title: "Sasak Village Tour" }, { image: "/assets/images/lambok6.png", title: "Pink Beach" },
-          { image: "/assets/images/lambok7.png", title: "Gili Meno Lake" }, { image: "/assets/images/lambok8.png", title: "Selong Belanak Beach" },
-          { image: "/assets/images/lambok9.png", title: "Benang Stokel Waterfall" }, { image: "/assets/images/lambok10.png", title: "Kuta Lombok" },
-          { image: "/assets/images/lambok11.png", title: "Merese Hill Viewpoint" }, { image: "/assets/images/lambok12.png", title: "Gili Air Snorkeling" },
-          { image: "/assets/images/lambok13.png", title: "Sembalun Valley" }, { image: "/assets/images/lambok14.png", title: "Pura Lingsar Temple" },
-          { image: "/assets/images/lambok15.png", title: "Mawun Beach" }, { image: "/assets/images/lambok16.png", title: "Traditional Weaving" },
-          { image: "/assets/images/lambok17.png", title: "Bukit Pergasingan" }, { image: "/assets/images/lambok18.png", title: "Narmada Water Palace" },
-          { image: "/assets/images/lambok19.png", title: "Sunset at Malimbu Hill" }, { image: "/assets/images/lambok20.png", title: "Tiu Kelep Waterfall" }
+          { image: "/assets/images/lambok1.webp", title: "Mount Rinjani Trek" }, { image: "/assets/images/lambok2.webp", title: "Gili Trawangan" },
+          { image: "/assets/images/lambok3.webp", title: "Tanjung Aan Beach" }, { image: "/assets/images/lambok4.webp", title: "Sendang Gile Waterfall" },
+          { image: "/assets/images/lambok5.webp", title: "Sasak Village Tour" }, { image: "/assets/images/lambok6.webp", title: "Pink Beach" },
+          { image: "/assets/images/lambok7.webp", title: "Gili Meno Lake" }, { image: "/assets/images/lambok8.webp", title: "Selong Belanak Beach" },
+          { image: "/assets/images/lambok9.webp", title: "Benang Stokel Waterfall" }, { image: "/assets/images/lambok10.webp", title: "Kuta Lombok" },
+          { image: "/assets/images/lambok11.webp", title: "Merese Hill Viewpoint" }, { image: "/assets/images/lambok12.webp", title: "Gili Air Snorkeling" },
+          { image: "/assets/images/lambok13.webp", title: "Sembalun Valley" }, { image: "/assets/images/lambok14.webp", title: "Pura Lingsar Temple" },
+          { image: "/assets/images/lambok15.webp", title: "Mawun Beach" }, { image: "/assets/images/lambok16.webp", title: "Traditional Weaving" },
+          { image: "/assets/images/lambok17.webp", title: "Bukit Pergasingan" }, { image: "/assets/images/lambok18.webp", title: "Narmada Water Palace" },
+          { image: "/assets/images/lambok19.webp", title: "Sunset at Malimbu Hill" }, { image: "/assets/images/lambok20.webp", title: "Tiu Kelep Waterfall" }
         ],
         "nusa-penida": [
-          { image: "/assets/images/nusa1.png", title: "Kelingking Beach" }, { image: "/assets/images/nusa2.png", title: "Broken Beach" },
-          { image: "/assets/images/nusa3.png", title: "Angel's Billabong" }, { image: "/assets/images/nusa4.png", title: "Diamond Beach" },
-          { image: "/assets/images/nusa5.png", title: "Crystal Bay" }, { image: "/assets/images/nusa6.png", title: "Manta Point Dive" },
-          { image: "/assets/images/nusa7.png", title: "Atuh Beach" }, { image: "/assets/images/nusa8.png", title: "Teletubbies Hill" },
-          { image: "/assets/images/nusa9.png", title: "Rumah Pohon Treehouse" }, { image: "/assets/images/nusa10.png", title: "Tembeling Beach" },
-          { image: "/assets/images/nusa11.png", title: "Peguyangan Waterfall" }, { image: "/assets/images/nusa12.png", title: "Pura Goa Giri Putri" },
-          { image: "/assets/images/nusa13.png", title: "Banah Cliff Point" }, { image: "/assets/images/nusa14.png", title: "Suwehan Beach" },
-          { image: "/assets/images/nusa15.png", title: "Gamat Bay Snorkeling" }, { image: "/assets/images/nusa16.png", title: "Thousand Islands Viewpoint" },
-          { image: "/assets/images/nusa17.png", title: "Saren Cliff Point" }, { image: "/assets/images/nusa18.png", title: "Toyapakeh Wall Dive" },
-          { image: "/assets/images/nusa19.png", title: "Pura Dalem Penataran Ped" }, { image: "/assets/images/nusa20.png", title: "Island Road Trip" }
+          { image: "/assets/images/nusa1.webp", title: "Kelingking Beach" }, { image: "/assets/images/nusa2.webp", title: "Broken Beach" },
+          { image: "/assets/images/nusa3.webp", title: "Angel's Billabong" }, { image: "/assets/images/nusa4.webp", title: "Diamond Beach" },
+          { image: "/assets/images/nusa5.webp", title: "Crystal Bay" }, { image: "/assets/images/nusa6.webp", title: "Manta Point Dive" },
+          { image: "/assets/images/nusa7.webp", title: "Atuh Beach" }, { image: "/assets/images/nusa8.webp", title: "Teletubbies Hill" },
+          { image: "/assets/images/nusa9.webp", title: "Rumah Pohon Treehouse" }, { image: "/assets/images/nusa10.webp", title: "Tembeling Beach" },
+          { image: "/assets/images/nusa11.webp", title: "Peguyangan Waterfall" }, { image: "/assets/images/nusa12.webp", title: "Pura Goa Giri Putri" },
+          { image: "/assets/images/nusa13.webp", title: "Banah Cliff Point" }, { image: "/assets/images/nusa14.webp", title: "Suwehan Beach" },
+          { image: "/assets/images/nusa15.webp", title: "Gamat Bay Snorkeling" }, { image: "/assets/images/nusa16.webp", title: "Thousand Islands Viewpoint" },
+          { image: "/assets/images/nusa17.webp", title: "Saren Cliff Point" }, { image: "/assets/images/nusa18.webp", title: "Toyapakeh Wall Dive" },
+          { image: "/assets/images/nusa19.webp", title: "Pura Dalem Penataran Ped" }, { image: "/assets/images/nusa20.webp", title: "Island Road Trip" }
         ],
         uluwatu: [
-          { image: "/assets/images/uluwatu1.png", title: "Uluwatu Temple" }, { image: "/assets/images/uluwatu2.png", title: "Kecak Fire Dance" },
-          { image: "/assets/images/uluwatu3.png", title: "Padang Padang Beach" }, { image: "/assets/images/uluwatu4.png", title: "Suluban Beach" },
-          { image: "/assets/images/uluwatu5.png", title: "Single Fin Beach Club" }, { image: "/assets/images/uluwatu6.png", title: "Nyang Nyang Beach" },
-          { image: "/assets/images/uluwatu7.png", title: "Bingin Beach" }, { image: "/assets/images/uluwatu8.png", title: "Dreamland Beach" },
-          { image: "/assets/images/uluwatu9.png", title: "Balangan Beach" }, { image: "/assets/images/uluwatu10.png", title: "GWK Cultural Park" },
-          { image: "/assets/images/uluwatu11.png", title: "Sunday Beach Club" }, { image: "/assets/images/uluwatu12.png", title: "Blue Point Beach" },
-          { image: "/assets/images/uluwatu13.png", title: "Cliff Sunset Viewpoint" }, { image: "/assets/images/uluwatu14.png", title: "Surf at Uluwatu Reef" },
-          { image: "/assets/images/uluwatu15.png", title: "Melasti Beach" }, { image: "/assets/images/uluwatu16.png", title: "Karma Beach Club" },
-          { image: "/assets/images/uluwatu17.png", title: "Savaya Day Club" }, { image: "/assets/images/uluwatu18.png", title: "Jimbaran Seafood Dinner" },
-          { image: "/assets/images/uluwatu19.png", title: "Temple Monkey Encounters" }, { image: "/assets/images/uluwatu20.png", title: "Cliff Coastal Walk" }
+          { image: "/assets/images/uluwatu1.webp", title: "Uluwatu Temple" }, { image: "/assets/images/uluwatu2.webp", title: "Kecak Fire Dance" },
+          { image: "/assets/images/uluwatu3.webp", title: "Padang Padang Beach" }, { image: "/assets/images/uluwatu4.webp", title: "Suluban Beach" },
+          { image: "/assets/images/uluwatu5.webp", title: "Single Fin Beach Club" }, { image: "/assets/images/uluwatu6.webp", title: "Nyang Nyang Beach" },
+          { image: "/assets/images/uluwatu7.webp", title: "Bingin Beach" }, { image: "/assets/images/uluwatu8.webp", title: "Dreamland Beach" },
+          { image: "/assets/images/uluwatu9.webp", title: "Balangan Beach" }, { image: "/assets/images/uluwatu10.webp", title: "GWK Cultural Park" },
+          { image: "/assets/images/uluwatu11.webp", title: "Sunday Beach Club" }, { image: "/assets/images/uluwatu12.webp", title: "Blue Point Beach" },
+          { image: "/assets/images/uluwatu13.webp", title: "Cliff Sunset Viewpoint" }, { image: "/assets/images/uluwatu14.webp", title: "Surf at Uluwatu Reef" },
+          { image: "/assets/images/uluwatu15.webp", title: "Melasti Beach" }, { image: "/assets/images/uluwatu16.webp", title: "Karma Beach Club" },
+          { image: "/assets/images/uluwatu17.webp", title: "Savaya Day Club" }, { image: "/assets/images/uluwatu18.webp", title: "Jimbaran Seafood Dinner" },
+          { image: "/assets/images/uluwatu19.webp", title: "Temple Monkey Encounters" }, { image: "/assets/images/uluwatu20.webp", title: "Cliff Coastal Walk" }
         ]
       };
       const locationContentMap = {
@@ -5076,7 +5079,7 @@ const triponInitMain = () => {
           bestTimeOutro: "If you prefer sunny weather with fewer crowds, shoulder months are ideal; if you enjoy culture and lower costs, wet months can still be rewarding.",
           thingsTitle: "Things To Do in Ubud",
           things: [
-            { image: "/assets/images/location1.webp", title: "Monkey Forest" }, { image: "/assets/images/location2.webp", title: "Puri Saren Agung" }, { image: "/assets/images/location3.webp", title: "Traditional Dance" }, { image: "/assets/images/location4.webp", title: "Art Market" }, { image: "/assets/images/location5.webp", title: "Rice Terraces" }, { image: "/assets/images/location6.webp", title: "Hike to Waterfalls" }, { image: "/assets/images/location7.png", title: "Cooking Class" }, { image: "/assets/images/location.png", title: "Sacred Temples" }
+            { image: "/assets/images/location1.webp", title: "Monkey Forest" }, { image: "/assets/images/location2.webp", title: "Puri Saren Agung" }, { image: "/assets/images/location3.webp", title: "Traditional Dance" }, { image: "/assets/images/location4.webp", title: "Art Market" }, { image: "/assets/images/location5.webp", title: "Rice Terraces" }, { image: "/assets/images/location6.webp", title: "Hike to Waterfalls" }, { image: "/assets/images/location7.webp", title: "Cooking Class" }, { image: "/assets/images/location.webp", title: "Sacred Temples" }
           ]
         },
         kuta: {
@@ -5107,7 +5110,7 @@ const triponInitMain = () => {
           bestTimeOutro: "For balanced weather and value, shoulder months are often the most practical choice for Kuta.",
           thingsTitle: "Things To Do in Kuta",
           things: [
-            { image: "/assets/images/location3.webp", title: "Kuta Beach Sunset" }, { image: "/assets/images/location4.webp", title: "Surfing Lessons" }, { image: "/assets/images/location5.webp", title: "Beach Walk Mall" }, { image: "/assets/images/location6.webp", title: "Waterbom Bali" }, { image: "/assets/images/location7.png", title: "Street Shopping" }, { image: "/assets/images/location.png", title: "Nightlife Spots" }, { image: "/assets/images/location1.webp", title: "Beach Cafes" }, { image: "/assets/images/location2.webp", title: "Temple Visits" }
+            { image: "/assets/images/location3.webp", title: "Kuta Beach Sunset" }, { image: "/assets/images/location4.webp", title: "Surfing Lessons" }, { image: "/assets/images/location5.webp", title: "Beach Walk Mall" }, { image: "/assets/images/location6.webp", title: "Waterbom Bali" }, { image: "/assets/images/location7.webp", title: "Street Shopping" }, { image: "/assets/images/location.webp", title: "Nightlife Spots" }, { image: "/assets/images/location1.webp", title: "Beach Cafes" }, { image: "/assets/images/location2.webp", title: "Temple Visits" }
           ]
         },
         lombok: {
@@ -5138,12 +5141,12 @@ const triponInitMain = () => {
           bestTimeOutro: "For active itineraries in Lombok, dry and shoulder months usually provide the best balance of comfort and accessibility.",
           thingsTitle: "Things To Do in Lombok",
           things: [
-            { image: "/assets/images/location5.webp", title: "Mount Rinjani Trek" }, { image: "/assets/images/location6.webp", title: "Sasak Village Tour" }, { image: "/assets/images/location7.png", title: "Pink Beach" }, { image: "/assets/images/location.png", title: "Gili Island Hop" }, { image: "/assets/images/location1.webp", title: "Waterfall Hike" }, { image: "/assets/images/location2.webp", title: "Snorkeling Spots" }, { image: "/assets/images/location3.webp", title: "Coastal Drives" }, { image: "/assets/images/location4.webp", title: "Sunrise Viewpoints" }
+            { image: "/assets/images/location5.webp", title: "Mount Rinjani Trek" }, { image: "/assets/images/location6.webp", title: "Sasak Village Tour" }, { image: "/assets/images/location7.webp", title: "Pink Beach" }, { image: "/assets/images/location.webp", title: "Gili Island Hop" }, { image: "/assets/images/location1.webp", title: "Waterfall Hike" }, { image: "/assets/images/location2.webp", title: "Snorkeling Spots" }, { image: "/assets/images/location3.webp", title: "Coastal Drives" }, { image: "/assets/images/location4.webp", title: "Sunrise Viewpoints" }
           ]
         },
-        seminyak: { label: "Seminyak", miniMeta: "18+ Activities, 14 Sight Seeing", miniImage: "/assets/images/location4.webp", visitors: "130K+", places: "18+", oneWord: "Trendy", historyIntro: "Seminyak transformed from a quieter coastal extension into a premium destination known for lifestyle travel, dining culture, boutique retail, and modern beach experiences.", historyPoints: ["Coastal Extension Origins: Seminyak initially developed as a calmer neighboring area to Kuta, with lower density and a more relaxed shoreline atmosphere.", "Hospitality Growth: Over time, upscale villas, curated stays, and premium service models helped Seminyak emerge as a higher-end Bali destination.", "Lifestyle Development: Beach clubs, wellness spaces, and design-focused venues shaped a distinct identity centered around comfort and contemporary travel culture.", "Culinary Reputation: The district became one of Bali's strongest dining corridors, offering international cuisine, local fusion concepts, and destination restaurants.", "Retail and Design Influence: Boutique shopping, interior brands, and local artisan collaborations elevated Seminyak's appeal for style-oriented travelers.", "Community and Ritual Life: Despite commercial growth, local temple ceremonies and neighborhood traditions continue to anchor cultural continuity in the area.", "Traveler Profile Expansion: Seminyak attracted couples, families, and remote professionals seeking convenience, aesthetics, and premium leisure experiences.", "Current Positioning: Today Seminyak is recognized for combining modern luxury, beachside relaxation, and elements of Balinese cultural heritage."], historyImage: "https://images.unsplash.com/photo-1483683804023-6ccdb62f86ef?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Seminyak beach view", bestTimeIntro: "Seminyak is best during dry months for beach sunsets, shopping walks, and outdoor dining experiences.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "Seminyak is busiest with beach clubs, luxury stays, and high-demand dining." }, { label: "Shoulder Seasons (May to June, September)", text: "You still get clear sunsets and excellent weather while enjoying easier reservations." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Warm tropical weather continues with occasional showers and better hotel value." }, { label: "Best For Slow Travel", text: "Great for cafe culture, spa routines, and boutique exploration with fewer crowds." }] }], bestTimeOutro: "For a balanced Seminyak trip with comfort and fewer queues, shoulder season works very well.", thingsTitle: "Things To Do in Seminyak", things: [{ image: "/assets/images/location4.webp", title: "Seminyak Beach Sunset" }, { image: "/assets/images/location5.webp", title: "Beach Clubs" }, { image: "/assets/images/location6.webp", title: "Boutique Shopping" }, { image: "/assets/images/location7.png", title: "Spa & Wellness" }, { image: "/assets/images/location.png", title: "Cafe Hopping" }, { image: "/assets/images/location1.webp", title: "Petitenget Temple" }, { image: "/assets/images/location2.webp", title: "Night Dining Streets" }, { image: "/assets/images/location3.webp", title: "Artisan Markets" }] },
-        "nusa-penida": { label: "Nusa Penida", miniMeta: "14+ Activities, 12 Sight Seeing", miniImage: "/assets/images/location5.webp", visitors: "85K+", places: "14+", oneWord: "Dramatic", historyIntro: "Nusa Penida has evolved from a remote island community into a sought-after nature destination known for steep cliffs, sacred sites, and dramatic marine landscapes.", historyPoints: ["Island Community Roots: Historically, Nusa Penida was home to fishing families and temple-centered communities shaped by sea-based livelihoods and spiritual traditions.", "Geographic Isolation: Its rugged roads and steep coastal terrain kept tourism limited for many years, preserving natural viewpoints and village character.", "Temple and Ritual Significance: Sacred sites and ceremonial practices have long played a central role in social and cultural life across the island.", "Access and Tourism Rise: Fast-boat connectivity from Bali significantly increased visitor movement and encouraged overnight stays and guided excursions.", "Photographic Recognition: Iconic cliff landscapes such as Kelingking and Diamond Beach gained global visibility through digital travel media and photography.", "Infrastructure Improvements: Better roads and transport links gradually opened western and eastern routes to a wider range of travelers.", "Marine Adventure Appeal: Snorkeling and diving ecosystems, including manta experiences, strengthened Nusa Penida's position in nature-based tourism.", "Current Destination Identity: Today Nusa Penida is known for dramatic scenery, ocean adventure, and spiritual heritage within a compact island setting."], historyImage: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Nusa Penida cliff coast", bestTimeIntro: "Nusa Penida is best when sea crossings are smoother and visibility is clear for viewpoints.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "The island sees high visitor numbers, especially at major photo viewpoints." }, { label: "Shoulder Seasons (May to June, September)", text: "Good sea and weather conditions remain with lower crowd pressure." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Rougher crossings and short storms can occur, requiring flexible route timing." }, { label: "Best For Flexible Itineraries", text: "You can still enjoy dramatic scenery during clear weather windows." }] }], bestTimeOutro: "For safer crossings and better outdoor comfort, dry or shoulder months are recommended.", thingsTitle: "Things To Do in Nusa Penida", things: [{ image: "/assets/images/location5.webp", title: "Kelingking Beach Viewpoint" }, { image: "/assets/images/location6.webp", title: "Broken Beach" }, { image: "/assets/images/location7.png", title: "Angel's Billabong" }, { image: "/assets/images/location.png", title: "Diamond Beach" }, { image: "/assets/images/location1.webp", title: "Crystal Bay Snorkeling" }, { image: "/assets/images/location2.webp", title: "Manta Point Tour" }, { image: "/assets/images/location3.webp", title: "Island Road Trip" }, { image: "/assets/images/location4.webp", title: "Sunset Cliff Stops" }] },
-        uluwatu: { label: "Uluwatu", miniMeta: "12+ Activities, 9 Sight Seeing", miniImage: "/assets/images/location6.webp", visitors: "95K+", places: "12+", oneWord: "Clifftop", historyIntro: "Uluwatu has a strong cultural and geographic identity built around cliffside temples, ocean-facing landscapes, and one of Bali's most recognized surf regions.", historyPoints: ["Temple-Centered Origins: Uluwatu's early identity formed around coastal settlements and the spiritual significance of Uluwatu Temple on the cliff edge.", "Sacred Landscape Influence: High limestone cliffs and ocean-facing terrain made the area both ceremonially important and visually distinctive.", "Surf Destination Emergence: International surfers helped establish Uluwatu as a renowned wave destination, increasing global attention over time.", "Cultural Performance Legacy: Sunset Kecak dance events near the temple became a defining attraction that connects visitors with Balinese storytelling traditions.", "Heritage Preservation: Temple management and local communities continue to protect ritual practices and sacred customs within a growing tourism environment.", "Hospitality Expansion: Boutique stays, cliffside venues, and curated travel services developed as Uluwatu's popularity rose among premium travelers.", "Coastal Exploration Growth: Hidden beaches and cove access routes attracted photographers, surfers, and sunset-seeking visitors from around the world.", "Present-Day Character: Uluwatu now represents a blend of spiritual heritage, dramatic coastal scenery, surf culture, and destination-level sunset experiences."], historyImage: "https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Uluwatu temple cliff", bestTimeIntro: "Uluwatu is most enjoyable during dry weather when cliff roads and beach access are easier.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "Uluwatu is vibrant with temple visits, Kecak dance crowds, and busy sunset venues." }, { label: "Shoulder Seasons (May to June, September)", text: "Excellent weather for clifftop experiences and surfing with fewer queues." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Humidity and occasional rain increase, and sea conditions can be less predictable." }, { label: "Best For Relaxed Exploration", text: "Good for quieter stays and flexible sightseeing plans." }] }], bestTimeOutro: "Shoulder months give a great mix of views, weather, and manageable crowd levels in Uluwatu.", thingsTitle: "Things To Do in Uluwatu", things: [{ image: "/assets/images/location6.webp", title: "Uluwatu Temple" }, { image: "/assets/images/location7.png", title: "Kecak Dance Show" }, { image: "/assets/images/location.png", title: "Clifftop Sunset Spots" }, { image: "/assets/images/location1.webp", title: "Padang Padang Beach" }, { image: "/assets/images/location2.webp", title: "Suluban Beach" }, { image: "/assets/images/location3.webp", title: "Surfing Breaks" }, { image: "/assets/images/location4.webp", title: "Seafood Dinner by Coast" }, { image: "/assets/images/location5.webp", title: "Scenic Cliff Walks" }] }
+        seminyak: { label: "Seminyak", miniMeta: "18+ Activities, 14 Sight Seeing", miniImage: "/assets/images/location4.webp", visitors: "130K+", places: "18+", oneWord: "Trendy", historyIntro: "Seminyak transformed from a quieter coastal extension into a premium destination known for lifestyle travel, dining culture, boutique retail, and modern beach experiences.", historyPoints: ["Coastal Extension Origins: Seminyak initially developed as a calmer neighboring area to Kuta, with lower density and a more relaxed shoreline atmosphere.", "Hospitality Growth: Over time, upscale villas, curated stays, and premium service models helped Seminyak emerge as a higher-end Bali destination.", "Lifestyle Development: Beach clubs, wellness spaces, and design-focused venues shaped a distinct identity centered around comfort and contemporary travel culture.", "Culinary Reputation: The district became one of Bali's strongest dining corridors, offering international cuisine, local fusion concepts, and destination restaurants.", "Retail and Design Influence: Boutique shopping, interior brands, and local artisan collaborations elevated Seminyak's appeal for style-oriented travelers.", "Community and Ritual Life: Despite commercial growth, local temple ceremonies and neighborhood traditions continue to anchor cultural continuity in the area.", "Traveler Profile Expansion: Seminyak attracted couples, families, and remote professionals seeking convenience, aesthetics, and premium leisure experiences.", "Current Positioning: Today Seminyak is recognized for combining modern luxury, beachside relaxation, and elements of Balinese cultural heritage."], historyImage: "https://images.unsplash.com/photo-1483683804023-6ccdb62f86ef?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Seminyak beach view", bestTimeIntro: "Seminyak is best during dry months for beach sunsets, shopping walks, and outdoor dining experiences.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "Seminyak is busiest with beach clubs, luxury stays, and high-demand dining." }, { label: "Shoulder Seasons (May to June, September)", text: "You still get clear sunsets and excellent weather while enjoying easier reservations." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Warm tropical weather continues with occasional showers and better hotel value." }, { label: "Best For Slow Travel", text: "Great for cafe culture, spa routines, and boutique exploration with fewer crowds." }] }], bestTimeOutro: "For a balanced Seminyak trip with comfort and fewer queues, shoulder season works very well.", thingsTitle: "Things To Do in Seminyak", things: [{ image: "/assets/images/location4.webp", title: "Seminyak Beach Sunset" }, { image: "/assets/images/location5.webp", title: "Beach Clubs" }, { image: "/assets/images/location6.webp", title: "Boutique Shopping" }, { image: "/assets/images/location7.webp", title: "Spa & Wellness" }, { image: "/assets/images/location.webp", title: "Cafe Hopping" }, { image: "/assets/images/location1.webp", title: "Petitenget Temple" }, { image: "/assets/images/location2.webp", title: "Night Dining Streets" }, { image: "/assets/images/location3.webp", title: "Artisan Markets" }] },
+        "nusa-penida": { label: "Nusa Penida", miniMeta: "14+ Activities, 12 Sight Seeing", miniImage: "/assets/images/location5.webp", visitors: "85K+", places: "14+", oneWord: "Dramatic", historyIntro: "Nusa Penida has evolved from a remote island community into a sought-after nature destination known for steep cliffs, sacred sites, and dramatic marine landscapes.", historyPoints: ["Island Community Roots: Historically, Nusa Penida was home to fishing families and temple-centered communities shaped by sea-based livelihoods and spiritual traditions.", "Geographic Isolation: Its rugged roads and steep coastal terrain kept tourism limited for many years, preserving natural viewpoints and village character.", "Temple and Ritual Significance: Sacred sites and ceremonial practices have long played a central role in social and cultural life across the island.", "Access and Tourism Rise: Fast-boat connectivity from Bali significantly increased visitor movement and encouraged overnight stays and guided excursions.", "Photographic Recognition: Iconic cliff landscapes such as Kelingking and Diamond Beach gained global visibility through digital travel media and photography.", "Infrastructure Improvements: Better roads and transport links gradually opened western and eastern routes to a wider range of travelers.", "Marine Adventure Appeal: Snorkeling and diving ecosystems, including manta experiences, strengthened Nusa Penida's position in nature-based tourism.", "Current Destination Identity: Today Nusa Penida is known for dramatic scenery, ocean adventure, and spiritual heritage within a compact island setting."], historyImage: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Nusa Penida cliff coast", bestTimeIntro: "Nusa Penida is best when sea crossings are smoother and visibility is clear for viewpoints.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "The island sees high visitor numbers, especially at major photo viewpoints." }, { label: "Shoulder Seasons (May to June, September)", text: "Good sea and weather conditions remain with lower crowd pressure." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Rougher crossings and short storms can occur, requiring flexible route timing." }, { label: "Best For Flexible Itineraries", text: "You can still enjoy dramatic scenery during clear weather windows." }] }], bestTimeOutro: "For safer crossings and better outdoor comfort, dry or shoulder months are recommended.", thingsTitle: "Things To Do in Nusa Penida", things: [{ image: "/assets/images/location5.webp", title: "Kelingking Beach Viewpoint" }, { image: "/assets/images/location6.webp", title: "Broken Beach" }, { image: "/assets/images/location7.webp", title: "Angel's Billabong" }, { image: "/assets/images/location.webp", title: "Diamond Beach" }, { image: "/assets/images/location1.webp", title: "Crystal Bay Snorkeling" }, { image: "/assets/images/location2.webp", title: "Manta Point Tour" }, { image: "/assets/images/location3.webp", title: "Island Road Trip" }, { image: "/assets/images/location4.webp", title: "Sunset Cliff Stops" }] },
+        uluwatu: { label: "Uluwatu", miniMeta: "12+ Activities, 9 Sight Seeing", miniImage: "/assets/images/location6.webp", visitors: "95K+", places: "12+", oneWord: "Clifftop", historyIntro: "Uluwatu has a strong cultural and geographic identity built around cliffside temples, ocean-facing landscapes, and one of Bali's most recognized surf regions.", historyPoints: ["Temple-Centered Origins: Uluwatu's early identity formed around coastal settlements and the spiritual significance of Uluwatu Temple on the cliff edge.", "Sacred Landscape Influence: High limestone cliffs and ocean-facing terrain made the area both ceremonially important and visually distinctive.", "Surf Destination Emergence: International surfers helped establish Uluwatu as a renowned wave destination, increasing global attention over time.", "Cultural Performance Legacy: Sunset Kecak dance events near the temple became a defining attraction that connects visitors with Balinese storytelling traditions.", "Heritage Preservation: Temple management and local communities continue to protect ritual practices and sacred customs within a growing tourism environment.", "Hospitality Expansion: Boutique stays, cliffside venues, and curated travel services developed as Uluwatu's popularity rose among premium travelers.", "Coastal Exploration Growth: Hidden beaches and cove access routes attracted photographers, surfers, and sunset-seeking visitors from around the world.", "Present-Day Character: Uluwatu now represents a blend of spiritual heritage, dramatic coastal scenery, surf culture, and destination-level sunset experiences."], historyImage: "https://images.unsplash.com/photo-1493558103817-58b2924bce98?auto=format&fit=crop&w=1400&q=80", historyImageAlt: "Uluwatu temple cliff", bestTimeIntro: "Uluwatu is most enjoyable during dry weather when cliff roads and beach access are easier.", bestTimeSeasons: [{ title: "Dry Season (April to October)", details: [{ label: "Peak Season (July and August)", text: "Uluwatu is vibrant with temple visits, Kecak dance crowds, and busy sunset venues." }, { label: "Shoulder Seasons (May to June, September)", text: "Excellent weather for clifftop experiences and surfing with fewer queues." }] }, { title: "Wet Season (November to March)", details: [{ label: "Rainy Season", text: "Humidity and occasional rain increase, and sea conditions can be less predictable." }, { label: "Best For Relaxed Exploration", text: "Good for quieter stays and flexible sightseeing plans." }] }], bestTimeOutro: "Shoulder months give a great mix of views, weather, and manageable crowd levels in Uluwatu.", thingsTitle: "Things To Do in Uluwatu", things: [{ image: "/assets/images/location6.webp", title: "Uluwatu Temple" }, { image: "/assets/images/location7.webp", title: "Kecak Dance Show" }, { image: "/assets/images/location.webp", title: "Clifftop Sunset Spots" }, { image: "/assets/images/location1.webp", title: "Padang Padang Beach" }, { image: "/assets/images/location2.webp", title: "Suluban Beach" }, { image: "/assets/images/location3.webp", title: "Surfing Breaks" }, { image: "/assets/images/location4.webp", title: "Seafood Dinner by Coast" }, { image: "/assets/images/location5.webp", title: "Scenic Cliff Walks" }] }
       };
 
       const selectedLocation = locationContentMap[locationKey] || locationContentMap.ubud;
@@ -5203,7 +5206,7 @@ const triponInitMain = () => {
       const extraThings = selectedLocation.things.slice(8);
       if (thingsGrid) {
         thingsGrid.innerHTML = `${primaryThings.map((item) => `<article><img src="${item.image}" alt="${item.title}" /><span>${item.title}</span></article>`).join("")}
-        <article class="location-more-card" id="locationThingsMoreCard"><img src="${selectedLocation.things[0]?.image || "/assets/images/location.png"}" alt="More activities" /><span><strong>${extraThings.length || 20}+ More</strong><small>Activities & Sightseetings</small></span></article>`;
+        <article class="location-more-card" id="locationThingsMoreCard"><img src="${selectedLocation.things[0]?.image || "/assets/images/location.webp"}" alt="More activities" /><span><strong>${extraThings.length || 20}+ More</strong><small>Activities & Sightseetings</small></span></article>`;
         thingsGrid.querySelectorAll("img").forEach((img) => bindImageExtensionFallback(img));
       }
       if (thingsExtra) {
@@ -5794,58 +5797,58 @@ const triponInitMain = () => {
     const reasonSlides = {
       Festivals: [
         {
-          image: "/assets/images/festive.png",
+          image: "/assets/images/festive.webp",
           title: "Galungan Festival",
           body: "Galungan celebrates the victory of dharma over adharma. Villages fill with decorated penjor bamboo poles, temple prayers, and family gatherings across Bali."
         },
         {
-          image: "/assets/images/festive1.png",
+          image: "/assets/images/festive1.webp",
           title: "Nyepi: Day of Silence",
           body: "Nyepi marks the Balinese New Year with a full day of silence, no travel, and no lights. The night before includes colorful ogoh-ogoh parades and rituals."
         },
         {
-          image: "/assets/images/festive2.png",
+          image: "/assets/images/festive2.webp",
           title: "Kuningan Traditions",
           body: "Kuningan closes the festive cycle with temple visits and offerings. Families wear traditional dress and share special dishes to honor ancestral blessings."
         }
       ],
       "Peace and Quiet": [
         {
-          image: "/assets/images/peace.png",
+          image: "/assets/images/peace.webp",
           title: "Ubud Morning Calm",
           body: "Start your day with misty rice terraces, slow village walks, and temple bells that create a peaceful rhythm away from city noise."
         },
         {
-          image: "/assets/images/peace1.png",
+          image: "/assets/images/peace1.webp",
           title: "Silent Beach Hours",
           body: "Quiet bays in Bali offer gentle waves, soft sunsets, and relaxed corners where you can unwind without crowds."
         },
         {
-          image: "/assets/images/peace2.png",
+          image: "/assets/images/peace2.webp",
           title: "Spa and Wellness Retreats",
           body: "Traditional Balinese wellness sessions, herbal baths, and nature-view spas help you reconnect and recharge in a serene setting."
         }
       ],
       "Romantic Ambience": [
         {
-          image: "/assets/images/ambience.png",
+          image: "/assets/images/ambience.webp",
           title: "Candlelight by the Coast",
           body: "Enjoy private sunset dinners near the ocean, where soft lights, sea breeze, and calm waves create a romantic Bali evening."
         },
         {
-          image: "/assets/images/ambience1.png",
+          image: "/assets/images/ambience1.webp",
           title: "Villa Escape for Couples",
           body: "Peaceful pool villas and tropical gardens provide intimate spaces for couples to relax and celebrate special moments together."
         },
         {
-          image: "/assets/images/ambience2.png",
+          image: "/assets/images/ambience2.webp",
           title: "Golden Hour Memories",
           body: "From cliff viewpoints to dreamy beaches, Bali's golden hour offers perfect scenes for romantic walks and unforgettable photos."
         }
       ],
       "Ease of Travel": [
         {
-          image: "/assets/images/travel.png",
+          image: "/assets/images/travel.webp",
           title: "Seamless Local Transfers",
           body: "Move comfortably between popular Bali spots with reliable drivers, app-based rides, and easy day-trip planning."
         },
@@ -5855,7 +5858,7 @@ const triponInitMain = () => {
           body: "Plan efficient routes between beaches, temples, and cafes so you spend more time exploring and less time commuting."
         },
         {
-          image: "/assets/images/travel2.png",
+          image: "/assets/images/travel2.webp",
           title: "Friendly Travel Support",
           body: "From pickup coordination to local guidance, smooth travel services make every part of your Bali journey stress-free."
         }
@@ -6038,26 +6041,26 @@ const triponInitMain = () => {
     let isPackagesScreenVisible = false;
     const coupleHoverImages = [
       "/assets/images/couple.webp",
-      "/assets/images/couple1.png",
-      "/assets/images/couple2.png",
-      "/assets/images/couple3.png",
-      "/assets/images/couple4.png",
-      "/assets/images/couple5.png"
+      "/assets/images/couple1.webp",
+      "/assets/images/couple2.webp",
+      "/assets/images/couple3.webp",
+      "/assets/images/couple4.webp",
+      "/assets/images/couple5.webp"
     ];
     const friendsHoverImages = [
-      "/assets/images/friends.png",
-      "/assets/images/friends1.png",
+      "/assets/images/friends.webp",
+      "/assets/images/friends1.webp",
       "/assets/images/friends2.webp",
-      "/assets/images/friends3.png",
-      "/assets/images/friends4.png",
-      "/assets/images/friends5.png",
-      "/assets/images/friends6.png"
+      "/assets/images/friends3.webp",
+      "/assets/images/friends4.webp",
+      "/assets/images/friends5.webp",
+      "/assets/images/friends6.webp"
     ];
     const familyHoverImages = [
-      "/assets/images/couple1.png",
-      "/assets/images/couple2.png",
-      "/assets/images/friends1.png",
-      "/assets/images/friends3.png"
+      "/assets/images/couple1.webp",
+      "/assets/images/couple2.webp",
+      "/assets/images/friends1.webp",
+      "/assets/images/friends3.webp"
     ];
 
     const extractDaysFromChip = (chip) => {
@@ -6398,26 +6401,26 @@ const triponInitMain = () => {
     let isPackageSectionVisible = false;
     const coupleHoverImages = [
       "/assets/images/couple.webp",
-      "/assets/images/couple1.png",
-      "/assets/images/couple2.png",
-      "/assets/images/couple3.png",
-      "/assets/images/couple4.png",
-      "/assets/images/couple5.png"
+      "/assets/images/couple1.webp",
+      "/assets/images/couple2.webp",
+      "/assets/images/couple3.webp",
+      "/assets/images/couple4.webp",
+      "/assets/images/couple5.webp"
     ];
     const friendsHoverImages = [
-      "/assets/images/friends.png",
-      "/assets/images/friends1.png",
+      "/assets/images/friends.webp",
+      "/assets/images/friends1.webp",
       "/assets/images/friends2.webp",
-      "/assets/images/friends3.png",
-      "/assets/images/friends4.png",
-      "/assets/images/friends5.png",
-      "/assets/images/friends6.png"
+      "/assets/images/friends3.webp",
+      "/assets/images/friends4.webp",
+      "/assets/images/friends5.webp",
+      "/assets/images/friends6.webp"
     ];
     const familyHoverImages = [
-      "/assets/images/couple1.png",
-      "/assets/images/couple2.png",
-      "/assets/images/friends1.png",
-      "/assets/images/friends3.png"
+      "/assets/images/couple1.webp",
+      "/assets/images/couple2.webp",
+      "/assets/images/friends1.webp",
+      "/assets/images/friends3.webp"
     ];
 
     const applyPackageFilter = (type) => {
@@ -7518,12 +7521,12 @@ const triponInitMain = () => {
         ],
         gallery: [
           {
-            src: "/assets/images/blog.png",
+            src: "/assets/images/blog.webp",
             alt: "Rice terraces in Bali",
             caption: "Walk terraces early for mist and cooler air."
           },
           {
-            src: "/assets/images/blog1.png",
+            src: "/assets/images/blog1.webp",
             alt: "Surfers on a Bali beach",
             caption: "South coast sunsets pair well with a fresh coconut stop."
           }
@@ -7565,12 +7568,12 @@ const triponInitMain = () => {
         ],
         gallery: [
           {
-            src: "/assets/images/blog2.png",
+            src: "/assets/images/blog2.webp",
             alt: "Team collaborating on laptops",
             caption: "Cowork spaces help with printers, mail, and community."
           },
           {
-            src: "/assets/images/blog3.png",
+            src: "/assets/images/blog3.webp",
             alt: "Minimal desk with plant",
             caption: "Private villas can work if you verify upload speeds first."
           }
@@ -7612,12 +7615,12 @@ const triponInitMain = () => {
         ],
         gallery: [
           {
-            src: "/assets/images/blog4.png",
+            src: "/assets/images/blog4.webp",
             alt: "Balinese offering baskets",
             caption: "Morning markets overflow with offering flowers and snacks."
           },
           {
-            src: "/assets/images/blog5.png",
+            src: "/assets/images/blog5.webp",
             alt: "Forest path with sunlight",
             caption: "Hidden canyon trails require sturdy shoes, not flip-flops."
           }
@@ -7659,12 +7662,12 @@ const triponInitMain = () => {
         ],
         gallery: [
           {
-            src: "/assets/images/blog6.png",
+            src: "/assets/images/blog6.webp",
             alt: "Mountain ridge above clouds",
             caption: "Clear mornings reveal neighboring peaks and coast."
           },
           {
-            src: "/assets/images/blog7.png",
+            src: "/assets/images/blog7.webp",
             alt: "Jungle waterfall plunge pool",
             caption: "Go with locals who know seasonal water strength."
           }

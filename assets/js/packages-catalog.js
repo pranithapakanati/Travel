@@ -12,8 +12,8 @@
       days: "4 Days",
       price: "₹15,700",
       type: "friends",
-      image: "assets/images/arizona.png",
-      detailImages: "images/arizona.png,images/arizona1.png,images/arizona2.png",
+      image: "assets/images/arizona.webp",
+      detailImages: "images/arizona.webp,images/arizona1.webp,images/arizona2.webp",
       places: "Sonoran Desert trails,Cactus Canyon viewpoints,Desert camp base",
       activities: "Guided ATV ride,Desert photo stops,Safety briefing and gear",
       included: "ATV rental and helmet,Safety gear,Professional desert guide,Hotel pickup and drop-off"
@@ -26,8 +26,8 @@
       days: "4 Days",
       price: "₹18,700",
       type: "family",
-      image: "assets/images/molokini.png",
-      detailImages: "images/molokini.png,images/molokini1.png,images/molokini2.png",
+      image: "assets/images/molokini.webp",
+      detailImages: "images/molokini.webp,images/molokini1.webp,images/molokini2.webp",
       places: "Molokini Crater,Turtle Town reef,Nusa Penida coastline",
       activities: "Snorkeling with sea turtles,Reef exploration,Boat cruise with crew",
       included: "Boat transfers,Snorkeling equipment,Lunch on board,Professional snorkel guide"
@@ -40,8 +40,8 @@
       days: "4 Days",
       price: "₹78,300",
       type: "couple",
-      image: "assets/images/westminster.png",
-      detailImages: "images/westminster.png,images/westminster1.png,images/westminster2.png",
+      image: "assets/images/westminster.webp",
+      detailImages: "images/westminster.webp,images/westminster1.webp,images/westminster2.webp",
       places: "Westminster Abbey,Big Ben and Parliament,St James's Park",
       activities: "Guided walking tour,Abbey entry and highlights,River Thames photo walk",
       included: "Westminster Abbey entry,Expert local guide,Walking tour route map,Headsets where required"
@@ -54,8 +54,8 @@
       days: "4 Days",
       price: "₹64,000",
       type: "family",
-      image: "assets/images/circle.png",
-      detailImages: "images/circle.png,images/circle1.png,images/circle2.png",
+      image: "assets/images/circle.webp",
+      detailImages: "images/circle.webp,images/circle1.webp,images/circle2.webp",
       places: "Senggigi coast,Sasak villages,Waterfall viewpoints",
       activities: "Circle island scenic drive,Traditional lunch stop,Cultural village visit",
       included: "Private transport,English-speaking guide,Lunch,Entrance fees on route"
@@ -69,7 +69,7 @@
       price: "₹45,000",
       type: "couple",
       image: "assets/images/couple.webp",
-      detailImages: "images/couple.webp,images/couple1.png,images/couple2.png",
+      detailImages: "images/couple.webp,images/couple1.webp,images/couple2.webp",
       places: "Tanah Lot Temple,Ubud Rice Terraces,Campuhan Ridge,Tirta Empul",
       activities: "Balinese cooking class,Couple spa,Rice terrace walk,Traditional dance evening",
       included: "Boutique stay with breakfast,Couple spa session,Private transfers,Selected temple entries"
@@ -82,8 +82,8 @@
       days: "6 Days",
       price: "₹50,000",
       type: "couple",
-      image: "assets/images/isolated.png",
-      detailImages: "images/isolated.png,images/isolated1.png,images/isolated2.png",
+      image: "assets/images/isolated.webp",
+      detailImages: "images/isolated.webp,images/isolated1.webp,images/isolated2.webp",
       places: "Kelingking Beach,Diamond Beach,Broken Beach,Angel Billabong,Crystal Bay",
       activities: "Snorkel with manta rays,Island coastal drive,Cliff viewpoint hike,Sunset at the beach",
       included: "Fast-boat transfers,Scooter or van hire support,Breakfast daily,Snorkel gear on activity days"
@@ -97,7 +97,7 @@
       price: "₹75,000",
       type: "couple",
       image: "assets/images/gilli.webp",
-      detailImages: "images/gilli.webp,images/gilli1.png,images/gilli2.png",
+      detailImages: "images/gilli.webp,images/gilli1.webp,images/gilli2.webp",
       places: "Gili Trawangan beaches,Gili Meno sandbar,Gili Air village,Turtle snorkeling point",
       activities: "Beach cycling,Snorkeling day trip,Sunset swing photo stop,Island café crawl",
       included: "Island transfers,Bicycle rental,Snorkeling trip,Breakfast at stay"
@@ -111,7 +111,7 @@
       price: "₹1,20,000",
       type: "family",
       image: "assets/images/semiyak81.webp",
-      detailImages: "images/semiyak81.webp,images/semiyak82.png,images/semiyak83.png",
+      detailImages: "images/semiyak81.webp,images/semiyak82.webp,images/semiyak83.webp",
       places: "Seminyak Beach,Petitenget Temple,Ku De Ta sunset strip",
       activities: "Resort pool and beach time,Family dining crawl,Kids-friendly water play",
       included: "Resort accommodation,Daily breakfast,Airport transfers,Kids club access where available"
@@ -125,7 +125,7 @@
       price: "₹95,000",
       type: "family",
       image: "assets/images/ubud51.webp",
-      detailImages: "images/ubud51.webp,images/ubud52.png,images/ubud53.png",
+      detailImages: "images/ubud51.webp,images/ubud52.webp,images/ubud53.webp",
       places: "Ubud Monkey Forest,Rice Terrace Walk,Art Market,Traditional Dance",
       activities: "Village tour,Craft workshop,Local cuisine tasting,Temple visit",
       included: "Village guide,Craft workshop materials,Temple sarongs,Private family transport"
@@ -139,7 +139,7 @@
       price: "₹1,10,000",
       type: "family",
       image: "assets/images/kuta61.webp",
-      detailImages: "images/kuta61.webp,images/kuta62.png,images/kuta63.png",
+      detailImages: "images/kuta61.webp,images/kuta62.webp,images/kuta63.webp",
       places: "Waterbom Bali,Uluwatu Temple,Tanah Lot,Tegenungan Waterfall",
       activities: "Waterpark day pass,Temple sunset visit,Family photo stops,Beach leisure time",
       included: "Waterpark tickets,Temple entries,Private van with driver,Lunch on tour days"
@@ -153,7 +153,7 @@
       price: "₹55,000",
       type: "friends",
       image: "assets/images/conggu.webp",
-      detailImages: "images/conggu.webp,images/conggu1.png,images/conggu2.png",
+      detailImages: "images/conggu.webp,images/conggu1.webp,images/conggu2.webp",
       places: "Batu Bolong Beach,Echo Beach,Canggu rice lanes",
       activities: "Surf lessons with coach,Board rental sessions,Sunset beach barbecue,Scooter coastal loop",
       included: "Surf lessons,Board rental,Beach transfer support,Welcome drink on arrival day"
@@ -167,7 +167,7 @@
       price: "₹40,000",
       type: "friends",
       image: "assets/images/volcano.webp",
-      detailImages: "images/volcano.webp,images/volcano1.png,images/volcano2.png",
+      detailImages: "images/volcano.webp,images/volcano1.webp,images/volcano2.webp",
       places: "Mount Batur summit,Lake Batur viewpoint,Hot springs village",
       activities: "Sunrise volcano trek,Breakfast after summit,Hot spring soak,Volcano crater photos",
       included: "Trek guide and torch,Light breakfast after hike,Transport to trailhead,Hot spring entry"
@@ -181,7 +181,7 @@
       price: "₹65,000",
       type: "friends",
       image: "assets/images/nusa61.webp",
-      detailImages: "images/nusa61.webp,images/nusa62.png,images/nusa63.png",
+      detailImages: "images/nusa61.webp,images/nusa62.webp,images/nusa63.webp",
       places: "Nusa Lembongan mangroves,Nusa Ceningan bridge,Blue Lagoon cliff",
       activities: "Island hopping by boat,Snorkeling stops,Cliff jumping viewpoint (optional),Beach chill time",
       included: "Boat hops between islands,Snorkel gear,Rice lunch on Ceningan,Harbour transfers"
@@ -194,8 +194,8 @@
       days: "6 Days",
       price: "₹88,000",
       type: "family",
-      image: "assets/images/bedgul.png",
-      detailImages: "images/bedgul.png,images/bedgul1.png,images/bedgul2.png",
+      image: "assets/images/bedgul.webp",
+      detailImages: "images/bedgul.webp,images/bedgul1.webp,images/bedgul2.webp",
       places: "Ulun Danu Beratan Temple,Handara Gate,Bedugul Botanical Garden",
       activities: "Lake temple visit,Family picnic by the lake,Garden walk,Strawberry farm stop",
       included: "Family room stay,Breakfast,Garden and temple entries,Private driver for day trips"
@@ -208,8 +208,8 @@
       days: "8 Days",
       price: "₹1,35,000",
       type: "couple",
-      image: "assets/images/luxury.png",
-      detailImages: "images/luxury.png,images/luxury1.png,images/luxury2.png",
+      image: "assets/images/luxury.webp",
+      detailImages: "images/luxury.webp,images/luxury1.webp,images/luxury2.webp",
       places: "Uluwatu Temple,Bingin Beach clifftops,Jimbaran Bay",
       activities: "Kecak dance at sunset,Private cliffside dining,Couple spa ritual,Infinity pool downtime",
       included: "Luxury villa or resort stay,Private airport transfers,Couple spa session,Kecak show tickets"
@@ -222,8 +222,8 @@
       days: "6 Days",
       price: "₹76,000",
       type: "friends",
-      image: "assets/images/lake1.png",
-      detailImages: "images/lake1.png,images/lake2.png,images/lake3.png",
+      image: "assets/images/lake1.webp",
+      detailImages: "images/lake1.webp,images/lake2.webp,images/lake3.webp",
       places: "Uluwatu cliffs,Padang Padang beach,Suluban cave beach",
       activities: "Coastal cliff trek,Surf spot check-ins,Sunset viewpoint hops,Beach barbecue evening",
       included: "Trail guide,Transport between viewpoints,Beach barbecue dinner,Drinking water on hikes"

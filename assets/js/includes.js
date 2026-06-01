@@ -346,6 +346,41 @@
     document.head.appendChild(link);
   }
 
+  function triponEnsureRoutePageStyles() {
+    const prefix = triponRelPrefix();
+    const add = (file, id) => {
+      if (document.getElementById(id) || document.querySelector(`link[href*="${file}"]`)) {
+        return;
+      }
+      const link = document.createElement("link");
+      link.id = id;
+      link.rel = "stylesheet";
+      link.href = `${prefix}assets/css/${file}`;
+      document.head.appendChild(link);
+    };
+
+    const hasStaticLocation = !!document.querySelector("[data-static-location-page='true']");
+    const hasHub =
+      document.body?.classList.contains("all-locations-page") ||
+      !!document.querySelector("[data-all-locations-hub='true']") ||
+      (!!document.querySelector(".all-locations-main-wrap") &&
+        !hasStaticLocation &&
+        !document.querySelector(".location-shell"));
+    const hasBlogDetails = !!document.querySelector(".blog-details-page");
+    const hasLocationDetail =
+      hasStaticLocation || (!!document.querySelector(".location-shell") && !hasHub);
+
+    if (hasHub) {
+      add("all-locations-page.css", "tripon-all-locations-page-css");
+    }
+    if (hasBlogDetails) {
+      add("blog-details-page.css", "tripon-blog-details-page-css");
+    }
+    if (hasLocationDetail) {
+      add("location-page.css", "tripon-location-page-css");
+    }
+  }
+
   function triponEnsurePackageDetailsStylesEarly() {
     if (!triponPageNeedsLuxuryPickerStyles()) {
       return;
@@ -373,6 +408,7 @@
     triponEnsureFooterStylesEarly();
     triponEnsureSiteAmbientStyles();
     triponEnsurePackageDetailsStylesEarly();
+    triponEnsureRoutePageStyles();
   }
 
   function triponBootstrapSiteAmbient() {

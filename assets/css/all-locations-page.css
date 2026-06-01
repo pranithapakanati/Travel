@@ -1,0 +1,882 @@
+/* all-locations-page — restored from git main.css */
+
+.all-locations-page {
+  margin: 0;
+  min-height: 100vh;
+  background: #f6f7f9;
+  color: #14241c;
+}
+
+[data-all-locations-hub="true"] .all-locations-main-wrap {
+  background: #f6f7f9;
+}
+
+.all-locations-hero {
+  position: relative;
+  height: 220px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #0a3d2e 0%, #10b981 55%, #34d399 100%);
+  border-bottom: 2px solid rgba(11, 123, 86, 0.16);
+}
+
+.all-locations-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(17, 29, 23, 0.42), rgba(17, 29, 23, 0.32));
+}
+
+.all-locations-hero h1 {
+  position: relative;
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(30px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.all-locations-main {
+  width: min(1320px, 100%);
+  margin: 52px auto 40px;
+  padding: 0 28px;
+  box-sizing: border-box;
+}
+
+.all-locations-breadcrumb {
+  text-align: center;
+  margin: 0 0 24px;
+  font-size: 14px;
+}
+
+.all-locations-breadcrumb a {
+  color: #0b7b56;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.all-locations-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.all-locations-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* Top-level locations hub: single destination card centered */
+.all-locations-grid--hub,
+[data-all-locations-hub="true"] .all-locations-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.all-locations-grid--hub .all-location-card,
+[data-all-locations-hub="true"] .all-location-card:not(.all-location-card--hub-feature) {
+  flex: 0 1 min(360px, 100%);
+  max-width: 360px;
+  width: 100%;
+}
+
+/* TRIPON — locations hub cinematic destination gallery */
+:root {
+  --tripon-cinema-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --tripon-cinema-duration: 880ms;
+  --tripon-coverflow-duration: 800ms;
+  --tripon-coverflow-slide-w: clamp(260px, 78vw, 400px);
+  --tripon-coverflow-slide-ratio: 1.42;
+}
+
+.all-locations-main.all-locations-main--gallery {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto 56px;
+  padding: clamp(36px, 6vw, 56px) clamp(16px, 4vw, 28px) clamp(40px, 6vw, 56px);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.all-locations-main--gallery::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  z-index: -2;
+  background: url("../images/background.png") center / cover no-repeat;
+  filter: blur(1px);
+  transform: scale(1.06);
+  pointer-events: none;
+}
+
+.all-locations-main--gallery::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.52) 0%,
+    rgba(255, 255, 255, 0.38) 45%,
+    rgba(246, 247, 249, 0.48) 100%
+  );
+  pointer-events: none;
+}
+
+.all-locations-main--gallery>.tripon-dest-gallery {
+  position: relative;
+  z-index: 1;
+}
+
+.tripon-dest-gallery {
+  width: min(1040px, 100%);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.tripon-dest-gallery.is-revealed .tripon-dest-gallery__head {
+  animation: triponGalleryReveal 920ms var(--tripon-cinema-ease) both;
+}
+
+.tripon-dest-gallery.is-revealed .tripon-dest-gallery__tabs-wrap {
+  animation: triponGalleryReveal 920ms var(--tripon-cinema-ease) 120ms both;
+}
+
+.tripon-dest-gallery.is-revealed .tripon-coverflow {
+  animation: triponGalleryReveal 980ms var(--tripon-cinema-ease) 220ms both;
+}
+
+@keyframes triponGalleryReveal {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tripon-dest-gallery__head {
+  margin-bottom: clamp(20px, 4vw, 32px);
+}
+
+.tripon-dest-gallery__kicker {
+  margin: 0 0 18px;
+  font-size: clamp(11px, 2.8vw, 13px);
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #4a5c54;
+}
+
+.tripon-dest-gallery__tabs-wrap {
+  margin-bottom: clamp(22px, 4vw, 30px);
+  overflow: hidden;
+}
+
+.tripon-dest-gallery__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  padding: 2px;
+}
+
+.tripon-dest-gallery__tab {
+  flex: 0 1 auto;
+  max-width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(20, 36, 28, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: #3d4f46;
+  font-family: inherit;
+  font-size: clamp(11px, 2.8vw, 13px);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition:
+    background-color 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 380ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.tripon-dest-gallery__tab:hover {
+  border-color: rgba(11, 123, 86, 0.35);
+  transform: translateY(-1px);
+}
+
+.tripon-dest-gallery__tab.is-active {
+  background: #0b7b56;
+  border-color: #0b7b56;
+  color: #ffffff;
+  box-shadow: 0 10px 24px rgba(11, 123, 86, 0.28);
+}
+
+.tripon-dest-gallery__stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+}
+
+/* 3D Cover Flow carousel (centeredSlides + loop + coverflow + slidesPerView auto) */
+.tripon-coverflow {
+  width: 100%;
+  max-width: 100%;
+  touch-action: pan-y;
+}
+
+.tripon-coverflow__viewport {
+  position: relative;
+  width: 100%;
+  min-height: calc(var(--tripon-coverflow-slide-w) * var(--tripon-coverflow-slide-ratio));
+  padding: 16px 0 12px;
+  perspective: 1400px;
+  perspective-origin: 50% 42%;
+  overflow: visible;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.tripon-coverflow.is-dragging .tripon-coverflow__viewport {
+  cursor: grabbing;
+}
+
+.tripon-coverflow__track {
+  position: relative;
+  width: 100%;
+  height: calc(var(--tripon-coverflow-slide-w) * var(--tripon-coverflow-slide-ratio));
+  transform-style: preserve-3d;
+}
+
+.tripon-coverflow__slide {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: var(--tripon-coverflow-slide-w);
+  margin-left: calc(var(--tripon-coverflow-slide-w) / -2);
+  transform-style: preserve-3d;
+  transition:
+    transform var(--tripon-coverflow-duration) var(--tripon-cinema-ease),
+    opacity var(--tripon-coverflow-duration) var(--tripon-cinema-ease),
+    filter var(--tripon-coverflow-duration) var(--tripon-cinema-ease);
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+}
+
+.tripon-coverflow__card {
+  border-radius: 32px;
+  overflow: hidden;
+  box-shadow:
+    0 28px 64px rgba(17, 29, 23, 0.14),
+    0 10px 26px rgba(17, 29, 23, 0.06);
+  transition: box-shadow var(--tripon-coverflow-duration) var(--tripon-cinema-ease);
+}
+
+.tripon-coverflow__slide.is-active .tripon-coverflow__card {
+  box-shadow:
+    0 36px 78px rgba(11, 123, 86, 0.18),
+    0 14px 34px rgba(17, 29, 23, 0.1);
+  animation: triponDestCardFloat 6.2s ease-in-out infinite;
+}
+
+.tripon-coverflow__slide.is-source-hidden {
+  visibility: hidden;
+}
+
+.tripon-coverflow__slide.is-side {
+  cursor: pointer;
+}
+
+.tripon-dest-gallery__card-open {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.tripon-dest-gallery__card-open:focus-visible {
+  outline: 3px solid rgba(11, 123, 86, 0.5);
+  outline-offset: 4px;
+}
+
+.tripon-dest-gallery__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #e8ece9;
+}
+
+.tripon-coverflow__slide.is-active .tripon-dest-gallery__media img {
+  transform: scale(1);
+}
+
+.tripon-dest-gallery__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--tripon-coverflow-duration) var(--tripon-cinema-ease);
+}
+
+.tripon-coverflow__slide.is-active .tripon-dest-gallery__card-open:hover .tripon-dest-gallery__media img,
+.tripon-coverflow__slide.is-active .tripon-dest-gallery__card-open:focus-visible .tripon-dest-gallery__media img {
+  transform: scale(1.05);
+}
+
+.tripon-dest-gallery__glass {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: 18px 20px 22px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.55) 40%, rgba(255, 255, 255, 0.82) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-top: 1px solid rgba(255, 255, 255, 0.65);
+}
+
+.tripon-dest-gallery__label {
+  display: block;
+  font-size: clamp(22px, 5.5vw, 32px);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #14241c;
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tripon-coverflow__slide.is-active .tripon-dest-gallery__label {
+  animation: triponLabelReveal 720ms var(--tripon-cinema-ease) both;
+}
+
+@keyframes triponLabelReveal {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    letter-spacing: 0.28em;
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    letter-spacing: 0.14em;
+  }
+}
+
+.tripon-dest-gallery__all-link {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0b7b56;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+  transition: color 220ms ease, opacity 220ms ease;
+}
+
+.tripon-dest-gallery__all-link:hover {
+  color: #085f43;
+  text-decoration: underline;
+}
+
+/* Cinematic expand-to-fullscreen modal */
+.tripon-dest-gallery-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  pointer-events: none;
+  visibility: hidden;
+}
+
+.tripon-dest-gallery-modal.is-mounting,
+.tripon-dest-gallery-modal.is-open,
+.tripon-dest-gallery-modal.is-closing {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.tripon-dest-gallery-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(6, 12, 10, 0.42);
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
+  opacity: 0;
+  transition:
+    opacity var(--tripon-cinema-duration) var(--tripon-cinema-ease),
+    backdrop-filter var(--tripon-cinema-duration) var(--tripon-cinema-ease),
+    background-color var(--tripon-cinema-duration) var(--tripon-cinema-ease);
+}
+
+.tripon-dest-gallery-modal.is-open .tripon-dest-gallery-modal__backdrop,
+.tripon-dest-gallery-modal.is-closing .tripon-dest-gallery-modal__backdrop {
+  opacity: 1;
+}
+
+.tripon-dest-gallery-modal.is-open .tripon-dest-gallery-modal__backdrop {
+  background: rgba(6, 12, 10, 0.78);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.tripon-dest-gallery-modal__shell {
+  position: fixed;
+  left: var(--shell-x, 50%);
+  top: var(--shell-y, 50%);
+  width: var(--shell-w, 320px);
+  height: var(--shell-h, 400px);
+  border-radius: var(--shell-radius, 28px);
+  overflow: hidden;
+  z-index: 2;
+  box-shadow:
+    0 28px 64px rgba(0, 0, 0, 0.28),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  transition:
+    left var(--tripon-cinema-duration) var(--tripon-cinema-ease),
+    top var(--tripon-cinema-duration) var(--tripon-cinema-ease),
+    width var(--tripon-cinema-duration) var(--tripon-cinema-ease),
+    height var(--tripon-cinema-duration) var(--tripon-cinema-ease),
+    border-radius var(--tripon-cinema-duration) var(--tripon-cinema-ease),
+    box-shadow var(--tripon-cinema-duration) var(--tripon-cinema-ease);
+  will-change: left, top, width, height, border-radius;
+}
+
+.tripon-dest-gallery-modal.is-open .tripon-dest-gallery-modal__shell {
+  box-shadow:
+    0 40px 90px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+}
+
+.tripon-dest-gallery-modal__viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  background: #0a1210;
+}
+
+.tripon-dest-gallery-modal__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition:
+    opacity 620ms var(--tripon-cinema-ease),
+    transform 760ms var(--tripon-cinema-ease),
+    filter 620ms var(--tripon-cinema-ease);
+}
+
+.tripon-dest-gallery-modal__img--a {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  z-index: 1;
+}
+
+.tripon-dest-gallery-modal__img--b {
+  opacity: 0;
+  transform: translateX(16%) scale(1.12);
+  z-index: 2;
+}
+
+.tripon-dest-gallery-modal.is-parallax-next .tripon-dest-gallery-modal__img--a {
+  opacity: 0;
+  transform: translateX(-18%) scale(1.1);
+  filter: blur(3px);
+}
+
+.tripon-dest-gallery-modal.is-parallax-next .tripon-dest-gallery-modal__img--b {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  filter: blur(0);
+}
+
+.tripon-dest-gallery-modal.is-parallax-prev .tripon-dest-gallery-modal__img--a {
+  opacity: 0;
+  transform: translateX(18%) scale(1.1);
+  filter: blur(3px);
+}
+
+.tripon-dest-gallery-modal.is-parallax-prev .tripon-dest-gallery-modal__img--b {
+  opacity: 1;
+  transform: translateX(0) scale(1);
+  filter: blur(0);
+}
+
+.tripon-dest-gallery-modal__chrome {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  grid-template-rows: 1fr auto auto;
+  align-items: center;
+  justify-items: center;
+  padding: clamp(12px, 3vw, 24px);
+  box-sizing: border-box;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 520ms var(--tripon-cinema-ease) 280ms,
+    transform 520ms var(--tripon-cinema-ease) 280ms;
+}
+
+.tripon-dest-gallery-modal.is-ui-ready .tripon-dest-gallery-modal__chrome {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: none;
+}
+
+.tripon-dest-gallery-modal.is-ui-ready .tripon-dest-gallery-modal__chrome button {
+  pointer-events: auto;
+}
+
+.tripon-dest-gallery-modal__close {
+  position: absolute;
+  top: clamp(12px, 3vw, 20px);
+  right: clamp(12px, 3vw, 20px);
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 18px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background-color 240ms ease, transform 240ms var(--tripon-cinema-ease);
+}
+
+.tripon-dest-gallery-modal__close:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.06);
+}
+
+.tripon-dest-gallery-modal__nav {
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  font-size: 16px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: background-color 240ms ease, transform 240ms var(--tripon-cinema-ease);
+}
+
+.tripon-dest-gallery-modal__nav:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: scale(1.08);
+}
+
+.tripon-dest-gallery-modal__nav--prev {
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: start;
+  align-self: center;
+}
+
+.tripon-dest-gallery-modal__nav--next {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  align-self: center;
+}
+
+.tripon-dest-gallery-modal__caption,
+.tripon-dest-gallery-modal__counter {
+  grid-column: 1 / -1;
+  margin: 0;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.94);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+}
+
+.tripon-dest-gallery-modal__caption {
+  grid-row: 2;
+  font-size: clamp(16px, 3.8vw, 20px);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.tripon-dest-gallery-modal__counter {
+  grid-row: 3;
+  font-size: 13px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+@keyframes triponDestCardFloat {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (max-width: 480px) {
+  .all-locations-main--gallery {
+    padding-inline: 12px;
+  }
+
+  .all-locations-main--gallery::before {
+    inset: -12%;
+    transform: scale(1.1);
+  }
+
+  :root {
+    --tripon-coverflow-slide-w: clamp(240px, 84vw, 340px);
+    --tripon-coverflow-slide-ratio: 1.38;
+  }
+
+  .tripon-dest-gallery__tab {
+    padding: 8px 11px;
+    font-size: 11px;
+  }
+
+  .tripon-dest-gallery__glass {
+    padding: 14px 16px 18px;
+  }
+
+  .tripon-dest-gallery-modal__nav--prev,
+  .tripon-dest-gallery-modal__nav--next {
+    display: none;
+  }
+
+  .tripon-dest-gallery-modal__close {
+    top: 10px;
+    right: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --tripon-cinema-duration: 1ms;
+  }
+
+  .tripon-coverflow__slide.is-active .tripon-coverflow__card,
+  .tripon-dest-gallery.is-revealed .tripon-dest-gallery__head,
+  .tripon-dest-gallery.is-revealed .tripon-dest-gallery__tabs-wrap,
+  .tripon-dest-gallery.is-revealed .tripon-coverflow,
+  .tripon-coverflow__slide.is-active .tripon-dest-gallery__label {
+    animation: none;
+  }
+
+  .tripon-coverflow__slide,
+  .tripon-dest-gallery__media img,
+  .tripon-dest-gallery-modal__img,
+  .tripon-dest-gallery-modal__shell,
+  .tripon-dest-gallery-modal__backdrop,
+  .tripon-dest-gallery-modal__chrome,
+  .location-things-lightbox__stage,
+  .location-things-lightbox__backdrop,
+  .location-things-lightbox__chrome,
+  .location-things-lightbox__caption,
+  .location-things-lightbox__counter,
+  .location-things-ring__slide {
+    transition-duration: 0.01ms;
+  }
+}
+
+.all-locations-main-wrap.is-entering .all-locations-hero h1 {
+  opacity: 0;
+}
+
+.all-locations-main-wrap.is-entering .all-locations-hero--revealed h1 {
+  animation: allLocationsHeroIn 680ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.all-locations-main-wrap.is-entering .all-location-card {
+  opacity: 0;
+  transform: translateY(20px) scale(0.96);
+}
+
+.all-location-card.all-location-card-animate {
+  animation: allLocationCardRise 560ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+@keyframes allLocationCardRise {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes allLocationsHeroIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+  .all-locations-main-wrap.is-entering .all-location-card,
+  .all-location-card.all-location-card-animate {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  .all-locations-main-wrap.is-entering .all-locations-hero h1,
+  .all-locations-main-wrap.is-entering .all-locations-hero--revealed h1 {
+    opacity: 1;
+    animation: none;
+  }
+
+  .tripon-dest-gallery__card--float {
+    animation: none;
+  }
+}
+
+.all-location-card {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 1px solid #dce6e1;
+  border-radius: 10px;
+  overflow: hidden;
+  text-decoration: none;
+  box-shadow: 0 5px 16px rgba(17, 29, 23, 0.08);
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.all-location-card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+.all-location-card span {
+  display: block;
+  padding: 12px 14px;
+  color: #1c2f24;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  background: #ffffff;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.all-location-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(11, 123, 86, 0.45);
+  box-shadow: 0 9px 24px rgba(11, 123, 86, 0.2);
+}
+
+.all-location-card:hover span {
+  background: #0b7b56;
+  color: #ffffff;
+}
+
+.all-locations-page .bali-blogs {
+  margin-top: 56px;
+}
+
+.all-locations-page .bali-blogs h2 {
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .all-locations-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 460px) {
+  .all-locations-main {
+    padding: 0 14px;
+  }
+
+  .all-locations-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Bali blogs strip on locations hub (uses .location-blogs) */
+.all-locations-page .location-blogs {
+  width: 100%;
+  max-width: none;
+  margin: 20px 0 0;
+  padding: 60px 56px;
+}
+
+.all-locations-page .location-blogs .bali-blogs-grid {
+  width: 84%;
+  margin: 0 auto;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.all-locations-page .location-blogs h2 {
+  text-align: center;
+  margin: 0 0 20px;
+}
+
+@media (min-width: 769px) {
+  .all-locations-page .location-blogs .bali-blogs-grid {
+    grid-template-rows: repeat(2, 248px);
+  }
+
+  .all-locations-page .location-blogs .bali-card,
+  .all-locations-page .location-blogs .bali-card--featured {
+    min-height: 248px;
+    max-height: 248px;
+    height: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .all-locations-page .location-blogs {
+    width: min(100%, calc(100% - 28px));
+    padding: 40px 14px 36px;
+  }
+
+  .all-locations-page .location-blogs .bali-blogs-grid {
+    gap: 20px;
+    row-gap: 24px;
+    width: 100%;
+    transform: none;
+  }
+}
