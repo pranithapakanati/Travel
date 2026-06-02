@@ -393,6 +393,8 @@
 
   function triponEnsureRoutePageStyles() {
     const prefix = triponRelPrefix();
+    const path = (g.location.pathname || "").replace(/\\/g, "/").toLowerCase();
+    const isHomeRoute = path === "/" || /\/index\.html?$/i.test(path);
     const add = (file, id) => {
       if (document.getElementById(id) || document.querySelector(`link[href*="${file}"]`)) {
         return;
@@ -414,6 +416,20 @@
     const hasBlogDetails = !!document.querySelector(".blog-details-page");
     const hasLocationDetail =
       hasStaticLocation || (!!document.querySelector(".location-shell") && !hasHub);
+    const hasContactPage =
+      document.body?.classList.contains("contact-page") ||
+      !!document.querySelector(".contact-screen") ||
+      /\/company\/contact-us\.html?$/i.test(path) ||
+      isHomeRoute;
+    const hasPeopleReviewsPage =
+      document.body?.classList.contains("reviews-page") ||
+      !!document.querySelector(".people-reviews-screen") ||
+      /\/company\/people-reviews\.html?$/i.test(path) ||
+      isHomeRoute;
+    const hasHomePage =
+      (document.body?.dataset?.triponNav || "").toLowerCase() === "home" ||
+      !!document.querySelector(".home-screen") ||
+      isHomeRoute;
 
     if (hasHub) {
       add("all-locations-page.css", "tripon-all-locations-page-css");
@@ -423,6 +439,16 @@
     }
     if (hasLocationDetail) {
       add("location-page.css", "tripon-location-page-css");
+    }
+    if (hasContactPage) {
+      add("contact-page.css", "tripon-contact-page-css");
+    }
+    if (hasPeopleReviewsPage) {
+      add("people-reviews-page.css", "tripon-people-reviews-page-css");
+    }
+    if (hasHomePage) {
+      add("home-sections.css", "tripon-home-sections-css");
+      add("home-responsive.css", "tripon-home-responsive-css");
     }
   }
 

@@ -1502,3 +1502,57 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Responsive media queries moved from main.css */
+
+@media (max-width: 768px) {
+.location-pill {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 375px) {
+.location-pill {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 320px) {
+.location-pill {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 320px) {
+.location-pill {
+    font-size: 11px !important;
+  }
+}
+
+@media (max-width: 375px) {
+.location-dropdown-wrapper {
+    min-width: 0;
+  }
+
+.location-pill {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 320px) {
+.location-pill {
+    max-width: 100px;
+    font-size: 10px !important;
+  }
+}
+
+@media (max-width: 768px) {
+.topbar-left .topbar-divider,
+  .topbar-left .location-dropdown-wrapper,
+  .topbar .right-actions {
+    display: none !important;
+  }
+}

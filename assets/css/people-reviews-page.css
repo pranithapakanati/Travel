@@ -1,0 +1,1656 @@
+/* People reviews styles extracted from main.css */
+
+
+
+.people-reviews-screen {
+  display: none;
+  padding: 60px 0 50px;
+}
+
+
+
+.page.reviews-active .home-screen {
+  display: none;
+}
+
+
+
+.page.reviews-active .people-reviews-screen {
+  display: block;
+}
+
+
+
+.page.packages-active .home-screen,
+.page.packages-active .people-reviews-screen {
+  display: none;
+}
+
+
+
+.page.contact-active .home-screen,
+.page.contact-active .people-reviews-screen,
+.page.contact-active .packages-screen {
+  display: none;
+}
+
+/* Standalone reviews page visibility lock */
+.reviews-page .people-reviews-screen {
+  display: block !important;
+  padding: 60px 0 50px;
+}
+
+
+
+.reviews-page .home-screen,
+.reviews-page .packages-screen,
+.reviews-page .contact-screen {
+  display: none !important;
+}
+
+
+
+.packages-page .home-screen,
+.packages-page .people-reviews-screen,
+.packages-page .contact-screen {
+  display: none !important;
+}
+
+
+
+.reviews-shell {
+  width: min(1600px, calc(100% - 72px));
+  margin: 0 auto;
+}
+
+
+
+.reviews-shell h2 {
+  margin: 0 auto 54px;
+  padding: 0 16px;
+  font-size: 52px;
+  line-height: 1.12;
+  color: #111c2a;
+  text-align: center;
+}
+
+
+
+.reviews-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 44px;
+  row-gap: 0;
+  align-items: stretch;
+  margin: 0 0 40px;
+}
+
+
+
+.reviews-metric {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 4px 0;
+}
+
+
+
+.reviews-metric-text {
+  min-width: 0;
+}
+
+
+
+.reviews-metrics h3 {
+  margin: 0;
+  font-size: 50px;
+  line-height: 1;
+  font-weight: 700;
+  color: #10192a;
+}
+
+
+
+.reviews-metrics h3 span {
+  color: #f7bf2a;
+}
+
+
+
+.reviews-metrics p {
+  margin: 6px 0 0;
+  font-size: 18px;
+  line-height: 1.35;
+  color: #767f8f;
+}
+
+
+
+.reviews-metric-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 86px;
+  height: 86px;
+}
+
+
+
+.reviews-metric-star-3d,
+.reviews-metric-mountain-3d {
+  display: block;
+  width: 80px;
+  height: 80px;
+}
+
+
+
+.reviews-metric-thumb-3d {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  font-size: 58px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.18));
+}
+
+
+
+.reviews-metric-icon--thumb .fa-thumbs-up {
+  color: #dfa06a;
+  text-shadow:
+    0 1px 0 rgba(255, 247, 230, 0.9),
+    0 -1px 1px rgba(160, 90, 40, 0.35),
+    1px 2px 0 rgba(200, 120, 60, 0.25);
+}
+
+
+
+.reviews-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  margin-top: 28px;
+}
+
+
+
+.reviews-row-media {
+  align-items: start;
+  margin-top: 30px;
+}
+
+
+
+.reviews-row-bottom {
+  margin-top: 30px;
+}
+
+
+
+.testimonials {
+  padding-top: 48px;
+  text-align: center;
+  box-sizing: border-box;
+  width: var(--section-band-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+.testimonial-label {
+  display: inline-block;
+  margin-top: 40px;
+  border: 1px solid #c6ccd1;
+  border-radius: 10px;
+  padding: 11px 26px;
+  color: #0b7b56;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+
+
+.testimonials h2 {
+  margin-top: 20px;
+  margin-bottom: 8px;
+  font-size: 40px;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: #121c2a;
+}
+
+
+
+.testimonial-sub {
+  margin: 10px auto 0;
+  max-width: min(52rem, 94%);
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #6e7b8f;
+}
+
+
+
+.testimonial-links {
+  margin-top: 14px;
+  font-size: 21px;
+  line-height: 1.48;
+  color: #5c6571;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  column-gap: 0.35em;
+  row-gap: 0.25em;
+}
+
+
+
+.testimonial-wall {
+  margin-top: 60px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 30px 34px;
+  align-items: start;
+}
+
+
+
+.testimonial-wall.one-by-one-slider {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+
+
+.testimonial-wall.one-by-one-slider::-webkit-scrollbar {
+  display: none;
+}
+
+
+
+.testimonial-wall.one-by-one-slider .review-card {
+  flex: 0 0 min(320px, 85%);
+  scroll-snap-align: start;
+}
+
+
+
+.review-card {
+  text-align: left;
+  color: #394454;
+  cursor: default !important;
+}
+
+
+
+.review-card.muted {
+  opacity: 0.38;
+}
+
+
+
+.review-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+
+
+.review-head img,
+.review-head .dot {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+
+
+.review-head .dot {
+  display: inline-block;
+  background: #e8ecef;
+}
+
+
+
+.review-head h3 {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.22;
+  color: #121a26;
+}
+
+
+
+.review-head p {
+  margin: 3px 0 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #4d5970;
+}
+
+/* People reviews / packages: 3D blog carousel (not legacy grid) */
+.reviews-bali-blogs.bali-blogs--3d,
+.packages-screen .bali-blogs--3d {
+  padding: clamp(64px, 8vw, 96px) clamp(20px, 4vw, 48px) clamp(56px, 7vw, 80px);
+  background: transparent;
+  overflow: visible;
+}
+
+
+
+.packages-screen .reviews-bali-blogs.bali-blogs--3d {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+
+
+.packages-screen .reviews-bali-blogs.bali-blogs--3d .bali-blogs-head h2 {
+  width: auto;
+  margin: 0 auto 10px;
+  font-size: clamp(28px, 4.2vw, 42px);
+  text-align: center;
+}
+
+
+
+.packages-screen .reviews-bali-blogs.bali-blogs--3d .bali-blogs-sub {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+.packages-screen .reviews-bali-blogs.bali-blogs--3d .bali-blogs-stage,
+.packages-screen .reviews-bali-blogs.bali-blogs--3d .bali-blogs-carousel {
+  overflow: visible;
+}
+
+/* Packages / reviews / locations: show 3D blog cards immediately (no homepage GSAP hide) */
+.packages-page [data-tripon-blogs-gsap] [data-blog-card],
+.reviews-page [data-tripon-blogs-gsap] [data-blog-card] {
+  visibility: visible;
+  opacity: 1;
+}
+
+
+
+.packages-page .packages-screen > .reviews-bali-blogs.bali-blogs--3d {
+  overflow: visible;
+  position: relative;
+  z-index: 2;
+}
+
+
+
+.reviews-page .people-reviews-screen .reviews-bali-blogs.bali-blogs--3d {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+
+
+.reviews-page .people-reviews-screen .reviews-bali-blogs.bali-blogs--3d .bali-blogs-head h2 {
+  width: auto;
+  margin: 0 0 10px;
+  font-size: clamp(28px, 4.2vw, 42px);
+}
+
+
+
+.reviews-page .people-reviews-screen .reviews-bali-blogs.bali-blogs--3d .bali-blogs-sub {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 700px) {
+.testimonials {
+    text-align: center;
+  }
+
+.testimonial-label {
+    font-size: 22px;
+    padding: 10px 22px;
+  }
+
+.testimonials h2 {
+    font-size: clamp(40px, 2.85vw, 48px);
+  }
+
+.testimonial-sub {
+    font-size: 19px;
+    font-weight: 600;
+    max-width: min(52rem, 94%);
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+  }
+
+.testimonial-links {
+    font-size: 21px;
+  }
+
+.testimonial-wall {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+.review-head h3 {
+    font-size: 18px;
+  }
+
+.review-head p {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 375px) {
+.testimonial-wall {
+    gap: 6px;
+  }
+}
+
+@media (max-width: 425px) {
+.testimonials {
+    text-align: center;
+    padding-top: 48px;
+  }
+
+.testimonial-label {
+    font-size: 22px;
+    padding: 10px 22px;
+  }
+
+.testimonials h2 {
+    font-size: clamp(40px, 2.85vw, 48px);
+  }
+
+.testimonial-sub {
+    font-size: 19px;
+    font-weight: 600;
+    max-width: min(52rem, 94%);
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+  }
+
+.testimonial-links {
+    font-size: 21px;
+  }
+
+.testimonial-wall {
+    margin-top: 60px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+.review-head h3 {
+    font-size: 18px;
+  }
+
+.review-head p {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 1100px) {
+.reviews-shell {
+    width: min(100%, calc(100% - 34px));
+  }
+
+.reviews-shell h2 {
+    font-size: 33px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+.reviews-metrics h3 {
+    font-size: 31px;
+  }
+}
+
+@media (max-width: 768px) {
+.people-reviews-screen {
+    padding-top: 20px;
+  }
+
+.reviews-shell h2 {
+    font-size: 29px;
+    margin: 0 auto 22px !important;
+    padding: 0 12px;
+    text-align: center !important;
+  }
+
+.reviews-row {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
+.people-reviews-screen .reviews-row-top,
+  .people-reviews-screen .reviews-row-bottom,
+  .people-reviews-screen .reviews-row-media {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    grid-template-columns: none !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-x !important;
+    gap: 12px !important;
+    scrollbar-width: none !important;
+  }
+
+.people-reviews-screen .reviews-row-top::-webkit-scrollbar,
+  .people-reviews-screen .reviews-row-bottom::-webkit-scrollbar,
+  .people-reviews-screen .reviews-row-media::-webkit-scrollbar {
+    display: none !important;
+  }
+
+.people-reviews-screen .reviews-row-media {
+    margin-top: 12px !important;
+  }
+
+.people-reviews-screen .reviews-row-bottom {
+    margin-top: 12px !important;
+  }
+}
+
+/* 376–900px: slightly wider content column than the 320-tight gutter (28px → 16px) */
+
+/* Reviews/packages: match homepage grid row height (avoid 290px cards in 248px rows) */
+.reviews-bali-blogs .bali-blogs-grid>.bali-card--featured:first-child,
+.reviews-bali-blogs .bali-blogs-grid>.bali-card--featured:last-child,
+.packages-screen .bali-blogs .bali-blogs-grid>.bali-card--featured:first-child,
+.packages-screen .bali-blogs .bali-blogs-grid>.bali-card--featured:last-child {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 248px !important;
+}
+
+
+
+.reviews-bali-blogs .bali-blogs-grid>.bali-card,
+.packages-screen .bali-blogs .bali-blogs-grid>.bali-card {
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 248px !important;
+}
+
+
+
+.reviews-bali-blogs .bali-card-body {
+  padding: 18px 22px;
+  gap: 10px;
+}
+
+
+
+.reviews-bali-blogs .bali-card-body h3 {
+  font-size: 19px;
+  line-height: 1.35;
+}
+
+
+
+.reviews-bali-blogs .bali-card-body p {
+  font-size: 14.5px;
+  line-height: 1.65;
+}
+
+
+
+.reviews-bali-blogs .author-info strong {
+  font-size: 15px;
+}
+
+
+
+.reviews-bali-blogs .author-info span {
+  font-size: 13px;
+}
+
+
+
+.reviews-bali-blogs .author-avatar {
+  width: 40px;
+  height: 40px;
+}
+
+
+
+.reviews-bali-blogs .blog-author {
+  gap: 12px;
+}
+
+
+
+.reviews-bali-blogs .bali-card--img-only .bali-card-body {
+  padding: 14px 20px 16px;
+}
+
+
+
+.reviews-bali-blogs .bali-card-img {
+  height: 155px;
+}
+
+
+
+.reviews-bali-blogs .bali-card--featured .bali-card-media {
+  flex: 0 0 44%;
+}
+
+
+
+.reviews-bali-blogs .blog-tag {
+  font-size: 13px;
+  padding: 5px 14px;
+}
+
+
+
+.reviews-bali-blogs .bali-blogs-footer {
+  margin-top: 38px;
+}
+
+
+
+.reviews-bali-blogs .want-more-btn {
+  padding: 16px 46px;
+  font-size: 17px;
+}
+
+
+
+.reviews-bali-blogs .bali-blogs-grid>.bali-card--featured:first-child .bali-card-media,
+.reviews-bali-blogs .bali-blogs-grid>.bali-card--featured:last-child .bali-card-media,
+.packages-screen .bali-blogs .bali-blogs-grid>.bali-card--featured:first-child .bali-card-media,
+.packages-screen .bali-blogs .bali-blogs-grid>.bali-card--featured:last-child .bali-card-media {
+  height: 100% !important;
+}
+
+
+
+.reviews-bali-blogs .bali-blogs-grid>.bali-card--featured:first-child .bali-card-media img,
+.reviews-bali-blogs .bali-blogs-grid>.bali-card--featured:last-child .bali-card-media img,
+.packages-screen .bali-blogs .bali-blogs-grid>.bali-card--featured:first-child .bali-card-media img,
+.packages-screen .bali-blogs .bali-blogs-grid>.bali-card--featured:last-child .bali-card-media img {
+  height: 100% !important;
+}
+
+
+
+.reviews-bali-blogs .bali-blogs-grid>.bali-card--featured:last-child .bali-card-body p,
+.packages-screen .bali-blogs .bali-blogs-grid>.bali-card--featured:last-child .bali-card-body p {
+  display: -webkit-box;
+  line-clamp: 6;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+
+
+.reviews-bali-blogs .bali-blogs-grid,
+.packages-screen .bali-blogs .bali-blogs-grid {
+  width: min(1600px, calc(100% - 90px));
+  margin: 0 auto;
+  gap: 16px;
+  align-items: stretch;
+}
+
+@media (min-width: 769px) {
+.reviews-bali-blogs .bali-blogs-grid,
+  .packages-screen .bali-blogs .bali-blogs-grid {
+    grid-template-rows: repeat(2, 248px);
+  }
+
+.reviews-bali-blogs .bali-blogs-grid > .bali-card,
+  .packages-screen .bali-blogs .bali-blogs-grid > .bali-card {
+    min-height: 248px;
+    max-height: 248px;
+  }
+}
+
+
+
+.reviews-bali-blogs h2,
+.packages-screen .bali-blogs h2 {
+  text-align: center;
+  width: min(1600px, calc(100% - 90px));
+  margin: 0 auto 38px;
+  font-size: 42px;
+}
+
+@media (max-width: 375px) {
+.home-screen .testimonials {
+    padding-top: 30px !important;
+  }
+
+.home-screen .testimonials h2 {
+    font-size: 22px !important;
+    line-height: 1.2;
+  }
+
+.home-screen .testimonial-sub {
+    font-size: 12px !important;
+    line-height: 1.45;
+    padding-inline: 2px;
+  }
+
+.home-screen .testimonial-wall:not(.one-by-one-slider) {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+.home-screen .testimonial-wall:not(.one-by-one-slider) .review-card {
+    width: 100%;
+    min-width: 0;
+    padding: 12px !important;
+  }
+
+.home-screen .review-head {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 375px) {
+.home-screen .testimonials {
+    padding-top: 24px !important;
+  }
+
+.home-screen .testimonial-label {
+    margin-top: 12px !important;
+    font-size: 14px !important;
+    letter-spacing: 1px !important;
+    padding: 7px 12px !important;
+  }
+
+.home-screen .testimonials h2 {
+    font-size: 20px !important;
+    line-height: 1.18 !important;
+    margin-bottom: 6px !important;
+  }
+
+.home-screen .testimonial-sub,
+  .home-screen .testimonial-links {
+    font-size: 12px !important;
+    line-height: 1.4 !important;
+    white-space: normal !important;
+  }
+
+.home-screen .testimonial-wall:not(.one-by-one-slider) {
+    margin-top: 20px !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+.home-screen .testimonial-wall:not(.one-by-one-slider) .review-card,
+  .home-screen .testimonial-wall:not(.one-by-one-slider) .review-card.muted {
+    opacity: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden;
+  }
+}
+
+/* FINAL 375px section-fit lock (adventure + testimonials) */
+@media (max-width: 375px) {
+  .home-screen {
+    overflow-x: clip;
+  }
+
+  /* Adventure */
+  .home-screen .adventure {
+    padding-top: 24px !important;
+    margin-top: 0 !important;
+  }
+
+  .home-screen .adventure h2 {
+    font-size: 19px !important;
+    line-height: 1.15 !important;
+  }
+
+  .home-screen .adventure-sub {
+    font-size: 12px !important;
+  }
+
+  .home-screen .place-row {
+    margin-top: 12px !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  .home-screen .place-item {
+    width: 100% !important;
+    grid-template-columns: 38px 1fr !important;
+    column-gap: 8px !important;
+  }
+
+  .home-screen .place-icon {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 16px !important;
+  }
+
+  .home-screen .place-content h3 {
+    font-size: 14px !important;
+  }
+
+  .home-screen .place-content span {
+    font-size: 10px !important;
+    line-height: 1.3 !important;
+    white-space: normal !important;
+  }
+
+  /* Testimonials */
+  .home-screen .testimonials {
+    padding-top: 22px !important;
+  }
+
+  .home-screen .testimonial-label {
+    margin-top: 8px !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+  }
+
+  .home-screen .testimonials h2 {
+    font-size: 19px !important;
+    line-height: 1.2 !important;
+  }
+
+  .home-screen .testimonial-sub,
+  .home-screen .testimonial-links {
+    font-size: 11px !important;
+    line-height: 1.38 !important;
+    white-space: normal !important;
+  }
+
+  .home-screen .testimonial-wall:not(.one-by-one-slider) {
+    margin-top: 14px !important;
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  .home-screen .testimonial-wall:not(.one-by-one-slider) .review-card,
+  .home-screen .testimonial-wall:not(.one-by-one-slider) .review-card.muted {
+    opacity: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 10px !important;
+  }
+}
+
+/* ULTRA FINAL 375px testimonials fix */
+@media (max-width: 375px) {
+  .home-screen .testimonials {
+    overflow-x: clip !important;
+  }
+
+  .home-screen .review-head {
+    display: flex !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .home-screen .review-head h3,
+  .home-screen .review-head p,
+  .home-screen .review-text {
+    margin: 0 !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+    overflow-wrap: anywhere !important;
+  }
+
+  .home-screen .review-text {
+    line-height: 1.4 !important;
+  }
+}
+
+/* Home testimonials: horizontal moving row (desktop/tablet — not stacked grid) */
+@media (min-width: 321px) {
+
+  .home-screen .testimonial-wall.one-by-one-slider {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    align-items: stretch !important;
+    grid-template-columns: unset !important;
+    gap: 18px !important;
+    margin-top: 60px !important;
+    padding-bottom: 4px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .home-screen .testimonial-wall.one-by-one-slider::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .home-screen .testimonial-wall.one-by-one-slider .review-card,
+  .home-screen .testimonial-wall.one-by-one-slider .review-card.muted {
+    flex: 0 0 min(320px, 85%) !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    scroll-snap-align: start !important;
+    opacity: 1 !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* 320px: one testimonial card at a time */
+@media (max-width: 320px) {
+
+  .home-screen .testimonial-wall.one-by-one-slider {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    gap: 12px !important;
+    margin-top: 14px !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+
+  .home-screen .testimonial-wall.one-by-one-slider .review-card,
+  .home-screen .testimonial-wall.one-by-one-slider .review-card.muted {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    scroll-snap-align: start !important;
+    scroll-snap-stop: always !important;
+    opacity: 1 !important;
+    padding: 10px !important;
+    box-sizing: border-box !important;
+  }
+}
+
+/* 375px: home — popular packages, testimonials, video banner */
+@media (min-width: 321px) and (max-width: 375px) {
+
+  .home-screen .popular-packages {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-inline: 10px !important;
+    padding-top: 32px !important;
+    padding-bottom: 28px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .home-screen .popular-packages .label {
+    min-width: 0 !important;
+    width: auto !important;
+    max-width: 100% !important;
+    font-size: 12px !important;
+    padding: 8px 14px !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  .home-screen .popular-packages h2 {
+    font-size: 22px !important;
+    line-height: 1.2 !important;
+    margin-top: 14px !important;
+    padding-inline: 2px !important;
+  }
+
+  .home-screen .popular-packages .package-tabs {
+    display: grid !important;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    flex-wrap: unset !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 16px 0 12px !important;
+    padding: 6px !important;
+    gap: 5px !important;
+    overflow: visible !important;
+    min-height: 44px !important;
+    box-sizing: border-box !important;
+  }
+
+  .home-screen .popular-packages .package-tabs button {
+    width: 100% !important;
+    min-width: 0 !important;
+    flex: unset !important;
+    font-size: 11px !important;
+    padding: 8px 4px !important;
+    min-height: 36px !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+    text-align: center !important;
+  }
+
+  .home-screen .package-grid-new.one-by-one-package-slider {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    grid-template-columns: unset !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 12px 0 0 !important;
+    gap: 12px !important;
+    padding: 0 0 6px !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    scroll-padding-inline: 0 !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    box-sizing: border-box !important;
+  }
+
+  .home-screen .package-grid-new.one-by-one-package-slider::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .home-screen .package-grid-new.one-by-one-package-slider .package-card {
+    flex: 0 0 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    padding: 0.75rem !important;
+    scroll-snap-align: start !important;
+    scroll-snap-stop: always !important;
+    box-sizing: border-box !important;
+  }
+
+  .home-screen .package-grid-new.one-by-one-package-slider .package-card img {
+    height: clamp(10rem, 44vw, 12rem) !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .home-screen .package-card h3 {
+    font-size: 1rem !important;
+  }
+
+  .home-screen .package-card .location,
+  .home-screen .package-card .rating {
+    font-size: 0.8125rem !important;
+  }
+
+  .home-screen .package-card .meta {
+    font-size: 0.9375rem !important;
+    column-gap: 8px !important;
+    grid-template-columns: minmax(6.5rem, max-content) minmax(0, 1fr) !important;
+  }
+
+  .home-screen .testimonials {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-top: 28px !important;
+    padding-inline: 10px !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: clip !important;
+  }
+
+  .home-screen .testimonial-label {
+    font-size: 12px !important;
+    padding: 7px 12px !important;
+    margin-top: 0 !important;
+  }
+
+  .home-screen .testimonials h2 {
+    font-size: 22px !important;
+    line-height: 1.2 !important;
+    margin-top: 12px !important;
+  }
+
+  .home-screen .testimonial-sub,
+  .home-screen .testimonial-links {
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+    max-width: 100% !important;
+    padding-inline: 2px !important;
+  }
+
+  .home-screen .testimonial-wall.one-by-one-slider {
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    grid-template-columns: unset !important;
+    gap: 12px !important;
+    margin-top: 18px !important;
+    padding-bottom: 4px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x mandatory !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    box-sizing: border-box !important;
+  }
+
+  .home-screen .testimonial-wall.one-by-one-slider .review-card,
+  .home-screen .testimonial-wall.one-by-one-slider .review-card.muted {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    padding: 12px !important;
+    scroll-snap-align: start !important;
+    scroll-snap-stop: always !important;
+    opacity: 1 !important;
+    box-sizing: border-box !important;
+  }
+
+  .home-screen .review-head h3 {
+    font-size: 15px !important;
+  }
+
+  .home-screen .review-head p,
+  .home-screen .review-text {
+    font-size: 13px !important;
+    line-height: 1.45 !important;
+  }
+
+  .home-screen .video-banner {
+    position: relative !important;
+    aspect-ratio: auto !important;
+    min-height: min(420px, 88vh) !important;
+    height: auto !important;
+    margin-top: 28px !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+    overflow: hidden !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    box-sizing: border-box !important;
+  }
+
+  .home-screen .video-banner>video {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .home-screen .video-banner .overlay {
+    position: absolute !important;
+    inset: 0 !important;
+  }
+
+  .home-screen .banner-content {
+    padding: 18px 16px 22px !important;
+    gap: 10px !important;
+    box-sizing: border-box !important;
+  }
+
+  .home-screen .indo-map {
+    width: min(88%, calc(100vw - 48px)) !important;
+    max-height: clamp(88px, 26vw, 118px) !important;
+    margin: 0 0 8px !important;
+  }
+
+  .home-screen .spotlight-kicker {
+    font-size: clamp(10px, 2.8vw, 12px) !important;
+    margin: 0 0 6px !important;
+    letter-spacing: 0.35px !important;
+  }
+
+  .home-screen .video-banner h2 {
+    font-size: clamp(30px, 9vw, 38px) !important;
+    line-height: 1.06 !important;
+  }
+
+  .home-screen .spotlight-btn {
+    margin-top: 12px !important;
+    font-size: clamp(15px, 4.2vw, 17px) !important;
+    font-weight: 600 !important;
+    padding: 13px 24px !important;
+    min-height: 48px !important;
+    line-height: 1.2 !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  .home-screen .spotlight-btn span {
+    font-size: clamp(14px, 3.8vw, 16px) !important;
+  }
+}
+
+/* Content clearance for fixed pill navbar (see navbar.css for full rules) */
+body:has(#tripon-navbar-zone):not([data-tripon-nav="home"]) .page,
+body.has-tripon-navbar:not(.tripon-home-page) .page,
+body.packages-page .page,
+body[data-tripon-nav="packages"] .page,
+body:has(#tripon-navbar-zone) .page.packages-active,
+body:has(#tripon-navbar-zone) .page.contact-active,
+body:has(#tripon-navbar-zone) .page.reviews-active {
+  padding-top: 128px;
+  box-sizing: border-box;
+}
+
+
+
+body:has(#tripon-navbar-zone)[data-tripon-nav="home"] .page:not(.packages-active):not(.contact-active):not(.reviews-active),
+body.tripon-home-page .page:not(.packages-active):not(.contact-active):not(.reviews-active) {
+  padding-top: 0 !important;
+}
+
+@media (max-width: 768px) {
+body:has(#tripon-navbar-zone):not([data-tripon-nav="home"]) .page,
+  body.has-tripon-navbar:not(.tripon-home-page) .page,
+  body.packages-page .page,
+  body[data-tripon-nav="packages"] .page,
+  body:has(#tripon-navbar-zone) .page.packages-active,
+  body:has(#tripon-navbar-zone) .page.contact-active,
+  body:has(#tripon-navbar-zone) .page.reviews-active,
+  body:has(#tripon-navbar-zone).package-details-page,
+  body:has(#tripon-navbar-zone).cancellation-policy-page,
+  body.has-tripon-navbar:not(.tripon-home-page).package-details-page,
+  body.has-tripon-navbar:not(.tripon-home-page).cancellation-policy-page {
+    padding-top: 112px;
+  }
+}
+
+/* Responsive media queries moved from main.css */
+
+@media (min-width: 431px) and (max-width: 768px) {
+.people-reviews-screen .reviews-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(20px, 6vw, 48px);
+    row-gap: 20px;
+    align-items: center;
+    justify-items: stretch;
+    margin-bottom: 26px !important;
+  }
+
+.people-reviews-screen .reviews-metrics .reviews-metric:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+    width: fit-content;
+    max-width: 100%;
+    text-align: left;
+  }
+
+.people-reviews-screen .reviews-metrics .reviews-metric:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+    width: fit-content;
+    max-width: 100%;
+    text-align: left;
+  }
+
+.people-reviews-screen .reviews-metrics .reviews-metric:nth-child(3) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: center;
+    width: fit-content;
+    max-width: 100%;
+    padding: 0;
+  }
+}
+
+@media (max-width: 430px) {
+.people-reviews-screen .reviews-metrics {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-auto-flow: row !important;
+    row-gap: 12px !important;
+    column-gap: 0 !important;
+    margin: 0 0 22px !important;
+    width: 100% !important;
+  }
+
+.people-reviews-screen .reviews-shell h2 {
+    margin: 0 0 22px !important;
+    padding: 0 12px !important;
+    text-align: center !important;
+  }
+
+.people-reviews-screen .reviews-metric {
+    padding: 10px 0 !important;
+    gap: 14px !important;
+    padding-right: 0 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+  }
+
+.people-reviews-screen .reviews-metric:first-child {
+    padding-top: 0 !important;
+  }
+
+.people-reviews-screen .reviews-metrics h3 {
+    font-size: 23px !important;
+  }
+
+.people-reviews-screen .reviews-metrics p {
+    font-size: 12px !important;
+  }
+
+.people-reviews-screen .reviews-metric-icon {
+    width: 56px !important;
+    height: 56px !important;
+    flex-shrink: 0 !important;
+  }
+
+.people-reviews-screen .reviews-metric-star-3d {
+    width: 50px !important;
+    height: 50px !important;
+  }
+
+.people-reviews-screen .reviews-metric-thumb-3d {
+    width: 50px !important;
+    height: 50px !important;
+    font-size: 36px !important;
+  }
+
+.people-reviews-screen .reviews-metric-mountain-3d {
+    width: 50px !important;
+    height: 50px !important;
+  }
+}
+
+@media (max-width: 430px) {
+.bali-blogs-grid,
+  .home-screen .bali-blogs-grid,
+  .packages-screen .bali-blogs .bali-blogs-grid,
+  .reviews-bali-blogs .bali-blogs-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto !important;
+    gap: 10px !important;
+    align-items: start !important;
+  }
+
+.bali-blogs-grid>.bali-card,
+  .home-screen .bali-blogs-grid>.bali-card,
+  .packages-screen .bali-blogs .bali-blogs-grid>.bali-card,
+  .reviews-bali-blogs .bali-blogs-grid>.bali-card {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    grid-column: span 1 !important;
+  }
+
+.bali-blogs-grid>.bali-card--featured,
+  .home-screen .bali-blogs-grid>.bali-card--featured,
+  .packages-screen .bali-blogs .bali-blogs-grid>.bali-card--featured,
+  .reviews-bali-blogs .bali-blogs-grid>.bali-card--featured {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: auto !important;
+    max-height: none !important;
+    height: auto !important;
+    grid-column: span 1 !important;
+  }
+
+.bali-blogs-grid>.bali-card--featured .bali-card-media,
+  .home-screen .bali-blogs-grid>.bali-card--featured .bali-card-media,
+  .packages-screen .bali-blogs .bali-blogs-grid>.bali-card--featured .bali-card-media,
+  .reviews-bali-blogs .bali-blogs-grid>.bali-card--featured .bali-card-media {
+    min-height: 170px !important;
+    height: 170px !important;
+  }
+}
+
+@media (max-width: 768px) {
+.topbar *,
+  .hero-content *,
+  .search-box *,
+  .reasons-layout *,
+  .package-grid-new *,
+  .testimonial-wall *,
+  .bali-blogs-grid *,
+  .family-tour-card *,
+  .why-choose-grid *,
+  .faq-list *,
+  .tripon-footer-top * {
+    min-width: 0;
+  }
+
+.testimonials h2 {
+    font-size: 32px;
+  }
+
+.testimonial-label {
+    font-size: 17px;
+    padding: 9px 16px;
+  }
+
+.testimonial-sub {
+    font-size: 14px;
+    max-width: min(42rem, 94%);
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.45;
+  }
+
+.testimonial-links {
+    font-size: 16px;
+  }
+
+.testimonial-wall {
+    margin-top: 28px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+.review-head h3 {
+    font-size: 16px;
+  }
+
+.review-head p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+.testimonial-wall {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 425px) {
+.testimonial-wall {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+.testimonials h2 {
+    font-size: 26px;
+  }
+
+.testimonial-label {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+.testimonial-sub {
+    font-size: 14px;
+    line-height: 1.42;
+    max-width: min(40rem, 94%);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+.testimonial-links {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 320px) {
+.testimonials h2 {
+    font-size: 22px;
+  }
+
+.testimonial-sub {
+    font-size: 13px;
+    line-height: 1.4;
+    max-width: min(36rem, 94%);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+.testimonial-links {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 425px) {
+.testimonial-wall {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+.review-head h3 {
+    font-size: 11px;
+  }
+
+.review-head p {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 425px) {
+.testimonial-wall {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 30px 34px;
+  }
+}
+
+@media (max-width: 327px) {
+.testimonial-wall {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 430px) {
+.people-reviews-screen .reviews-row-top .reviews-card,
+  .people-reviews-screen .reviews-row-bottom .reviews-card {
+    flex: 0 0 min(100%, calc(100% - 12px)) !important;
+    min-width: min(100%, calc(100% - 12px)) !important;
+    max-width: min(100%, calc(100% - 12px)) !important;
+    width: auto !important;
+    scroll-snap-align: start !important;
+    box-sizing: border-box !important;
+  }
+
+.people-reviews-screen .reviews-row-media .reviews-media-card {
+    flex: 0 0 min(100%, calc(100% - 12px)) !important;
+    min-width: min(100%, calc(100% - 12px)) !important;
+    max-width: min(100%, calc(100% - 12px)) !important;
+    width: auto !important;
+    scroll-snap-align: start !important;
+    box-sizing: border-box !important;
+  }
+
+.people-reviews-screen .reviews-row-media .reviews-media-card video,
+  .people-reviews-screen .reviews-row-media .reviews-media-card img {
+    height: clamp(180px, 52vw, 260px);
+    width: 100%;
+  }
+
+.people-reviews-screen .reviews-row-media .reviews-media-card p {
+    margin: 10px 0 0 !important;
+    font-size: clamp(13px, 3.4vw, 16px);
+    text-align: center;
+  }
+}
+
+@media (min-width: 431px) and (max-width: 768px) {
+.people-reviews-screen .reviews-row-top .reviews-card,
+  .people-reviews-screen .reviews-row-bottom .reviews-card {
+    flex: 0 0 calc((100% - 12px) / 2) !important;
+    min-width: calc((100% - 12px) / 2) !important;
+    max-width: calc((100% - 12px) / 2) !important;
+    width: auto !important;
+    scroll-snap-align: start !important;
+    box-sizing: border-box !important;
+  }
+
+.people-reviews-screen .reviews-row-media .reviews-media-card {
+    flex: 0 0 calc((100% - 12px) / 2) !important;
+    min-width: calc((100% - 12px) / 2) !important;
+    max-width: calc((100% - 12px) / 2) !important;
+    width: auto !important;
+    scroll-snap-align: start !important;
+    box-sizing: border-box !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+
+.people-reviews-screen .reviews-row-media .reviews-media-card video,
+  .people-reviews-screen .reviews-row-media .reviews-media-card img {
+    height: clamp(160px, 42vw, 280px);
+    width: 100%;
+  }
+
+.people-reviews-screen .reviews-row-media .reviews-media-card p {
+    margin: 10px 0 0 !important;
+    font-size: clamp(13px, 3.2vw, 16px);
+    text-align: center;
+  }
+}
+
+@media (min-width: 321px) and (max-width: 375px) {
+.home-screen .testimonial-wall.one-by-one-slider {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 18px !important;
+    gap: 12px !important;
+  }
+
+.home-screen .testimonial-wall.one-by-one-slider .review-card,
+  .home-screen .testimonial-wall.one-by-one-slider .review-card.muted {
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+
+.home-screen .testimonials,
+  .home-screen .popular-packages {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
