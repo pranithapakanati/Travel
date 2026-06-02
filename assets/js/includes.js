@@ -376,6 +376,7 @@
   }
 
   function triponEnsureFontAwesome() {
+    triponEnsureFontAwesomeFontDisplaySwap();
     if (
       document.getElementById("tripon-font-awesome-css") ||
       document.querySelector('link[href*="font-awesome"], link[href*="fontawesome"]')
@@ -389,6 +390,39 @@
     link.crossOrigin = "anonymous";
     link.referrerPolicy = "no-referrer";
     document.head.appendChild(link);
+  }
+
+  function triponEnsureFontAwesomeFontDisplaySwap() {
+    const id = "tripon-fontawesome-font-display-swap";
+    if (document.getElementById(id)) {
+      return;
+    }
+    const style = document.createElement("style");
+    style.id = id;
+    style.textContent = `
+@font-face{
+  font-family:"Font Awesome 6 Brands";
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/webfonts/fa-brands-400.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Font Awesome 6 Free";
+  font-style:normal;
+  font-weight:400;
+  font-display:swap;
+  src:url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/webfonts/fa-regular-400.woff2") format("woff2");
+}
+@font-face{
+  font-family:"Font Awesome 6 Free";
+  font-style:normal;
+  font-weight:900;
+  font-display:swap;
+  src:url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/webfonts/fa-solid-900.woff2") format("woff2");
+}
+`;
+    document.head.appendChild(style);
   }
 
   function triponEnsureRoutePageStyles() {
@@ -478,6 +512,7 @@
     triponEnsureNavbarStyles();
     triponEnsureFooterStylesEarly();
     triponEnsureSiteAmbientStyles();
+    triponEnsureFontAwesomeFontDisplaySwap();
     triponEnsurePackageDetailsStylesEarly();
     triponEnsureRoutePageStyles();
   }
