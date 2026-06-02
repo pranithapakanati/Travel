@@ -3135,20 +3135,19 @@ const triponInitMain = () => {
   if (heroSection) {
     triponInitHeroText2D(heroSection);
 
-    const heroImage = heroSection.querySelector("img");
-    if (heroImage) {
+    const heroMedia = heroSection.querySelector(".hero__media");
+    const heroSlideEls = heroMedia ? Array.from(heroMedia.querySelectorAll(".hero__slide")) : [];
+    if (heroMedia && heroSlideEls.length >= 2) {
       const heroSlides = [
-        { src: "/assets/images/home1.webp", alt: "Bali beach" },
-        { src: "/assets/images/home2.webp", alt: "Bali cliffside coast" },
-        { src: "/assets/images/home3.webp", alt: "Tropical Bali island view" }
+        { src: "assets/images/home1.webp", alt: "Bali beach" },
+        { src: "assets/images/home2.webp", alt: "Bali cliffside coast" },
+        { src: "assets/images/home3.webp", alt: "Tropical Bali island view" }
       ];
-      const FADE_DURATION_MS = 1800;
-      const SLIDE_INTERVAL_MS = 6500;
+      const FADE_DURATION_MS = 700;
+      const SLIDE_INTERVAL_MS = 4200;
       let activeSlideIndex = 0;
+      let activeLayerIndex = 0;
       let isSlideTransitioning = false;
-
-      heroImage.style.transition = `opacity ${FADE_DURATION_MS}ms ease-in-out`;
-      heroImage.style.opacity = "1";
 
       const preloadSlide = (slide) =>
         new Promise((resolve) => {
@@ -3158,37 +3157,42 @@ const triponInitMain = () => {
           image.src = slide.src;
         });
 
-      const paintHeroSlide = async (index) => {
+      const paintHeroSlide = (index) => {
         const slide = heroSlides[index];
         if (!slide || isSlideTransitioning) {
           return;
         }
 
+        const currentEl = heroSlideEls[activeLayerIndex];
+        const nextLayerIndex = activeLayerIndex === 0 ? 1 : 0;
+        const nextEl = heroSlideEls[nextLayerIndex];
+        if (!currentEl || !nextEl) {
+          return;
+        }
+
         isSlideTransitioning = true;
-        const handleFadeOut = (event) => {
-          if (event.propertyName !== "opacity") {
+        nextEl.src = slide.src;
+        nextEl.alt = slide.alt;
+        nextEl.removeAttribute("tabindex");
+        currentEl.setAttribute("tabindex", "-1");
+
+        const finishTransition = (event) => {
+          if (event.propertyName !== "opacity" || event.target !== nextEl) {
             return;
           }
-          heroImage.removeEventListener("transitionend", handleFadeOut);
-          heroImage.src = slide.src;
-          heroImage.alt = slide.alt;
-          window.requestAnimationFrame(() => {
-            heroImage.addEventListener(
-              "transitionend",
-              (fadeInEvent) => {
-                if (fadeInEvent.propertyName !== "opacity") {
-                  return;
-                }
-                isSlideTransitioning = false;
-              },
-              { once: true }
-            );
-            heroImage.style.opacity = "1";
-          });
+          nextEl.removeEventListener("transitionend", finishTransition);
+          currentEl.classList.remove("is-active");
+          nextEl.classList.add("is-active");
+          activeLayerIndex = nextLayerIndex;
+          activeSlideIndex = index;
+          isSlideTransitioning = false;
         };
 
-        heroImage.addEventListener("transitionend", handleFadeOut);
-        heroImage.style.opacity = "0";
+        nextEl.addEventListener("transitionend", finishTransition);
+        window.requestAnimationFrame(() => {
+          nextEl.classList.add("is-active");
+          currentEl.classList.remove("is-active");
+        });
       };
 
       Promise.all(heroSlides.map(preloadSlide)).then(() => {
@@ -3196,8 +3200,8 @@ const triponInitMain = () => {
           if (isSlideTransitioning) {
             return;
           }
-          activeSlideIndex = (activeSlideIndex + 1) % heroSlides.length;
-          void paintHeroSlide(activeSlideIndex);
+          const nextIndex = (activeSlideIndex + 1) % heroSlides.length;
+          paintHeroSlide(nextIndex);
         }, SLIDE_INTERVAL_MS);
       });
     }

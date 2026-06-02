@@ -47,18 +47,41 @@
   padding: 8px 28px 40px;
 }
 
-.hero>img {
+.hero__media {
+  position: relative;
+  z-index: 0;
   width: 100%;
   height: 600px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #071b17;
+}
+
+.hero__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   border-radius: 18px;
+  opacity: 0;
+  transition: opacity 700ms ease-in-out;
+  will-change: opacity;
+  pointer-events: none;
+}
+
+.hero__slide.is-active {
+  opacity: 1;
+  z-index: 1;
 }
 
 .hero .overlay {
   position: absolute;
   inset: 8px 28px 40px;
+  z-index: 2;
   border-radius: 18px;
   background: linear-gradient(90deg, rgba(7, 27, 23, 0.55), rgba(5, 13, 8, 0.12));
+  pointer-events: none;
 }
 
 .hero-content {
@@ -66,7 +89,12 @@
   top: 125px;
   left: 86px;
   color: #ffffff;
-  z-index: 2;
+  z-index: 3;
+}
+
+.hero .search-box,
+.hero .mobile-hero-booking-trigger {
+  z-index: 4;
 }
 
 .hero h1 {

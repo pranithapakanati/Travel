@@ -78,8 +78,12 @@
     <main class="home-screen" id="homeScreen">
 
       <section class="hero">
-        <img src="assets/images/home1.webp" alt="Bali beach" width="1920" height="1080" fetchpriority="high"
-          decoding="async" />
+        <div class="hero__media">
+          <img class="hero__slide is-active" src="assets/images/home1.webp" alt="Bali beach" width="1920" height="1080"
+            fetchpriority="high" decoding="async" />
+          <img class="hero__slide" src="assets/images/home2.webp" alt="" width="1920" height="1080" decoding="async"
+            tabindex="-1" />
+        </div>
         <div class="overlay"></div>
         <div class="hero-content">
           <p class="seek">Seek Out</p>
@@ -168,7 +172,7 @@
                   <div class="place-see-hero">
                     <img class="place-see-hero__img" src="assets/images/location2.webp"
                       srcset="assets/images/location2-card.webp 406w, assets/images/location2.webp 900w"
-                      sizes="(max-width: 620px) 82vw, 203px" alt="" loading="lazy" decoding="async" />
+                      sizes="203px" alt="" loading="lazy" decoding="async" />
                     <div class="place-see-badge" aria-hidden="true">
                       <span class="place-see-badge__flower"></span>
                       <span class="place-see-badge__ring">
@@ -197,10 +201,10 @@
                         <div class="place-see-avatars" aria-hidden="true">
                           <img src="assets/images/insta_pic1.webp" alt="" />
                           <img src="assets/images/insta_pic2.webp"
-                            srcset="assets/images/insta_pic2-icon.webp 40w, assets/images/insta_pic2-strip.webp 280w"
+                            srcset="assets/images/insta_pic2-icon.webp 40w, assets/images/insta_pic2-avatar.webp 120w, assets/images/insta_pic2-strip.webp 280w"
                             sizes="24px" width="24" height="24" alt="" loading="lazy" decoding="async" />
                           <img src="assets/images/insta_pic3.webp"
-                            srcset="assets/images/insta_pic3-icon.webp 40w, assets/images/insta_pic3-strip.webp 280w"
+                            srcset="assets/images/insta_pic3-icon.webp 40w, assets/images/insta_pic3-avatar.webp 120w, assets/images/insta_pic3-strip.webp 280w"
                             sizes="35px" width="35" height="28" alt="" loading="lazy" decoding="async" />
                         </div>
                         <p class="place-see-trust__text"><strong>180K+</strong> Travelers<br />Exploring Bali</p>
@@ -215,7 +219,7 @@
                 <div class="place-item__panel">
                   <img class="place-item__img" src="assets/images/location1.webp"
                     srcset="assets/images/location1-card.webp 406w, assets/images/location1.webp 900w"
-                    sizes="(max-width: 620px) 82vw, 203px" alt="" loading="lazy" decoding="async" />
+                    sizes="203px" alt="" loading="lazy" decoding="async" />
                   <div class="place-item__overlay" aria-hidden="true"></div>
                   <div class="place-item__glow" aria-hidden="true"></div>
                   <div class="place-content">
@@ -235,7 +239,7 @@
                 <div class="place-item__panel">
                   <img class="place-item__img" src="assets/images/location2.webp"
                     srcset="assets/images/location2-card.webp 406w, assets/images/location2.webp 900w"
-                    sizes="(max-width: 620px) 82vw, 203px" alt="" loading="lazy" decoding="async" />
+                    sizes="203px" alt="" loading="lazy" decoding="async" />
                   <div class="place-item__overlay" aria-hidden="true"></div>
                   <div class="place-item__glow" aria-hidden="true"></div>
                   <div class="place-content">
@@ -254,7 +258,7 @@
                 <div class="place-item__panel">
                   <img class="place-item__img" src="assets/images/location3.webp"
                     srcset="assets/images/location3-card.webp 406w, assets/images/location3.webp 900w"
-                    sizes="(max-width: 620px) 82vw, 203px" alt="" loading="lazy" decoding="async" />
+                    sizes="203px" alt="" loading="lazy" decoding="async" />
                   <div class="place-item__overlay" aria-hidden="true"></div>
                   <div class="place-item__glow" aria-hidden="true"></div>
                   <div class="place-content">
@@ -307,7 +311,7 @@
                 <div class="place-item__panel">
                   <img class="place-item__img" src="assets/images/location6.webp"
                     srcset="assets/images/location6-card.webp 406w, assets/images/location6.webp 900w"
-                    sizes="(max-width: 620px) 82vw, 203px" alt="" loading="lazy" decoding="async" />
+                    sizes="203px" alt="" loading="lazy" decoding="async" />
                   <div class="place-item__overlay" aria-hidden="true"></div>
                   <div class="place-item__glow" aria-hidden="true"></div>
                   <div class="place-content">
@@ -380,7 +384,7 @@
           <div class="reasons__media">
             <div class="reasons__media-glow" aria-hidden="true"></div>
             <div class="reasons__media-inner">
-              <img src="assets/images/reason.webp" alt="Bali culture dance" />
+              <img src="assets/images/reason-lite.webp" alt="Bali culture dance" />
             </div>
           </div>
           <div class="reason-text">
@@ -796,8 +800,8 @@
             <article class="bento-cell bento-cell--camper" data-ft-bento data-ft-enter="top">
               <span class="bento-cell__glow" aria-hidden="true"></span>
               <div class="bento-cell__media">
-                <img src="assets/images/family-tour1.webp"
-                  srcset="assets/images/family-tour1-ft345.webp 345w, assets/images/family-tour1.webp 1024w"
+                <img src="assets/images/family-tour1-ft690.webp"
+                  srcset="assets/images/family-tour1-ft345.webp 345w, assets/images/family-tour1-ft690.webp 690w"
                   sizes="(max-width: 900px) 88vw, 345px" width="345" height="228"
                   alt="Travelers beside a camper under the stars" fetchpriority="high" decoding="async" />
               </div>
