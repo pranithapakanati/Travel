@@ -67,6 +67,64 @@ body.package-details-page #mobilePrefModal .mobile-pref-step[data-step="6"] {
   display: none !important;
 }
 
+/* Package details: base modal presentation (hidden until .active) */
+body.package-details-page .mobile-pref-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1800;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(6, 17, 28, 0.52);
+  backdrop-filter: blur(4px);
+}
+
+body.package-details-page .mobile-pref-modal-overlay.active {
+  display: flex;
+}
+
+body.package-details-page .mobile-pref-modal {
+  width: min(640px, calc(100vw - 28px));
+  max-height: min(90vh, 860px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-radius: 22px;
+  padding: 24px 22px 20px;
+  background: linear-gradient(160deg, #ffffff 0%, #f3fbf8 100%);
+  border: 1px solid rgba(16, 41, 55, 0.13);
+  box-shadow: 0 24px 48px rgba(2, 12, 27, 0.28);
+  position: relative;
+}
+
+body.package-details-page .mobile-pref-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(16, 41, 55, 0.2);
+  border-radius: 999px;
+  background: #ffffff;
+  color: #102937;
+  font-size: 0;
+  cursor: pointer;
+}
+
+body.package-details-page .mobile-pref-close::before {
+  content: "×";
+  font-size: 24px;
+  line-height: 1;
+}
+
+body.package-details-page .mobile-pref-step {
+  display: none;
+}
+
+body.package-details-page .mobile-pref-step.active {
+  display: block;
+}
+
 /* Layout: accordion sits below highlights (no flex gap) */
 @media (min-width: 769px) {
   body.package-details-page .package-body-main.left-main {

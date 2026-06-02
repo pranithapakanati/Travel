@@ -460,6 +460,14 @@
       !!document.querySelector(".people-reviews-screen") ||
       /\/company\/people-reviews\.html?$/i.test(path) ||
       isHomeRoute;
+    const isPackageDetailsPage =
+      document.body?.classList.contains("package-details-page") ||
+      /\/packages\/[^/]+\/[^/]+\/[^/]+\.html?$/i.test(path);
+    const hasSharedHomeSections =
+      !isPackageDetailsPage &&
+      !!document.querySelector(
+        ".adventure--3d, .bali-blogs, .package-grid-new, .trip-days, .reasons, .deals, .subscribe-showcase"
+      );
     const hasHomePage =
       (document.body?.dataset?.triponNav || "").toLowerCase() === "home" ||
       !!document.querySelector(".home-screen") ||
@@ -480,7 +488,7 @@
     if (hasPeopleReviewsPage) {
       add("people-reviews-page.css", "tripon-people-reviews-page-css");
     }
-    if (hasHomePage) {
+    if (hasHomePage || hasSharedHomeSections) {
       add("home-sections.css", "tripon-home-sections-css");
       add("home-responsive.css", "tripon-home-responsive-css");
     }

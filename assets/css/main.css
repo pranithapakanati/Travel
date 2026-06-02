@@ -9196,6 +9196,64 @@ body.has-tripon-navbar:not(.tripon-home-page).cancellation-policy-page {
 
 /* WCAG AA contrast — homepage (inherits tokens from :root) */
 
+/* Shared booking-preferences modal base (all pages) */
+.mobile-pref-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1800;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(6, 17, 28, 0.5);
+  backdrop-filter: blur(4px);
+}
+
+.mobile-pref-modal-overlay.active {
+  display: flex;
+}
+
+.mobile-pref-modal {
+  width: min(640px, calc(100vw - 24px));
+  max-height: min(90vh, 860px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-radius: 20px;
+  padding: 22px 20px 18px;
+  background: linear-gradient(160deg, #ffffff 0%, #f3fbf8 100%);
+  border: 1px solid rgba(16, 41, 55, 0.13);
+  box-shadow: 0 24px 46px rgba(2, 12, 27, 0.26);
+  position: relative;
+}
+
+.mobile-pref-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(16, 41, 55, 0.2);
+  border-radius: 999px;
+  background: #ffffff;
+  color: #102937;
+  font-size: 0;
+  cursor: pointer;
+}
+
+.mobile-pref-close::before {
+  content: "×";
+  font-size: 22px;
+  line-height: 1;
+}
+
+.mobile-pref-step {
+  display: none;
+}
+
+.mobile-pref-step.active {
+  display: block;
+}
+
 
 
 
