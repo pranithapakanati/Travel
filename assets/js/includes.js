@@ -458,6 +458,7 @@
       document.body?.classList.contains("reviews-page") ||
       !!document.querySelector(".people-reviews-screen") ||
       /\/company\/people-reviews\.html?$/i.test(path);
+    const hasTestimonialsSection = !!document.querySelector(".testimonials .testimonial-wall");
     const isPackageDetailsPage =
       document.body?.classList.contains("package-details-page") ||
       /\/packages\/[^/]+\/[^/]+\/[^/]+\.html?$/i.test(path);
@@ -483,7 +484,7 @@
     if (hasContactPage) {
       add("contact-page.css", "tripon-contact-page-css");
     }
-    if (hasPeopleReviewsPage) {
+    if (hasPeopleReviewsPage || (hasHomePage && hasTestimonialsSection)) {
       add("people-reviews-page.css", "tripon-people-reviews-page-css");
     }
     if (hasHomePage || hasSharedHomeSections) {
