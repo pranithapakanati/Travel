@@ -270,6 +270,20 @@
   }
 }
 
+@media (max-width: 768px) {
+.bento-cell__glow,
+  .family-tour-bento .bento-cell::before,
+  .family-tour-bento .bento-cell::after,
+  .family-tour-section--premium.is-revealed .bento-cell--dive .bento-cell__media {
+    animation: none;
+  }
+
+.family-tour-bento .bento-cell,
+  .family-tour-bento .bento-cell__media img {
+    transition: none;
+  }
+}
+
 @media (min-width: 1100px) {
 .reasons {
     width: min(var(--why-choose-container), 100%);

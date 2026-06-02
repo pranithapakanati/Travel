@@ -4,7 +4,9 @@ const triponScrambleHeroHeadline = (heading) => {
     return;
   }
 
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const reduceMotion =
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+    window.matchMedia("(max-width: 768px)").matches;
   const originalHtml = heading.innerHTML;
   const parseSegments = (root) => {
     const segments = [];
@@ -250,7 +252,9 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
       return controller;
     }
 
-    const reduceMotion = g.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduceMotion =
+      g.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      g.matchMedia("(max-width: 768px)").matches;
 
     const updatePointer = (clientX, clientY) => {
       const rect = ambient.getBoundingClientRect();
@@ -3143,8 +3147,10 @@ const triponInitMain = () => {
         { src: "assets/images/home2.webp", alt: "Bali cliffside coast" },
         { src: "assets/images/home3.webp", alt: "Tropical Bali island view" }
       ];
+      const isMobileViewport = window.matchMedia("(max-width: 768px)").matches;
       const FADE_DURATION_MS = 700;
-      const SLIDE_INTERVAL_MS = 4200;
+      const SLIDE_INTERVAL_MS = isMobileViewport ? 9000 : 5200;
+      const START_DELAY_MS = isMobileViewport ? 14000 : 7000;
       let activeSlideIndex = 0;
       let activeLayerIndex = 0;
       let isSlideTransitioning = false;
@@ -3196,13 +3202,15 @@ const triponInitMain = () => {
       };
 
       Promise.all(heroSlides.map(preloadSlide)).then(() => {
-        window.setInterval(() => {
-          if (isSlideTransitioning) {
-            return;
-          }
-          const nextIndex = (activeSlideIndex + 1) % heroSlides.length;
-          paintHeroSlide(nextIndex);
-        }, SLIDE_INTERVAL_MS);
+        window.setTimeout(() => {
+          window.setInterval(() => {
+            if (isSlideTransitioning) {
+              return;
+            }
+            const nextIndex = (activeSlideIndex + 1) % heroSlides.length;
+            paintHeroSlide(nextIndex);
+          }, SLIDE_INTERVAL_MS);
+        }, START_DELAY_MS);
       });
     }
 

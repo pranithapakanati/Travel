@@ -90,6 +90,7 @@
   left: 86px;
   color: #ffffff;
   z-index: 3;
+  min-height: 232px;
 }
 
 .hero .search-box,
@@ -116,6 +117,10 @@
   font-weight: 400;
   letter-spacing: 0.2px;
   white-space: nowrap;
+}
+
+.hero-actions {
+  min-height: 44px;
 }
 
 .hero-validation-tooltip {
@@ -927,6 +932,7 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
     0 0 80px rgba(16, 185, 129, 0.08);
   overflow: hidden;
   isolation: isolate;
+  contain: layout paint;
 }
 
 .family-tour-ambient {

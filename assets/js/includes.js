@@ -453,13 +453,11 @@
     const hasContactPage =
       document.body?.classList.contains("contact-page") ||
       !!document.querySelector(".contact-screen") ||
-      /\/company\/contact-us\.html?$/i.test(path) ||
-      isHomeRoute;
+      /\/company\/contact-us\.html?$/i.test(path);
     const hasPeopleReviewsPage =
       document.body?.classList.contains("reviews-page") ||
       !!document.querySelector(".people-reviews-screen") ||
-      /\/company\/people-reviews\.html?$/i.test(path) ||
-      isHomeRoute;
+      /\/company\/people-reviews\.html?$/i.test(path);
     const isPackageDetailsPage =
       document.body?.classList.contains("package-details-page") ||
       /\/packages\/[^/]+\/[^/]+\/[^/]+\.html?$/i.test(path);
