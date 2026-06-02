@@ -2567,15 +2567,15 @@ a.place-item {
 }
 
 .day-4 {
-  background-image: linear-gradient(rgba(7, 22, 16, 0.25), rgba(7, 22, 16, 0.25)), url("https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=900&q=80");
+  background-image: linear-gradient(rgba(7, 22, 16, 0.25), rgba(7, 22, 16, 0.25)), url("../images/4-day.webp");
 }
 
 .day-5 {
-  background-image: linear-gradient(rgba(7, 22, 16, 0.25), rgba(7, 22, 16, 0.25)), url("https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=900&q=80");
+  background-image: linear-gradient(rgba(7, 22, 16, 0.25), rgba(7, 22, 16, 0.25)), url("../images/5-day.webp");
 }
 
 .day-custom {
-  background-image: linear-gradient(rgba(7, 22, 16, 0.25), rgba(7, 22, 16, 0.25)), url("https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=900&q=80");
+  background-image: linear-gradient(rgba(7, 22, 16, 0.25), rgba(7, 22, 16, 0.25)), url("../images/custom.webp");
 }
 
 .arrow-controls.side {
