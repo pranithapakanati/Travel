@@ -33,7 +33,7 @@ body.tripon-page-leaving {
 }
 
 /* No full-width body padding — content offset via .page / wrappers below */
-body.has-tripon-navbar {
+body.has-tripon-navbar:not(.package-details-page):not(.cancellation-policy-page) {
   padding-top: 0 !important;
 }
 
@@ -50,9 +50,9 @@ body.has-tripon-navbar:not(.tripon-home-page) .page {
 
 body:has(#tripon-navbar-zone).package-details-page,
 body:has(#tripon-navbar-zone).cancellation-policy-page,
-body.has-tripon-navbar:not(.tripon-home-page).package-details-page,
-body.has-tripon-navbar:not(.tripon-home-page).cancellation-policy-page {
-  padding-top: var(--th-nav-offset);
+body.has-tripon-navbar.package-details-page,
+body.has-tripon-navbar.cancellation-policy-page {
+  padding-top: calc(var(--th-nav-offset) + clamp(20px, 3vw, 32px)) !important;
   box-sizing: border-box;
 }
 
@@ -107,9 +107,9 @@ body.has-tripon-navbar:not(.tripon-home-page) > .container {
   body.has-tripon-navbar:not(.tripon-home-page) .page,
   body:has(#tripon-navbar-zone).package-details-page,
   body:has(#tripon-navbar-zone).cancellation-policy-page,
-  body.has-tripon-navbar:not(.tripon-home-page).package-details-page,
-  body.has-tripon-navbar:not(.tripon-home-page).cancellation-policy-page {
-    padding-top: var(--th-nav-offset-mobile);
+  body.has-tripon-navbar.package-details-page,
+  body.has-tripon-navbar.cancellation-policy-page {
+    padding-top: calc(var(--th-nav-offset-mobile) + clamp(16px, 4vw, 28px)) !important;
   }
 }
 

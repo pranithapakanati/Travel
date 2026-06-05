@@ -689,10 +689,20 @@ body {
   body.tripon-home-page .home-screen .hero .search-box .luxury-date-trigger,
   body.tripon-home-page .home-screen .hero .search-box .luxury-guests-trigger {
     font-size: 11px !important;
+    font-weight: 700 !important;
+    color: #2d3330 !important;
     min-width: 0 !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
+  }
+
+  body[data-tripon-nav="home"] .home-screen .hero .search-box .luxury-date-trigger.is-placeholder,
+  body[data-tripon-nav="home"] .home-screen .hero .search-box .luxury-guests-trigger.is-placeholder,
+  body.tripon-home-page .home-screen .hero .search-box .luxury-date-trigger.is-placeholder,
+  body.tripon-home-page .home-screen .hero .search-box .luxury-guests-trigger.is-placeholder {
+    color: #2d3330 !important;
+    font-weight: 700 !important;
   }
 
   body[data-tripon-nav="home"] .home-screen .hero .search-box .field-icon,
@@ -1631,6 +1641,12 @@ nav a {
   width: 90%;
   max-width: 90%;
   margin: 70px auto 0;
+}
+
+body.package-details-page .title-section {
+  width: 90%;
+  max-width: 90%;
+  margin: 0 auto !important;
 }
 
 h1 {
@@ -3055,8 +3071,8 @@ body.cancellation-policy-page {
 }
 
 .instagram-showcase {
-  margin-top: 120px;
-  padding: 0 0 18px;
+  margin-top: clamp(40px, 5vw, 64px);
+  padding: 0 0 12px;
   display: block;
   width: calc(100% + 40px);
   margin-left: -20px;
@@ -3126,10 +3142,10 @@ body.cancellation-policy-page {
 }
 
 .instagram-strip img {
-  flex: 0 0 160px;
-  width: 160px;
-  min-width: 160px;
-  height: 146px;
+  flex: 0 0 200px;
+  width: 200px;
+  min-width: 200px;
+  height: 180px;
   object-fit: cover;
   display: block;
   transition: transform 0.35s ease;
@@ -4469,8 +4485,34 @@ select:focus {
   transition-delay: calc(var(--fab-i, 0) * 58ms);
 }
 
-.tripon-social-fab:not(.is-open) .tripon-social-fab__row {
+.tripon-social-fab:not(.is-open) .tripon-social-fab__actions {
+  visibility: hidden;
+  opacity: 0;
   pointer-events: none;
+  max-height: 0;
+  overflow: hidden;
+  margin: 0;
+  gap: 0;
+}
+
+.tripon-social-fab:not(.is-open) .tripon-social-fab__row {
+  visibility: hidden;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.tripon-social-fab:not(.is-open) .tripon-social-fab__label,
+.tripon-social-fab:not(.is-open) .tripon-social-fab__orb {
+  visibility: hidden;
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.tripon-social-fab.is-open .tripon-social-fab__actions {
+  visibility: visible;
+  opacity: 1;
+  max-height: none;
+  overflow: visible;
 }
 
 .tripon-social-fab__label {
@@ -4489,7 +4531,7 @@ select:focus {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   white-space: nowrap;
-  opacity: 0.92;
+  opacity: 0;
   transform: translateX(6px);
   filter: none;
   transition:

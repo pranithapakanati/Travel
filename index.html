@@ -69,6 +69,10 @@
   <noscript>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   </noscript>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+    integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="assets/css/tripon-aos.css" />
 </head>
 
 <body data-tripon-nav="home" class="has-tripon-site-ambient">
@@ -107,25 +111,24 @@
         </div>
         <form class="search-box" novalidate>
           <div class="field">
-            <label><span class="field-icon"><i class="fa-regular fa-user"></i></span><span
-                class="field-label-text">Name</span></label>
-            <input type="text" placeholder="Enter Your Name" aria-label="Enter your name" minlength="2" required />
+            <label for="heroNameInput"><span class="field-icon"><i class="fa-regular fa-user"></i></span><span
+                class="field-label-text">Enter Your Name</span></label>
+            <input id="heroNameInput" type="text" placeholder="Name" aria-label="Enter your name" minlength="2" required />
           </div>
           <div class="field">
-            <label><span class="field-icon"><i class="fa-solid fa-phone"></i></span><span class="field-label-text">Phone
-                Number</span></label>
-            <input type="tel" placeholder="Enter Your Phone Number" aria-label="Enter your phone number"
+            <label for="heroPhoneInput"><span class="field-icon"><i class="fa-solid fa-phone"></i></span><span class="field-label-text">Enter Your Phone Number</span></label>
+            <input id="heroPhoneInput" type="tel" placeholder="Phone Number" aria-label="Enter your phone number"
               inputmode="numeric" maxlength="10" minlength="10" pattern="[0-9]{10}" required />
           </div>
           <div class="field">
-            <label><span class="field-icon"><i class="fa-regular fa-calendar"></i></span><span
-                class="field-label-text">Travel On</span></label>
-            <input type="date" placeholder="dd-mm-yyyy" aria-label="Select travel date" required />
+            <label for="heroTravelDateInput"><span class="field-icon"><i class="fa-regular fa-calendar"></i></span><span
+                class="field-label-text">Select travel date</span></label>
+            <input id="heroTravelDateInput" type="date" placeholder="Travel On" aria-label="Select travel date" required />
           </div>
           <div class="field">
-            <label><span class="field-icon"><i class="fa-solid fa-users"></i></span><span
-                class="field-label-text">Travelers</span></label>
-            <input type="number" min="1" max="20" placeholder="No. of Guests" aria-label="Number of guests" required />
+            <label for="heroTravelersInput"><span class="field-icon"><i class="fa-solid fa-users"></i></span><span
+                class="field-label-text">No. of Guests</span></label>
+            <input id="heroTravelersInput" type="number" min="1" max="20" placeholder="Travelers" aria-label="Number of guests" required />
           </div>
           <button class="send-btn" type="button">➤</button>
         </form>
@@ -405,7 +408,6 @@
             <h3 class="reasons__topic">Ease of Travel</h3>
           </div>
         </div>
-        <button class="more-blogs-btn reasons__cta tripon-neon-btn" type="button">More Blogs</button>
       </section>
 
       <section class="popular-packages">
@@ -421,10 +423,12 @@
 
           <!-- Couple packages -->
           <article class="package-card" data-package-place="ubud" data-package-slug="honey-moon-package-in-bali"
+            data-package-duration="5-days" data-days="5"
+            data-package-detail-href="packages/bali/5-days/honey-moon-package-in-bali.html"
             data-type="couple" data-package-places="Tanah Lot Temple,Ubud Rice Terraces,Campuhan Ridge,Tirta Empul"
             data-package-activities="Balinese cooking class,Couple spa,Rice terrace walk,Traditional dance evening"
-            data-package-detail-images="images/couple.webp,images/couple1.webp,images/couple2.webp"
-            data-package-hover-images="images/couple.webp,images/couple1.webp,images/couple2.webp">
+            data-package-detail-images="/assets/images/couple.webp,/assets/images/couple1.webp,/assets/images/couple2.webp"
+            data-package-hover-images="/assets/images/couple.webp,/assets/images/couple1.webp,/assets/images/couple2.webp">
             <div class="package-thumb">
               <span class="offer">10% off</span>
               <img src="assets/images/couple.webp" alt="Honey Moon Package" />
@@ -439,11 +443,13 @@
                   class="package-meta-days-text">4 Days</span></span><span>From ₹45,000</span></div>
           </article>
           <article class="package-card" data-package-place="nusa-penida" data-package-slug="isolated-mountains-retreat"
+            data-package-duration="6-days" data-days="6"
+            data-package-detail-href="packages/bali/6-days/isolated-mountains-retreat.html"
             data-type="couple"
             data-package-places="Kelingking Beach,Diamond Beach,Broken Beach,Angel Billabong,Crystal Bay"
             data-package-activities="Snorkel with manta rays,Island coastal drive,Cliff viewpoint hike,Sunset at the beach"
-            data-package-detail-images="images/isolated.webp,images/isolated1.webp,images/isolated2.webp"
-            data-package-hover-images="images/isolated.webp,images/isolated1.webp,images/isolated2.webp">
+            data-package-detail-images="/assets/images/isolated.webp,/assets/images/isolated1.webp,/assets/images/isolated2.webp"
+            data-package-hover-images="/assets/images/isolated.webp,/assets/images/isolated1.webp,/assets/images/isolated2.webp">
             <div class="package-thumb">
               <span class="offer">15% off</span>
               <img src="assets/images/isolated-thumb.webp"
@@ -460,11 +466,13 @@
                   class="package-meta-days-text">5 Days</span></span><span>From ₹50,000</span></div>
           </article>
           <article class="package-card" data-package-place="gili-trawangan" data-package-slug="the-white-beach-land"
+            data-package-duration="7-days" data-days="7"
+            data-package-detail-href="packages/bali/7-days/the-white-beach-land.html"
             data-type="couple"
             data-package-places="Gili Trawangan beaches,Gili Meno sandbar,Gili Air village,Turtle snorkeling point"
             data-package-activities="Beach cycling,Snorkeling day trip,Sunset swing photo stop,Island café crawl"
-            data-package-detail-images="images/gilli.webp,images/gilli1.webp,images/gilli2.webp"
-            data-package-hover-images="images/gilli.webp,images/gilli1.webp,images/gilli2.webp">
+            data-package-detail-images="/assets/images/gilli.webp,/assets/images/gilli1.webp,/assets/images/gilli2.webp"
+            data-package-hover-images="/assets/images/gilli.webp,/assets/images/gilli1.webp,/assets/images/gilli2.webp">
             <div class="package-thumb">
               <span class="offer">12% off</span>
               <img src="assets/images/gilli.webp"
@@ -483,9 +491,11 @@
 
           <!-- Family packages -->
           <article class="package-card" data-package-place="seminyak" data-package-slug="family-beach-resort-stay"
+            data-package-duration="8-days" data-days="8"
+            data-package-detail-href="packages/bali/8-days/family-beach-resort-stay.html"
             data-type="family"
-            data-package-detail-images="images/semiyak81.webp,images/semiyak82.webp,images/semiyak83.webp"
-            data-package-hover-images="images/semiyak81.webp,images/semiyak82.webp,images/semiyak83.webp">
+            data-package-detail-images="/assets/images/semiyak81.webp,/assets/images/semiyak82.webp,/assets/images/semiyak83.webp"
+            data-package-hover-images="/assets/images/semiyak81.webp,/assets/images/semiyak82.webp,/assets/images/semiyak83.webp">
             <div class="package-thumb">
               <span class="offer">8% off</span>
               <img src="assets/images/semiyak81.webp"
@@ -502,8 +512,10 @@
                   class="package-meta-days-text">5 Days</span></span><span>From ₹1,20,000</span></div>
           </article>
           <article class="package-card" data-package-place="ubud" data-package-slug="cultural-village-explorer"
-            data-type="family" data-package-detail-images="images/ubud51.webp,images/ubud52.webp,images/ubud53.webp"
-            data-package-hover-images="images/ubud51.webp,images/ubud52.webp,images/ubud53.webp">
+            data-package-duration="5-days" data-days="5"
+            data-package-detail-href="packages/bali/5-days/cultural-village-explorer.html"
+            data-type="family" data-package-detail-images="/assets/images/ubud51.webp,/assets/images/ubud52.webp,/assets/images/ubud53.webp"
+            data-package-hover-images="/assets/images/ubud51.webp,/assets/images/ubud52.webp,/assets/images/ubud53.webp">
             <div class="package-thumb">
               <span class="offer">10% off</span>
               <img src="assets/images/ubud51.webp"
@@ -521,8 +533,10 @@
                   class="package-meta-days-text">4 Days</span></span><span>From ₹95,000</span></div>
           </article>
           <article class="package-card" data-package-place="kuta" data-package-slug="waterpark-temples-tour"
-            data-type="family" data-package-detail-images="images/kuta61.webp,images/kuta62.webp,images/kuta63.webp"
-            data-package-hover-images="images/kuta61.webp,images/kuta62.webp,images/kuta63.webp">
+            data-package-duration="7-days" data-days="7"
+            data-package-detail-href="packages/bali/7-days/waterpark-temples-tour.html"
+            data-type="family" data-package-detail-images="/assets/images/kuta61.webp,/assets/images/kuta62.webp,/assets/images/kuta63.webp"
+            data-package-hover-images="/assets/images/kuta61.webp,/assets/images/kuta62.webp,/assets/images/kuta63.webp">
             <div class="package-thumb">
               <span class="offer">18% off</span>
               <img src="assets/images/kuta61.webp"
@@ -541,8 +555,10 @@
 
           <!-- Friends packages -->
           <article class="package-card" data-package-place="canggu" data-package-slug="adventure-surf-camp"
-            data-type="friends" data-package-detail-images="images/conggu.webp,images/conggu1.webp,images/conggu2.webp"
-            data-package-hover-images="images/conggu.webp,images/conggu1.webp,images/conggu2.webp">
+            data-package-duration="5-days" data-days="5"
+            data-package-detail-href="packages/bali/5-days/adventure-surf-camp.html"
+            data-type="friends" data-package-detail-images="/assets/images/conggu.webp,/assets/images/conggu1.webp,/assets/images/conggu2.webp"
+            data-package-hover-images="/assets/images/conggu.webp,/assets/images/conggu1.webp,/assets/images/conggu2.webp">
             <div class="package-thumb">
               <span class="offer">20% off</span>
               <img src="assets/images/conggu.webp" alt="Adventure Surf Camp" />
@@ -557,8 +573,10 @@
                   class="package-meta-days-text">5 Days</span></span><span>From ₹55,000</span></div>
           </article>
           <article class="package-card" data-package-place="mount-batur" data-package-slug="volcano-trekking-trip"
-            data-type="friends" data-package-detail-images="images/volcano.webp,images/volcano1.webp,images/volcano2.webp"
-            data-package-hover-images="images/volcano.webp,images/volcano1.webp,images/volcano2.webp">
+            data-package-duration="8-days" data-days="8"
+            data-package-detail-href="packages/bali/8-days/volcano-trekking-trip.html"
+            data-type="friends" data-package-detail-images="/assets/images/volcano.webp,/assets/images/volcano1.webp,/assets/images/volcano2.webp"
+            data-package-hover-images="/assets/images/volcano.webp,/assets/images/volcano1.webp,/assets/images/volcano2.webp">
             <div class="package-thumb">
               <span class="offer">5% off</span>
               <img src="assets/images/volcano.webp"
@@ -576,8 +594,10 @@
                   class="package-meta-days-text">3 Days</span></span><span>From ₹40,000</span></div>
           </article>
           <article class="package-card" data-package-place="nusa-lembongan" data-package-slug="island-hopping-tour"
-            data-type="friends" data-package-detail-images="images/nusa61.webp,images/nusa62.webp,images/nusa63.webp"
-            data-package-hover-images="images/nusa61.webp,images/nusa62.webp,images/nusa63.webp">
+            data-package-duration="7-days" data-days="7"
+            data-package-detail-href="packages/bali/7-days/island-hopping-tour.html"
+            data-type="friends" data-package-detail-images="/assets/images/nusa61.webp,/assets/images/nusa62.webp,/assets/images/nusa63.webp"
+            data-package-hover-images="/assets/images/nusa61.webp,/assets/images/nusa62.webp,/assets/images/nusa63.webp">
             <div class="package-thumb">
               <span class="offer">13% off</span>
               <img src="assets/images/nusa61.webp"
@@ -759,7 +779,7 @@
 
       <section class="family-tour-section family-tour-section--premium" data-tripon-family-tour-gsap
         aria-label="Family tour promotion">
-        <div class="family-tour-card">
+        <div class="family-tour-card" data-aos="tripon-fade-up-36" data-aos-duration="900" data-aos-offset="120">
           <div class="family-tour-ambient" aria-hidden="true">
             <span class="family-tour-ambient__orb family-tour-ambient__orb--1"></span>
             <span class="family-tour-ambient__orb family-tour-ambient__orb--2"></span>
@@ -784,10 +804,10 @@
           </svg>
 
           <div class="family-tour-copy" data-family-tour-parallax="copy">
-            <p class="family-tour-kicker" data-ft-reveal>Let&apos;s Travel</p>
-            <h2 data-ft-reveal>Family Tour</h2>
-            <p class="family-tour-offer" data-ft-reveal>35% Off</p>
-            <p class="family-tour-desc" data-ft-reveal>Whatever Your Summer Looks Like, Bring Your Own Heat With Up To
+            <p class="family-tour-kicker" data-aos="tripon-fade-up-36" data-aos-duration="750" data-aos-delay="0">Let&apos;s Travel</p>
+            <h2 data-aos="tripon-fade-up-36" data-aos-duration="750" data-aos-delay="120">Family Tour</h2>
+            <p class="family-tour-offer" data-aos="tripon-fade-up-36" data-aos-duration="750" data-aos-delay="240">35% Off</p>
+            <p class="family-tour-desc" data-aos="tripon-fade-up-36" data-aos-duration="750" data-aos-delay="360">Whatever Your Summer Looks Like, Bring Your Own Heat With Up To
               35% Off On Premium Family Packages.</p>
             <div class="family-tour-btn-wrap" data-ft-magnetic>
               <span class="family-tour-btn-glow" aria-hidden="true"></span>
@@ -861,8 +881,7 @@
                 <h2>
                   Finding your dream destination is our <span class="wc-word--priority">priority</span>
                 </h2>
-                <p>With a collection of destinations that include stunning natural landscapes,<br>vibrant cosmopolitan
-                  cities and enchanting tropical islands, we take you to the world&apos;s most stunning places.</p>
+                <p class="why-choose-intro__desc">With a collection of destinations that include stunning natural landscapes, vibrant cosmopolitan cities and enchanting tropical islands, we take you to the world&apos;s most stunning places.</p>
               </div>
             </div>
           </div>
@@ -1228,12 +1247,6 @@
             <div class="bali-card-media">
               <span class="blog-tag">Vlogger</span>
               <img src="assets/images/blog_card.webp" alt="Exploring Bali" />
-              <div class="blog-video-bar">
-                <span class="blog-play">&#9654;</span>
-                <div class="blog-progress">
-                  <div class="blog-progress-fill"></div>
-                </div>
-              </div>
             </div>
             <div class="bali-card-body">
               <h3>Exploring Bali: A Tropical Journey</h3>
@@ -1296,12 +1309,6 @@
             <div class="bali-card-media">
               <span class="blog-tag">Vlogger</span>
               <img src="assets/images/blog_card3.webp" alt="Bali adventure" />
-              <div class="blog-video-bar">
-                <span class="blog-play">&#9654;</span>
-                <div class="blog-progress">
-                  <div class="blog-progress-fill"></div>
-                </div>
-              </div>
             </div>
             <div class="bali-card-body">
               <h3>Adventures in Bali: Beyond the Beach</h3>
@@ -1468,6 +1475,10 @@
   </div>
 
   <div id="tripon-popups-zone" class="tripon-include-mount" style="display:contents"></div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
+    integrity="sha512-A7AYk1fGKX6S2SsHywmPkrnzTZHrgiVT7GcQkLGDe2ev0aWb8zejytzS8wjo7PGEXKqJOrjQ4oORtnimIRZBtw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="assets/js/tripon-aos.js"></script>
   <script src="assets/js/includes.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js" defer></script>

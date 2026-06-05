@@ -61,9 +61,6 @@
       el.classList.add("is-active");
     });
 
-    if (key === "contact" || key === "people-reviews" || key === "about") {
-      document.querySelector('[data-nav-key="company"]')?.classList.add("is-active");
-    }
   }
 
   function triponBindHeaderDropdowns() {

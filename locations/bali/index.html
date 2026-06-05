@@ -37,26 +37,32 @@
   <link rel="stylesheet" href="assets/css/package-details.css" />
   <link rel="stylesheet" href="/assets/css/responsive.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css"
+    integrity="sha512-1cK78a1o+ht2JcaW6g8OXYwqpev9+6GqOkz9xmBN9iUUhIndKtxwILGWYOSibOKjLsEdjyjZvYDq/cZwNeak0w=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/assets/css/tripon-aos.css" />
 </head>
 
 <body class="all-locations-page">
   <div class="page location-page" data-all-locations-hub="true" data-bali-locations-hub="true">
     <div id="tripon-navbar-zone" class="tripon-include-mount" style="display:contents"></div>
 
-    <main class="all-locations-main-wrap is-entering" id="allLocationsView">
+    <main class="all-locations-main-wrap" id="allLocationsView">
       <section class="all-locations-main all-locations-main--gallery" data-tripon-dest-gallery
         aria-label="Discover Bali destinations">
         <div class="tripon-dest-gallery" data-tripon-gallery-root>
-          <header class="tripon-dest-gallery__head">
+          <header class="tripon-dest-gallery__head" data-aos="tripon-fade-up-22" data-aos-duration="920">
             <p class="tripon-dest-gallery__kicker">Discover Bali</p>
           </header>
 
-          <div class="tripon-dest-gallery__tabs-wrap">
+          <div class="tripon-dest-gallery__tabs-wrap" data-aos="tripon-fade-up-22" data-aos-duration="920"
+            data-aos-delay="120">
             <div class="tripon-dest-gallery__tabs" role="tablist" aria-label="Bali destinations"></div>
           </div>
 
           <div class="tripon-dest-gallery__stage">
             <div class="tripon-coverflow" id="triponDestPanel" role="tabpanel" aria-labelledby="triponDestTab-0"
+              data-aos="tripon-fade-up-22" data-aos-duration="980" data-aos-delay="220"
               data-tripon-coverflow data-centered-slides="true" data-loop="true" data-effect="coverflow"
               data-slides-per-view="auto" aria-roledescription="carousel">
               <div class="tripon-coverflow__viewport" data-tripon-coverflow-viewport tabindex="0"
@@ -286,6 +292,10 @@
       </div>
     </div>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"
+    integrity="sha512-A7AYk1fGKX6S2SsHywmPkrnzTZHrgiVT7GcQkLGDe2ev0aWb8zejytzS8wjo7PGEXKqJOrjQ4oORtnimIRZBtw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="/assets/js/tripon-aos.js"></script>
   <script src="/assets/js/includes.js"></script>
   <script>
     window.triponBootMain();

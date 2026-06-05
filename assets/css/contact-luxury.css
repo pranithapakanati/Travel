@@ -554,7 +554,7 @@ body.contact-page:has(.submit-popup-overlay.active) .tripon-social-fab {
 /* Homepage — footer sits flush after Instagram (no dead space) */
 .home-screen .instagram-showcase {
   margin-bottom: 0;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
 }
 
 .home-screen .tripon-footer {

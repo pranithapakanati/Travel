@@ -186,7 +186,7 @@
 .hero .search-box .luxury-guests-trigger {
   box-sizing: border-box;
   grid-column: 2;
-  grid-row: 2;
+  grid-row: 1;
   width: 100% !important;
   height: auto !important;
   min-height: 0;
@@ -196,19 +196,43 @@
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-  font-size: 14px;
-  font-weight: 400;
-  color: #2d3330;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #2d3330 !important;
   font-family: inherit;
   text-align: left;
   cursor: pointer;
-  line-height: 1.35;
+  line-height: 1.1;
   justify-self: stretch;
 }
 
 .hero .search-box .luxury-date-trigger.is-placeholder,
 .hero .search-box .luxury-guests-trigger.is-placeholder {
-  color: #a5adac;
+  color: #2d3330 !important;
+  font-weight: 700 !important;
+  opacity: 0.9;
+}
+
+.hero .search-box .field input,
+.hero .search-box .field input::placeholder {
+  color: #2d3330 !important;
+  font-weight: 700 !important;
+  opacity: 1;
+}
+
+.hero .search-box .field input::placeholder {
+  opacity: 0.9;
+}
+
+.hero .search-box .field-icon {
+  opacity: 1;
+  color: #333;
+}
+
+.hero .search-box .field.input-box--luxury-date .field-icon,
+.hero .search-box .field.input-box--luxury-guests .field-icon {
+  opacity: 1;
+  color: #333;
 }
 
 .hero .search-box .field.input-box--luxury-date.is-picker-open .luxury-date-trigger,
@@ -292,6 +316,14 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
   will-change: transform, opacity;
   cursor: pointer;
   z-index: 1;
+}
+
+.adventure--3d.is-adventure-live .place-item--3d {
+  transform: none;
+}
+
+.adventure--3d.is-adventure-live .adventure__carousel {
+  pointer-events: auto;
 }
 
 .adventure--3d .place-item--3d.is-active:not(.place-item-see-all) {
@@ -473,13 +505,24 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 }
 
 .adventure--3d.is-adventure-live .place-item__panel {
-  transition: box-shadow 0.4s ease;
+  box-shadow: none;
+  transition: none;
 }
 
-.adventure--3d.is-adventure-live .place-item--3d.is-active .place-item__panel {
-  box-shadow:
-    0 16px 32px rgba(8, 30, 24, 0.28),
-    0 0 40px rgba(52, 211, 153, 0.22);
+.adventure--3d.is-adventure-live .place-item--3d.is-active {
+  filter:
+    drop-shadow(0 16px 32px rgba(8, 30, 24, 0.28))
+    drop-shadow(0 0 28px rgba(52, 211, 153, 0.18));
+}
+
+.adventure--3d.is-adventure-dragging .place-item--3d,
+.adventure--3d.is-adventure-dragging .place-item--3d .place-item__panel,
+.adventure--3d.is-adventure-dragging .place-item--3d .place-item__glow {
+  transition: none !important;
+}
+
+.adventure--3d.is-adventure-dragging .place-item--3d.is-active .place-item__glow {
+  box-shadow: none;
 }
 
 .trip-days {
@@ -513,7 +556,7 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 }
 
 .reasons h2 span {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .reasons-layout {
@@ -526,9 +569,16 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 
 .reasons-layout img {
   width: 100%;
-  height: clamp(460px, 42vw, 580px);
+  height: clamp(380px, 34vw, 500px);
   object-fit: cover;
   border-radius: 50% 42% 48% 38%;
+}
+
+.reasons .reason-text {
+  min-height: clamp(380px, 34vw, 500px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .reasons-layout img.festival-slide-spotlight {
@@ -537,7 +587,7 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 
 .reasons__topic {
   margin: 0 0 14px;
-  font-size: 24px;
+  font-size: 28px;
   color: #2e3642;
 }
 
@@ -547,7 +597,7 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 
 .reasons__article-title {
   margin: 0 0 10px;
-  font-size: 42px;
+  font-size: 50px;
 }
 
 .popular-packages {
@@ -660,12 +710,12 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
   font-size: inherit;
 }
 
-.popular-packages .package-card .meta {
+.popular-packages .package-card .meta.package-meta-row {
   padding-top: 0.7rem;
-  font-size: 1.0625rem;
-  line-height: 1.35;
-  grid-template-columns: minmax(8.75rem, max-content) minmax(0, 1fr);
-  column-gap: 12px;
+}
+
+.popular-packages .package-meta-price__now {
+  font-size: clamp(1.05rem, 2vw, 1.2rem);
 }
 
 .popular-packages .package-card .meta .package-meta-duration-icon {
@@ -748,6 +798,15 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 .bali-blogs-grid > .bali-card--featured .bali-card-media {
   align-self: stretch;
   min-height: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.bali-blogs-grid > .bali-card--featured .bali-card-body {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  background: #fff;
 }
 
 .bali-blogs-grid > .bali-card--img-only .bali-card-img {
@@ -1334,12 +1393,11 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 
 .deals {
   box-sizing: border-box;
-  width: min(var(--why-choose-container), 100%);
-  max-width: var(--why-choose-container);
+  width: var(--faq-band-width);
+  max-width: 100%;
   margin-left: auto;
   margin-right: auto;
   position: relative;
-  left: clamp(12px, 1.8vw, 40px);
   padding-inline: clamp(12px, 3vw, 24px);
   padding-top: clamp(68px, 7vw, 96px);
   padding-bottom: clamp(80px, 10vw, 128px);
@@ -1564,8 +1622,8 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 }
 
 .instagram-showcase {
-  margin-top: 78px;
-  padding: 0 0 28px;
+  margin-top: 48px;
+  padding: 0 0 16px;
   overflow: hidden;
 }
 
@@ -1573,17 +1631,17 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
   display: flex;
   flex-wrap: nowrap;
   align-items: flex-start;
-  max-height: 256px;
+  max-height: 200px;
   width: max-content;
 }
 
 .instagram-head {
-  padding: 0 74px 24px;
+  padding: 0 74px 14px;
 }
 
 .instagram-head h2 {
   margin: 0;
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   color: #111827;
   position: relative;
@@ -1601,8 +1659,8 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 }
 
 .instagram-head p {
-  margin: 20px 0 0;
-  font-size: 20px;
+  margin: 12px 0 0;
+  font-size: 18px;
   color: var(--a11y-text-muted);
 }
 
@@ -1628,7 +1686,7 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
   gap: 10px;
   overflow-x: auto;
   overflow-y: hidden;
-  max-height: 256px;
+  max-height: 200px;
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
@@ -1637,10 +1695,10 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 }
 
 .instagram-strip img {
-  flex: 0 0 280px;
-  width: 280px;
-  min-width: 280px;
-  height: 256px;
+  flex: 0 0 220px;
+  width: 220px;
+  min-width: 220px;
+  height: 200px;
   object-fit: cover;
   display: block;
   transform: scale(1);
@@ -1659,7 +1717,7 @@ body[data-tripon-nav="home"] .home-screen--has-ambient > .home-ambient .home-amb
 
 body[data-tripon-nav="home"] .home-screen .instagram-showcase {
   margin-bottom: 0;
-  padding-bottom: 12px;
+  padding-bottom: 8px;
 }
 
 body[data-tripon-nav="home"] .home-screen .tripon-footer--luxury {
@@ -1724,10 +1782,14 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro h2 {
   font-size: clamp(44px, 3.6vw, 64px);
 }
 
-body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
-  max-width: var(--why-choose-intro-max);
-  font-size: clamp(20px, 1.45vw, 26px);
-  white-space: pre-line;
+body[data-tripon-nav="home"] .home-screen .why-choose-intro p,
+body[data-tripon-nav="home"] .home-screen .why-choose-intro__desc {
+  max-width: var(--why-choose-desc-max);
+  margin-inline: auto;
+  font-size: clamp(17px, 1.55vw, 26px);
+  white-space: normal;
+  text-align: center;
+  text-wrap: balance;
 }
 
 .home-screen .adventure:not(.adventure--3d) .place-row,
@@ -1886,6 +1948,10 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
   justify-self: stretch !important;
   width: 100% !important;
   max-width: min(720px, 100%) !important;
+  min-height: clamp(380px, 34vw, 500px) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
 }
 
 .home-screen .reasons h2 {
@@ -1894,18 +1960,18 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
 }
 
 .home-screen .reasons .reasons__topic {
-  font-size: 26px;
+  font-size: 30px;
   margin-bottom: 14px;
 }
 
 .home-screen .reasons .reasons__article-title {
-  font-size: 48px;
+  font-size: 56px;
   margin-bottom: 12px;
 }
 
 .home-screen .reasons .reason-text p {
-  font-size: 18px;
-  line-height: 1.65;
+  font-size: 20px;
+  line-height: 1.6;
 }
 
 .hero-booking-modal-overlay {
@@ -1991,18 +2057,20 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
-  font-size: 14px;
-  font-weight: 400;
+  font-size: 22px;
+  font-weight: 700;
   color: #2d3330;
   font-family: inherit;
   text-align: left;
-  line-height: 1.35;
+  line-height: 1.1;
   justify-self: stretch;
 }
 
 .hero-booking-modal__form.search-box--modal button.luxury-date-trigger.is-placeholder,
 .hero-booking-modal__form.search-box--modal button.luxury-guests-trigger.is-placeholder {
-  color: #a5adac;
+  color: #2d3330;
+  font-weight: 700;
+  opacity: 0.9;
 }
 
 .hero-booking-modal__submit,
@@ -2566,7 +2634,7 @@ body[data-tripon-nav="home"] .home-screen .why-choose-intro p {
 }
 
 .reasons--gsap .reasons__accent {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .reasons--gsap .reasons__char {

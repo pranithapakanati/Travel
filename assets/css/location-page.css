@@ -825,7 +825,7 @@
   gap: 16px;
   align-content: start;
   margin-left: 0;
-  transform: translateX(-200px);
+  min-width: 0;
 }
 
 .blog-sidebar-card {

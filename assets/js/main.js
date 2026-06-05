@@ -247,7 +247,7 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
     const ambient = section.querySelector(".trip-days__ambient");
     const canvas = section.querySelector(".trip-days__canvas");
     const ripple = section.querySelector(".trip-days__ripple");
-    const controller = { start() {}, stop() {} };
+    const controller = { start() { }, stop() { } };
     if (!ambient) {
       return controller;
     }
@@ -602,7 +602,7 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
   }
 
   function createParticleController(section, canvas) {
-    const controller = { start() {}, stop() {} };
+    const controller = { start() { }, stop() { } };
     const ctx = canvas.getContext("2d");
     if (!ctx) {
       return controller;
@@ -932,15 +932,15 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
     const appendChar = (parent, char) => {
       const span = document.createElement("span");
       span.className = charClass;
-      /* Keep regular spaces so small screens can wrap heading text naturally. */
-      span.textContent = char;
+      span.textContent = char === " " ? "\u00a0" : char;
       parent.appendChild(span);
       chars.push(span);
     };
 
     const processNode = (parent, node) => {
       if (node.nodeType === Node.TEXT_NODE) {
-        [...(node.textContent || "")].forEach((char) => appendChar(parent, char));
+        const normalizedText = (node.textContent || "").replace(/\s+/g, " ");
+        [...normalizedText].forEach((char) => appendChar(parent, char));
         return;
       }
       if (node.nodeType === Node.ELEMENT_NODE) {
@@ -1441,7 +1441,6 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
     const card = section.querySelector(".family-tour-card");
     const copy = section.querySelector("[data-family-tour-parallax='copy']");
     const gallery = section.querySelector("[data-family-tour-parallax='gallery']");
-    const revealItems = section.querySelectorAll("[data-ft-reveal]");
     const bentoCells = section.querySelectorAll("[data-ft-bento]");
     const magneticWrap = section.querySelector("[data-ft-magnetic]");
     const magneticBtn = magneticWrap?.querySelector(".family-tour-btn");
@@ -1455,13 +1454,11 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
 
     if (reduceMotion) {
       section.classList.add("is-revealed");
-      gsap.set(revealItems, { opacity: 1, y: 0, filter: "none" });
       gsap.set(bentoCells, { opacity: 1 });
       gsap.set(bentoMedias, { opacity: 1, x: 0, y: 0, scale: 1 });
       return;
     }
 
-    gsap.set(revealItems, { opacity: 0, y: 36, filter: "blur(6px)" });
     gsap.set(bentoCells, { opacity: 1 });
     bentoCells.forEach((cell) => {
       const media = cell.querySelector(".bento-cell__media");
@@ -1470,8 +1467,6 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
       }
       gsap.set(media, getFamilyTourBentoEnterFrom(cell.dataset.ftEnter || ""));
     });
-    gsap.set(card, { opacity: 0.85, y: 40 });
-
     const entranceTl = gsap.timeline({
       scrollTrigger: {
         trigger: section,
@@ -1482,14 +1477,6 @@ window.triponAnimateHeroDestinationLine = triponAnimateHeroDestinationLine;
       },
       defaults: { ease: EASE },
     });
-
-    entranceTl
-      .to(card, { opacity: 1, y: 0, duration: 0.9 })
-      .to(
-        revealItems,
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.75, stagger: 0.12 },
-        "-=0.55"
-      );
 
     bentoCells.forEach((cell, index) => {
       const media = cell.querySelector(".bento-cell__media");
@@ -3265,20 +3252,37 @@ const triponInitMain = () => {
     const heroLuxuryCalendar =
       travelDateInput && typeof window.TriponLuxuryCalendar?.attach === "function"
         ? window.TriponLuxuryCalendar.attach(travelDateInput, {
-            minDate: getTodayDateString(),
-            packageName: "Your Bali Trip",
-            packageDuration: "",
-          })
+          minDate: getTodayDateString(),
+          packageName: "Your Bali Trip",
+          packageDuration: "",
+        })
         : null;
 
     const heroLuxuryGuests =
       heroTravelersInput && typeof window.TriponLuxuryGuestsPicker?.attach === "function"
         ? window.TriponLuxuryGuestsPicker.attach(heroTravelersInput, {
-            min: 1,
-            max: 20,
-            placeholder: "No. of Guests",
-          })
+          min: 1,
+          max: 20,
+          placeholder: "Travelers",
+          variant: "range-list",
+          showSlotIcon: true,
+          slots: [
+            { value: "2", label: "1 - 2 People" },
+            { value: "4", label: "3 - 4 People" },
+            { value: "6", label: "5 - 6 People" },
+            { value: "8", label: "6+ People" },
+          ],
+        })
         : null;
+
+    if (heroLuxuryCalendar?.trigger && !travelDateInput?.value) {
+      heroLuxuryCalendar.trigger.classList.add("is-placeholder");
+      heroLuxuryCalendar.trigger.textContent = "Travel On";
+    }
+    if (heroLuxuryGuests?.trigger && !heroTravelersInput?.value) {
+      heroLuxuryGuests.trigger.classList.add("is-placeholder");
+      heroLuxuryGuests.trigger.textContent = "Travelers";
+    }
 
     if (travelDateInput) {
       travelDateInput.min = getTodayDateString();
@@ -3432,9 +3436,9 @@ const triponInitMain = () => {
           showSubmitPopup();
           heroSearchForm?.reset();
           heroLuxuryCalendar?.trigger?.classList.add("is-placeholder");
-          heroLuxuryCalendar?.trigger && (heroLuxuryCalendar.trigger.textContent = "Select travel date");
+          heroLuxuryCalendar?.trigger && (heroLuxuryCalendar.trigger.textContent = "Travel On");
           heroLuxuryGuests?.trigger?.classList.add("is-placeholder");
-          heroLuxuryGuests?.trigger && (heroLuxuryGuests.trigger.textContent = "No. of Guests");
+          heroLuxuryGuests?.trigger && (heroLuxuryGuests.trigger.textContent = "Travelers");
           setHeroSendButtonState("default");
         }, 550);
       }, 900);
@@ -3762,6 +3766,17 @@ const triponInitMain = () => {
     return ADVENTURE_3D_SLOTS[key] || ADVENTURE_3D_SLOTS["-3"];
   };
 
+  const mixAdventure3dSlots = (from, to, t) => {
+    const mix = (a, b) => a + (b - a) * t;
+    return {
+      x: mix(from.x, to.x),
+      rotateY: mix(from.rotateY, to.rotateY),
+      z: mix(from.z, to.z),
+      scale: mix(from.scale, to.scale),
+      opacity: mix(from.opacity, to.opacity),
+    };
+  };
+
   const getWrappedOffset = (index, activeIndex, total) => {
     let diff = index - activeIndex;
     if (diff > total / 2) {
@@ -3789,9 +3804,18 @@ const triponInitMain = () => {
     const getGsap = () => window.gsap;
     const startItem = items.findIndex((item) => item.hasAttribute("data-adventure-start"));
     let activeIndex = startItem >= 0 ? startItem : 0;
-    let isAnimating = false;
     let autoplayId = null;
     let userInteracted = false;
+    let dragStartX = 0;
+    let dragPx = 0;
+    let dragScrollStart = 0;
+    let pointerActive = false;
+    let isDragging = false;
+    let suppressClick = false;
+    const dragStartThreshold = 6;
+    const pushDistancePx = 84;
+    const pushCommitRatio = 0.22;
+    const layoutDurationFast = 0.26;
 
     const scrollMobileCarouselToActive = (animate) => {
       const active = items[activeIndex];
@@ -3806,75 +3830,114 @@ const triponInitMain = () => {
       carousel.scrollTo({ left: targetLeft, behavior: animate ? "smooth" : "auto" });
     };
 
-    const applyLayout = (animate) => {
+    const buildCardTransform = (slot, activeYOffset, activeScale) =>
+      `translate(-50%, -50%) translate3d(${slot.x}px, ${activeYOffset}px, ${slot.z}px) rotateY(${slot.rotateY}deg) scale(${activeScale})`;
+
+    const clearGsapTransformProps = (item) => {
       const gsap = getGsap();
+      if (!gsap) {
+        return;
+      }
+      gsap.set(item, {
+        clearProps: "transform,x,y,z,rotateY,scale,xPercent,yPercent,opacity",
+      });
+    };
+
+    const applyLayout = (animate, slideT = 0) => {
+      const gsap = getGsap();
+      section.classList.add("is-adventure-live");
+
       if (isMobileCarousel()) {
         items.forEach((item, i) => {
           item.classList.toggle("is-active", i === activeIndex);
-          if (gsap) {
-            gsap.set(item, { clearProps: "all" });
-          }
+          clearGsapTransformProps(item);
+          item.style.removeProperty("transform");
+          item.style.removeProperty("opacity");
+          item.style.removeProperty("z-index");
         });
         scrollMobileCarouselToActive(animate);
         return;
       }
 
-      const duration = animate && gsap && !reduceMotion ? 0.72 : 0;
-      const ease = "power3.out";
+      const slide = Math.max(-1, Math.min(1, slideT));
+      const slideSign = slide > 0 ? 1 : slide < 0 ? -1 : 0;
+      const slideAmount = Math.abs(slide);
+      const duration =
+        animate && slideAmount === 0 && gsap && !reduceMotion ? layoutDurationFast : 0;
+      const ease = "power2.out";
+
+      if (gsap && (slideAmount > 0 || duration)) {
+        gsap.killTweensOf(items);
+      }
 
       items.forEach((item, i) => {
-        const offset = getWrappedOffset(i, activeIndex, items.length);
-        const slot = getAdventure3dSlot(offset);
-        const isActive = offset === 0;
+        const offA = getWrappedOffset(i, activeIndex, items.length);
+        const offB = slideSign
+          ? getWrappedOffset(i, activeIndex + slideSign, items.length)
+          : offA;
+        const slot =
+          slideAmount > 0
+            ? mixAdventure3dSlots(getAdventure3dSlot(offA), getAdventure3dSlot(offB), slideAmount)
+            : getAdventure3dSlot(offA);
+        const isActive =
+          slideAmount === 0
+            ? offA === 0
+            : (offA === 0 && slideAmount < 0.5) || (offB === 0 && slideAmount >= 0.5);
         item.classList.toggle("is-active", isActive);
         item.style.pointerEvents = slot.opacity < 0.2 ? "none" : "";
 
         const isSeeAll = item.classList.contains("place-item-see-all");
         const isTabletAdventure =
           window.matchMedia("(min-width: 621px) and (max-width: 900px)").matches;
-        /* See All: no extra Y nudge or scale — size comes from CSS; avoids top/bottom clip when front */
         const activeYOffset = isActive && !isSeeAll ? (isTabletAdventure ? 24 : 6) : 0;
         const activeScale = isSeeAll && isActive ? 1 : slot.scale;
+        const transform = buildCardTransform(slot, activeYOffset, activeScale);
+        const zIndex = String(Math.round(20 + slot.z / 5));
 
-        const vars = {
-          xPercent: -50,
-          yPercent: -50,
-          x: slot.x,
-          y: activeYOffset,
-          z: slot.z,
-          rotateY: slot.rotateY,
-          scale: activeScale,
-          opacity: slot.opacity,
-          transformPerspective: 1400,
-          transformOrigin: isSeeAll ? "50% 50%" : "50% 52%",
-          force3D: true,
-        };
+        item.style.zIndex = zIndex;
+        item.style.opacity = String(slot.opacity);
+        item.style.transformOrigin = isSeeAll ? "50% 50%" : "50% 52%";
 
-        if (gsap) {
-          if (duration) {
-            gsap.to(item, { ...vars, duration, ease });
-          } else {
-            gsap.set(item, vars);
-          }
+        if (gsap && duration) {
+          gsap.to(item, {
+            transform,
+            opacity: slot.opacity,
+            duration,
+            ease,
+            overwrite: "auto",
+            force3D: true,
+          });
         } else {
-          item.style.opacity = String(slot.opacity);
-          item.style.transform = `translate(-50%, -50%) translate3d(${slot.x}px, 0, ${slot.z}px) rotateY(${slot.rotateY}deg) scale(${slot.scale})`;
+          if (gsap) {
+            gsap.killTweensOf(item);
+          }
+          item.style.transform = transform;
         }
       });
-
-      section.classList.add("is-adventure-live");
     };
 
     const step = (dir) => {
-      if (isAnimating && !isMobileCarousel()) {
-        return;
-      }
       activeIndex = (activeIndex + dir + items.length) % items.length;
-      isAnimating = true;
-      applyLayout(true);
-      window.setTimeout(() => {
-        isAnimating = false;
-      }, isMobileCarousel() ? 420 : 760);
+      applyLayout(true, 0);
+    };
+
+    const getDragSlideT = () => -dragPx / pushDistancePx;
+
+    const commitDragSteps = () => {
+      let changed = false;
+      while (dragPx <= -pushDistancePx) {
+        activeIndex = (activeIndex + 1 + items.length * 8) % items.length;
+        dragPx += pushDistancePx;
+        changed = true;
+      }
+      while (dragPx >= pushDistancePx) {
+        activeIndex = (activeIndex - 1 + items.length * 8) % items.length;
+        dragPx -= pushDistancePx;
+        changed = true;
+      }
+      if (changed) {
+        applyLayout(false, getDragSlideT());
+      }
     };
 
     const syncAutoplay = () => {
@@ -3902,30 +3965,148 @@ const triponInitMain = () => {
       syncAutoplay();
     });
 
+    const syncActiveFromScroll = () => {
+      const center = carousel.scrollLeft + carousel.clientWidth / 2;
+      let nearest = activeIndex;
+      let nearestDist = Infinity;
+      items.forEach((item, i) => {
+        const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+        const dist = Math.abs(itemCenter - center);
+        if (dist < nearestDist) {
+          nearestDist = dist;
+          nearest = i;
+        }
+      });
+      if (nearest !== activeIndex) {
+        activeIndex = nearest;
+        items.forEach((item, i) => item.classList.toggle("is-active", i === activeIndex));
+      }
+    };
+
     carousel.addEventListener(
       "scroll",
       () => {
-        if (!isMobileCarousel()) {
+        if (!isMobileCarousel() || pointerActive) {
           return;
         }
-        const center = carousel.scrollLeft + carousel.clientWidth / 2;
-        let nearest = activeIndex;
-        let nearestDist = Infinity;
-        items.forEach((item, i) => {
-          const itemCenter = item.offsetLeft + item.offsetWidth / 2;
-          const dist = Math.abs(itemCenter - center);
-          if (dist < nearestDist) {
-            nearestDist = dist;
-            nearest = i;
-          }
-        });
-        if (nearest !== activeIndex) {
-          activeIndex = nearest;
-          items.forEach((item, i) => item.classList.toggle("is-active", i === activeIndex));
-        }
+        syncActiveFromScroll();
         userInteracted = true;
       },
       { passive: true }
+    );
+
+    const dragSurface = carousel;
+
+    const stopAutoplay = () => {
+      if (autoplayId) {
+        window.clearInterval(autoplayId);
+        autoplayId = null;
+      }
+    };
+
+    const bindWindowDrag = () => {
+      window.addEventListener("pointermove", onPointerMove, { passive: false });
+      window.addEventListener("pointerup", onPointerUp);
+      window.addEventListener("pointercancel", onPointerUp);
+    };
+
+    const unbindWindowDrag = () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
+    };
+
+    const onPointerDown = (event) => {
+      if (event.pointerType === "mouse" && event.button !== 0) {
+        return;
+      }
+      if (event.target.closest(".adventure__nav, button")) {
+        return;
+      }
+      pointerActive = true;
+      isDragging = false;
+      dragStartX = event.clientX;
+      dragPx = 0;
+      suppressClick = false;
+      dragScrollStart = carousel.scrollLeft;
+      userInteracted = true;
+      stopAutoplay();
+      if (getGsap()) {
+        getGsap().killTweensOf(items);
+      }
+      bindWindowDrag();
+      dragSurface.setPointerCapture?.(event.pointerId);
+    };
+
+    const onPointerMove = (event) => {
+      if (!pointerActive) {
+        return;
+      }
+      dragPx = event.clientX - dragStartX;
+      if (!isDragging && Math.abs(dragPx) < dragStartThreshold) {
+        return;
+      }
+      isDragging = true;
+      section.classList.add("is-adventure-dragging");
+      event.preventDefault();
+
+      if (isMobileCarousel()) {
+        carousel.scrollLeft = Math.max(0, dragScrollStart - dragPx);
+        syncActiveFromScroll();
+        return;
+      }
+
+      commitDragSteps();
+      applyLayout(false, getDragSlideT());
+    };
+
+    const onPointerUp = (event) => {
+      if (!pointerActive) {
+        return;
+      }
+      pointerActive = false;
+      section.classList.remove("is-adventure-dragging");
+      if (event?.pointerId != null && dragSurface.hasPointerCapture?.(event.pointerId)) {
+        dragSurface.releasePointerCapture(event.pointerId);
+      }
+
+      if (isDragging) {
+        if (isMobileCarousel()) {
+          syncActiveFromScroll();
+          scrollMobileCarouselToActive(true);
+          suppressClick = true;
+        } else {
+          commitDragSteps();
+          const slideT = getDragSlideT();
+          if (Math.abs(slideT) >= pushCommitRatio) {
+            activeIndex =
+              (activeIndex + (slideT > 0 ? 1 : -1) + items.length * 8) % items.length;
+            suppressClick = true;
+          }
+          applyLayout(true, 0);
+          syncAutoplay();
+        }
+      }
+
+      isDragging = false;
+      dragPx = 0;
+      unbindWindowDrag();
+    };
+
+    dragSurface.addEventListener("pointerdown", onPointerDown, true);
+    dragSurface.addEventListener("pointerup", onPointerUp);
+    dragSurface.addEventListener("pointercancel", onPointerUp);
+    dragSurface.addEventListener(
+      "click",
+      (event) => {
+        if (!suppressClick) {
+          return;
+        }
+        suppressClick = false;
+        event.preventDefault();
+        event.stopPropagation();
+      },
+      true
     );
 
     applyLayout(false);
@@ -4512,31 +4693,10 @@ const triponInitMain = () => {
     if (!wrap) {
       return;
     }
-    const hero = wrap.querySelector(".all-locations-hero");
-    const cards = Array.from(wrap.querySelectorAll(".all-location-card:not(.all-location-card--hub-feature)"));
-    const destGallery = wrap.querySelector("[data-tripon-dest-gallery]");
-    if (!cards.length && destGallery) {
-      window.setTimeout(() => wrap.classList.remove("is-entering"), 720);
-      return;
+    wrap.classList.remove("is-entering");
+    if (typeof window.triponRefreshAos === "function") {
+      window.triponRefreshAos();
     }
-    if (!cards.length) {
-      wrap.classList.remove("is-entering");
-      return;
-    }
-    hero?.classList.add("all-locations-hero--revealed");
-    cards.forEach((card, index) => {
-      card.classList.remove("all-location-card-animate");
-      card.style.animationDelay = `${index * 90}ms`;
-      void card.offsetWidth;
-      card.classList.add("all-location-card-animate");
-    });
-    const lastDelay = (cards.length - 1) * 90 + 560;
-    window.setTimeout(() => {
-      wrap.classList.remove("is-entering");
-      cards.forEach((card) => {
-        card.style.removeProperty("animation-delay");
-      });
-    }, lastDelay + 80);
   };
 
   const triponLocationsDrillKey = "tripon_locations_drill_in";
@@ -4889,12 +5049,10 @@ const triponInitMain = () => {
       { passive: true }
     );
 
-    const hubWrap = document.querySelector(".all-locations-main-wrap");
-    window.setTimeout(() => {
-      hubWrap?.classList.remove("is-entering");
-      galleryRoot?.classList.add("is-revealed");
-    }, 80);
     startSlideshow();
+    if (typeof window.triponRefreshAos === "function") {
+      window.triponRefreshAos();
+    }
   };
 
   const destGalleryRoot = document.querySelector("[data-tripon-dest-gallery]");
@@ -4907,7 +5065,6 @@ const triponInitMain = () => {
     if (!grid) {
       return;
     }
-    wrap.classList.add("is-entering");
     const fromHub = (() => {
       try {
         return sessionStorage.getItem(triponLocationsDrillKey) === "bali";
@@ -5797,10 +5954,10 @@ const triponInitMain = () => {
   // Reasons section: interactive topic switch
   const reasonsSection = document.querySelector(".reasons");
   if (reasonsSection) {
-    const topics = Array.from(reasonsSection.querySelectorAll(".reason-text h4"));
+    const topics = Array.from(reasonsSection.querySelectorAll(".reason-text .reasons__topic"));
     const reasonTextBox = reasonsSection.querySelector(".reason-text");
     const reasonArticle = reasonsSection.querySelector(".reason-text article");
-    const articleTitle = reasonsSection.querySelector(".reason-text article h3");
+    const articleTitle = reasonsSection.querySelector(".reason-text article .reasons__article-title");
     const articleTitleInner =
       articleTitle?.querySelector(".reasons__article-line-inner") || articleTitle;
     const articleCopy = reasonsSection.querySelector(".reason-text article p");
@@ -5988,7 +6145,7 @@ const triponInitMain = () => {
 
     const initMarker = () => {
       const marker = reasonsSection.querySelector(".reason-marker");
-      const activeTopic = reasonsSection.querySelector(".reason-text h4.active");
+      const activeTopic = reasonsSection.querySelector(".reason-text .reasons__topic.active");
       if (activeTopic) {
         moveReasonArticleBelowTopic(activeTopic);
       }
@@ -5999,7 +6156,7 @@ const triponInitMain = () => {
       }
     };
     requestAnimationFrame(initMarker);
-    const activeKey = reasonsSection.querySelector(".reason-text h4.active")?.textContent?.trim() || "Festivals";
+    const activeKey = reasonsSection.querySelector(".reason-text .reasons__topic.active")?.textContent?.trim() || "Festivals";
     const activeReason = reasonContent[activeKey];
     if (activeReason && articleTitleInner && articleCopy) {
       if (typeof window.triponReasonsGsapUpdateArticle === "function") {
@@ -6791,8 +6948,17 @@ const triponInitMain = () => {
       }
       card.setAttribute("data-package-place", match.place);
       card.setAttribute("data-package-slug", match.slug);
-      if (!card.getAttribute("data-package-duration") && match.entryDayNum) {
+      if (typeof window.triponSyncPackageCardCatalogAttrs === "function") {
+        window.triponSyncPackageCardCatalogAttrs(card);
+      } else if (!card.getAttribute("data-package-duration") && match.entryDayNum) {
         card.setAttribute("data-package-duration", `${match.entryDayNum}-days`);
+        card.setAttribute("data-days", match.entryDayNum);
+      }
+    });
+
+    document.querySelectorAll(".package-card").forEach((card) => {
+      if (typeof window.triponSyncPackageCardCatalogAttrs === "function") {
+        window.triponSyncPackageCardCatalogAttrs(card);
       }
     });
   };
@@ -6805,6 +6971,9 @@ const triponInitMain = () => {
   }
 
   triponHydratePackageCardMetadata();
+  if (typeof triponInitPackageCardMeta === "function") {
+    triponInitPackageCardMeta();
+  }
 
   const triponWirePackageCardClicks = (scope) => {
     const root = scope && typeof scope.querySelectorAll === "function" ? scope : document;
@@ -6886,18 +7055,31 @@ const triponInitMain = () => {
       }
       card.dataset.triponPackageClickWired = "1";
 
+      if (typeof window.triponEnsurePackageCardDetailHref === "function") {
+        window.triponEnsurePackageCardDetailHref(card);
+      } else if (typeof window.triponSyncPackageCardCatalogAttrs === "function") {
+        window.triponSyncPackageCardCatalogAttrs(card);
+      }
+
       card.style.cursor = "pointer";
       card.addEventListener("click", () => {
-        const title = card.querySelector("h4")?.textContent?.trim() || "";
+        const title =
+          card.querySelector("h4")?.textContent?.trim() ||
+          card.querySelector("h3")?.textContent?.trim() ||
+          "";
         const locationText = card.querySelector(".location")?.textContent?.replace(/\s+/g, " ").trim() || "";
         const ratingRaw = card.querySelector(".rating span")?.textContent?.trim() || "";
         const ratingMatch = ratingRaw.match(/(\d+(\.\d+)?)/);
         const reviewsMatch = ratingRaw.match(/\((\d+)\)/);
         const daysText = card.querySelector(".package-meta-days-text")?.textContent?.trim() || "";
-        const priceFromMeta = card.querySelector(".meta span:last-child")?.textContent?.trim() || "";
+        const priceFromMeta =
+          card.querySelector(".package-meta-price__now")?.textContent?.trim() ||
+          card.querySelector(".meta span:last-child")?.textContent?.trim() ||
+          "";
         const metaText = card.querySelector(".meta")?.textContent?.replace(/\s+/g, " ").trim() || "";
-        const priceMatch = metaText.match(/From\s*([₹$]\s?[\d,]+(?:\.\d+)?)/i);
-        const priceText = priceMatch?.[1]?.trim() || priceFromMeta.replace(/^From\s*/i, "").trim();
+        const priceMatch = metaText.match(/(?:From\s*)?([₹$]\s?[\d,]+(?:\.\d+)?)/i);
+        const priceText =
+          priceFromMeta.replace(/^From\s*/i, "").trim() || priceMatch?.[1]?.trim() || "";
         const imageSrc = card.querySelector(".package-thumb img")?.getAttribute("src") || "";
         const packageType = card.getAttribute("data-type") || "";
         const packagePlaces = (card.getAttribute("data-package-places") || card.getAttribute("data-places") || "").trim();
@@ -6943,14 +7125,22 @@ const triponInitMain = () => {
 
         sessionStorage.setItem("tripon_selected_package", JSON.stringify(payload));
         sessionStorage.setItem("tripon_selected_package_slug", packageSlug);
-        const daysAttr = card.getAttribute("data-days") || "";
-        const folderFromDays =
-          daysAttr &&
-          ({ "4": "4-days", "5": "5-days", "6": "6-days", "7": "7-days", "8": "8-days" })[daysAttr];
-        const targetFolder = durationFolder || folderFromDays || "";
-        const detailPath = targetFolder
-          ? `packages/bali/${targetFolder}/${packageSlug}.html`
-          : `packages/bali/5-days/${packageSlug}.html`;
+
+        const catalogKey = `${placeSlug}/${packageSlug}`;
+        const entryDayNum = String(catalogEntry.days || "").match(/\d+/)?.[0] || "";
+        const detailPath =
+          card.getAttribute("data-package-detail-href") ||
+          (typeof window.triponResolvePackageDetailPath === "function"
+            ? window.triponResolvePackageDetailPath(placeSlug, packageSlug)
+            : "") ||
+          window.TRIPON_PACKAGE_DETAIL_PATHS?.[catalogKey] ||
+          (entryDayNum ? `packages/bali/${entryDayNum}-days/${packageSlug}.html` : "");
+
+        if (!detailPath) {
+          showStatus("Package details are not available yet.");
+          return;
+        }
+
         const detailHref = triponResolveSiteHref(`/${detailPath}`);
         if (!detailHref) {
           showStatus("Package details are not available yet.");
@@ -8262,7 +8452,7 @@ const triponInitMain = () => {
       strip.style.setProperty("display", "block", "important");
       strip.style.setProperty("overflow-x", "hidden", "important");
       strip.style.setProperty("overflow-y", "hidden", "important");
-      strip.style.setProperty("max-height", "256px", "important");
+      strip.style.setProperty("max-height", "200px", "important");
       strip.style.setProperty("scroll-snap-type", "none", "important");
 
       if (!strip.dataset.marqueeReady) {
@@ -8810,6 +9000,13 @@ const triponInitMain = () => {
     const packageDetailsHrefFor = (placeSlug, packageSlug, durationFolder) => {
       const rel = typeof window.triponRelPrefix === "function" ? window.triponRelPrefix() : "";
       const slug = String(packageSlug || "honey-moon-package-in-bali").trim();
+      const catalogPath =
+        typeof window.triponResolvePackageDetailPath === "function"
+          ? window.triponResolvePackageDetailPath(placeSlug, slug)
+          : "";
+      if (catalogPath) {
+        return `${rel}${catalogPath}`;
+      }
       const dur =
         durationFolder || document.body?.getAttribute("data-package-duration") || "";
       if (dur) {
@@ -8939,6 +9136,13 @@ const triponInitMain = () => {
         toggle?.focus();
       }
     });
+  }
+
+  if (typeof window.triponInitAos === "function") {
+    window.triponInitAos();
+  }
+  if (typeof window.triponRefreshAos === "function") {
+    window.triponRefreshAos();
   }
 };
 

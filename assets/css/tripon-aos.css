@@ -1,0 +1,59 @@
+/**
+ * Custom AOS motion presets matching legacy Tripon reveal keyframes.
+ * Uses AOS transition props (duration / delay / easing from attributes).
+ */
+body.tripon-aos-ready [data-aos] {
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-aos="tripon-fade-up-22"] {
+  opacity: 0;
+  transform: translate3d(0, 22px, 0);
+  transition-property: opacity, transform;
+}
+
+[data-aos="tripon-fade-up-22"].aos-animate {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+[data-aos="tripon-fade-up-36"] {
+  opacity: 0;
+  transform: translate3d(0, 36px, 0);
+  transition-property: opacity, transform;
+}
+
+[data-aos="tripon-fade-up-36"].aos-animate {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+[data-aos="tripon-fade-down-14"] {
+  opacity: 0;
+  transform: translate3d(0, -14px, 0);
+  transition-property: opacity, transform;
+}
+
+[data-aos="tripon-fade-down-14"].aos-animate {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+[data-aos="tripon-rise-20"] {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0) scale(0.96);
+  transition-property: opacity, transform;
+}
+
+[data-aos="tripon-rise-20"].aos-animate {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

@@ -141,18 +141,11 @@
                 <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
               </button>
             </header>
-            <div class="lux-cal__legend">
-              <span class="lux-cal__legend-item"><span class="lux-cal__legend-dot lux-cal__legend-dot--available"></span> Available</span>
-              <span class="lux-cal__legend-item"><span class="lux-cal__legend-dot lux-cal__legend-dot--sold"></span> Sold out</span>
-              <span class="lux-cal__legend-item"><span class="lux-cal__legend-dot lux-cal__legend-dot--selected"></span> Selected</span>
-            </div>
             <div class="lux-cal__weekdays"></div>
             <div class="lux-cal__grid-wrap">
               <div class="lux-cal__grid"></div>
             </div>
             <footer class="lux-cal__footer">
-              <p class="lux-cal__package-title"></p>
-              <p class="lux-cal__package-meta"></p>
               <div class="lux-cal__selection">
                 <span class="lux-cal__selection-text">Pick a date to continue</span>
                 <span class="lux-cal__selection-price"></span>
@@ -165,17 +158,10 @@
         this.weekdaysEl = this.popup.querySelector(".lux-cal__weekdays");
         this.gridEl = this.popup.querySelector(".lux-cal__grid");
         this.gridWrap = this.popup.querySelector(".lux-cal__grid-wrap");
-        this.packageTitleEl = this.popup.querySelector(".lux-cal__package-title");
-        this.packageMetaEl = this.popup.querySelector(".lux-cal__package-meta");
         this.selectionTextEl = this.popup.querySelector(".lux-cal__selection-text");
         this.selectionPriceEl = this.popup.querySelector(".lux-cal__selection-price");
         this.prevBtn = this.popup.querySelector(".lux-cal__nav--prev");
         this.nextBtn = this.popup.querySelector(".lux-cal__nav--next");
-  
-        this.packageTitleEl.textContent = this.packageName;
-        this.packageMetaEl.textContent = this.packageDuration
-          ? `${this.packageDuration.replace(/-/g, " ")} · Premium Bali experience`
-          : "Premium tropical experience";
   
         WEEKDAYS.forEach((wd) => {
           const span = document.createElement("span");
@@ -351,10 +337,6 @@
               this.selectDate(meta.dateStr, meta.price);
             });
           } else if (meta.status === "sold") {
-            const sold = document.createElement("span");
-            sold.className = "lux-cal__day-price";
-            sold.textContent = "Sold";
-            btn.appendChild(sold);
             btn.disabled = true;
           } else {
             btn.disabled = true;
@@ -832,10 +814,20 @@
       this.row = input.closest(".input-box, .field");
       this.min = Number(options.min) || 1;
       this.max = Number(options.max) || 20;
-      this.slots = buildGuestSlots(this.min, this.max);
+      const customSlots = Array.isArray(options.slots) ? options.slots : [];
+      this.slots = customSlots.length
+        ? customSlots
+            .map((slot) => ({
+              value: String(slot?.value ?? ""),
+              label: String(slot?.label ?? "").trim(),
+            }))
+            .filter((slot) => slot.value && slot.label)
+        : buildGuestSlots(this.min, this.max);
       this.selected = input.value || "";
       this.isOpen = false;
       this.placeholder = options.placeholder || "No. of Guests";
+      this.rangeListMode = options.variant === "range-list";
+      this.showSlotIcon = options.showSlotIcon === true;
       this.onSelect = typeof options.onSelect === "function" ? options.onSelect : null;
       this._uid = `lux-guests-${Math.random().toString(36).slice(2, 9)}`;
 
@@ -865,7 +857,9 @@
       fieldWrap.insertBefore(this.trigger, this.input);
 
       this.popup = document.createElement("div");
-      this.popup.className = "lux-time lux-time--floating lux-guests--floating";
+      this.popup.className = `lux-time lux-time--floating lux-guests--floating${
+        this.rangeListMode ? " lux-guests--range" : ""
+      }`;
       this.popup.id = this._uid;
       this.popup.setAttribute("role", "dialog");
       this.popup.setAttribute("aria-modal", "true");
@@ -899,7 +893,10 @@
         btn.className = "lux-time__slot";
         btn.setAttribute("role", "option");
         btn.dataset.value = slot.value;
-        btn.innerHTML = `<span class="lux-time__slot-label">${slot.label}</span>`;
+        const iconHtml = this.showSlotIcon
+          ? '<span class="lux-time__slot-icon" aria-hidden="true"><i class="fa-solid fa-users"></i></span>'
+          : "";
+        btn.innerHTML = `<span class="lux-time__slot-label">${slot.label}</span>${iconHtml}`;
 
         if (slot.value === this.selected) {
           btn.classList.add("lux-time__slot--selected");
@@ -921,7 +918,9 @@
       const anchor = this.row.getBoundingClientRect();
       const gap = 10;
       const viewportPad = 12;
-      const popupWidth = Math.min(380, window.innerWidth - viewportPad * 2);
+      const popupWidth = this.rangeListMode
+        ? Math.min(320, window.innerWidth - viewportPad * 2)
+        : Math.min(380, window.innerWidth - viewportPad * 2);
 
       this.popup.style.width = `${popupWidth}px`;
 
@@ -988,7 +987,7 @@
       this.trigger.classList.remove("is-placeholder");
 
       this.renderSlots();
-      if (this.onSelect) this.onSelect(value);
+      if (this.onSelect) this.onSelect(value, label);
       window.setTimeout(() => this.close(), 220);
     }
 
@@ -2542,9 +2541,17 @@
 
   function triponPackageDetailHref(placeSlug, packageSlug, durationFolder) {
     const rel = typeof window.triponRelPrefix === "function" ? window.triponRelPrefix() : "";
+    const place = String(placeSlug || document.body?.getAttribute("data-package-place") || "").trim();
     const slug =
       String(packageSlug || document.body?.getAttribute("data-package-slug") || "").trim() ||
       "honey-moon-package-in-bali";
+    const catalogPath =
+      typeof window.triponResolvePackageDetailPath === "function"
+        ? window.triponResolvePackageDetailPath(place, slug)
+        : window.TRIPON_PACKAGE_DETAIL_PATHS?.[`${place}/${slug}`] || "";
+    if (catalogPath) {
+      return `${rel}${catalogPath}`;
+    }
     const dur =
       durationFolder ||
       document.body?.getAttribute("data-package-duration") ||
@@ -2554,7 +2561,7 @@
     if (dur) {
       return `${rel}packages/bali/${dur}/${slug}.html`;
     }
-    return `${rel}packages/bali/5-days/${slug}.html`;
+    return "";
   }
 
   const toPlaceSlug = (text) => {

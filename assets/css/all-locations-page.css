@@ -88,7 +88,7 @@
   position: absolute;
   inset: -8%;
   z-index: -2;
-  background: url("../images/background.png") center / cover no-repeat;
+  background: url("../images/background.webp") center / cover no-repeat;
   filter: blur(1px);
   transform: scale(1.06);
   pointer-events: none;
@@ -117,30 +117,6 @@
   width: min(1040px, 100%);
   margin: 0 auto;
   text-align: center;
-}
-
-.tripon-dest-gallery.is-revealed .tripon-dest-gallery__head {
-  animation: triponGalleryReveal 920ms var(--tripon-cinema-ease) both;
-}
-
-.tripon-dest-gallery.is-revealed .tripon-dest-gallery__tabs-wrap {
-  animation: triponGalleryReveal 920ms var(--tripon-cinema-ease) 120ms both;
-}
-
-.tripon-dest-gallery.is-revealed .tripon-coverflow {
-  animation: triponGalleryReveal 980ms var(--tripon-cinema-ease) 220ms both;
-}
-
-@keyframes triponGalleryReveal {
-  from {
-    opacity: 0;
-    transform: translateY(22px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 .tripon-dest-gallery__head {
@@ -667,9 +643,6 @@
   }
 
   .tripon-coverflow__slide.is-active .tripon-coverflow__card,
-  .tripon-dest-gallery.is-revealed .tripon-dest-gallery__head,
-  .tripon-dest-gallery.is-revealed .tripon-dest-gallery__tabs-wrap,
-  .tripon-dest-gallery.is-revealed .tripon-coverflow,
   .tripon-coverflow__slide.is-active .tripon-dest-gallery__label {
     animation: none;
   }
@@ -690,62 +663,7 @@
   }
 }
 
-.all-locations-main-wrap.is-entering .all-locations-hero h1 {
-  opacity: 0;
-}
-
-.all-locations-main-wrap.is-entering .all-locations-hero--revealed h1 {
-  animation: allLocationsHeroIn 680ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
-}
-
-.all-locations-main-wrap.is-entering .all-location-card {
-  opacity: 0;
-  transform: translateY(20px) scale(0.96);
-}
-
-.all-location-card.all-location-card-animate {
-  animation: allLocationCardRise 560ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
-}
-
-@keyframes allLocationCardRise {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.96);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes allLocationsHeroIn {
-  0% {
-    opacity: 0;
-    transform: translateY(-14px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
-
-  .all-locations-main-wrap.is-entering .all-location-card,
-  .all-location-card.all-location-card-animate {
-    opacity: 1;
-    transform: none;
-    animation: none;
-  }
-
-  .all-locations-main-wrap.is-entering .all-locations-hero h1,
-  .all-locations-main-wrap.is-entering .all-locations-hero--revealed h1 {
-    opacity: 1;
-    animation: none;
-  }
-
   .tripon-dest-gallery__card--float {
     animation: none;
   }

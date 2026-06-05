@@ -825,27 +825,29 @@ a.contact-btn {
 
 
 
-.contact-explore-grid .package-card .meta {
+.contact-explore-grid .package-card .meta.package-meta-row {
   margin-top: 0;
   padding-top: 14px;
   border-top: 1px solid #d7dce4;
-  font-size: 19px;
-  font-weight: 400;
-  color: #49546f;
   display: flex;
   justify-content: space-between;
   gap: 12px;
   align-items: center;
-  grid-template-columns: none;
 }
 
+.contact-explore-grid .package-meta-price__now {
+  font-size: 1.25rem;
+}
 
+.contact-explore-grid .package-meta-price__label,
+.contact-explore-grid .package-meta-price__was {
+  font-size: 0.875rem;
+}
 
 .contact-explore-grid .package-card .meta .package-meta-duration,
-.contact-explore-grid .package-card .meta .package-meta-days-text,
-.contact-explore-grid .package-card .meta>span:last-child {
-  font-size: 19px;
-  font-weight: 400;
+.contact-explore-grid .package-card .meta .package-meta-days-text {
+  font-size: 1.0625rem;
+  font-weight: 500;
   color: #49546f;
 }
 

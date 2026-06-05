@@ -1106,10 +1106,18 @@
     font-size: 0.8125rem !important;
   }
 
-  .home-screen .package-card .meta {
-    font-size: 0.9375rem !important;
+  .home-screen .package-card .meta.package-meta-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    grid-template-columns: none !important;
     column-gap: 8px !important;
-    grid-template-columns: minmax(6.5rem, max-content) minmax(0, 1fr) !important;
+    font-size: 0.8125rem !important;
+  }
+
+  .home-screen .package-card .meta.package-meta-row .package-meta-price__now {
+    font-size: 1rem !important;
+    white-space: nowrap !important;
   }
 
   .home-screen .testimonials {

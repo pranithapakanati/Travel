@@ -3,8 +3,10 @@
  */
 
 /* Gap below fixed pill navbar (badges/title must not touch nav) */
-body.package-details-page {
-  padding-top: calc(var(--th-nav-offset, 128px) + clamp(28px, 4.5vw, 44px)) !important;
+body.package-details-page,
+body.has-tripon-navbar.package-details-page,
+body:has(#tripon-navbar-zone).package-details-page {
+  padding-top: calc(var(--th-nav-offset, 128px) + clamp(20px, 3vw, 32px)) !important;
   box-sizing: border-box;
 }
 
@@ -31,9 +33,15 @@ body.package-details-page .title-section {
   margin-top: 0 !important;
 }
 
+body.package-details-page .title-badges-row {
+  margin-top: 0;
+}
+
 @media (max-width: 768px) {
-  body.package-details-page {
-    padding-top: calc(var(--th-nav-offset-mobile, 112px) + clamp(24px, 5vw, 36px)) !important;
+  body.package-details-page,
+  body.has-tripon-navbar.package-details-page,
+  body:has(#tripon-navbar-zone).package-details-page {
+    padding-top: calc(var(--th-nav-offset-mobile, 112px) + clamp(16px, 4vw, 28px)) !important;
   }
 
   body.package-details-page > .container {
@@ -157,8 +165,18 @@ body.package-details-page .mobile-pref-step.active {
 .hero .search-box .field .luxury-date-trigger,
 .hero .search-box .field .luxury-guests-trigger {
   padding: 0 !important;
-  font-size: 14px !important;
-  font-weight: 400 !important;
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  color: #2d3330 !important;
+  font-family: inherit !important;
+  line-height: 1.1 !important;
+}
+
+.hero .search-box .field .luxury-date-trigger.is-placeholder,
+.hero .search-box .field .luxury-guests-trigger.is-placeholder {
+  color: #2d3330 !important;
+  font-weight: 700 !important;
+  opacity: 0.9;
 }
 
 .luxury-date-trigger {
@@ -339,49 +357,11 @@ body.package-details-page .mobile-pref-step.active {
   flex: 1;
 }
 
-.lux-cal__legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px 14px;
-  margin-bottom: 12px;
-  font-size: 11px;
-  font-weight: 500;
-  color: #5a6b7d;
-}
-
-.lux-cal__legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.lux-cal__legend-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-}
-
-.lux-cal__legend-dot--available {
-  background: #ffffff;
-  border: 1px solid #c5cdd6;
-  box-shadow: none;
-}
-
-.lux-cal__legend-dot--sold {
-  background: linear-gradient(135deg, #f07171, #d63b3b);
-}
-
-.lux-cal__legend-dot--selected {
-  background: #ffffff;
-  border: 2px solid #1a2836;
-  box-shadow: none;
-}
-
 .lux-cal__weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
-  margin-bottom: 8px;
+  margin: 4px 0 8px;
 }
 
 .lux-cal__weekday {
@@ -495,18 +475,14 @@ body.package-details-page .mobile-pref-step.active {
 
 .lux-cal__day--sold {
   cursor: not-allowed;
-  background: rgba(214, 59, 59, 0.07);
+  background: #ffffff;
+  border: 1px solid #e6eaef;
+  box-sizing: border-box;
 }
 
 .lux-cal__day--sold .lux-cal__day-num {
-  color: #c44a4a;
-  text-decoration: line-through;
-}
-
-.lux-cal__day--sold .lux-cal__day-price {
-  color: #d63b3b;
-  font-size: 8px;
-  text-transform: uppercase;
+  color: #2a3a4a;
+  text-decoration: none;
 }
 
 .lux-cal__day--available:not(.lux-cal__day--selected):hover {
@@ -541,38 +517,26 @@ body.package-details-page .mobile-pref-step.active {
 }
 
 .lux-cal__footer {
-  margin-top: 14px;
-  padding-top: 14px;
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px solid #e8ecf0;
-}
-
-.lux-cal__package-title {
-  margin: 0 0 4px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #1a2836;
-  line-height: 1.35;
-}
-
-.lux-cal__package-meta {
-  margin: 0 0 8px;
-  font-size: 11px;
-  color: #6a7d8f;
-  font-weight: 500;
 }
 
 .lux-cal__selection {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   gap: 10px;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border-radius: 14px;
   background: #ffffff;
   border: 1px solid #e6eaef;
   font-size: 12px;
   font-weight: 600;
   color: #3d4f5f;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .lux-cal__selection strong {
@@ -869,6 +833,15 @@ body.package-details-page .booking-card .luxury-date-trigger {
   line-height: 1.2;
 }
 
+.lux-time__slot-icon {
+  margin-left: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: #1a3344;
+}
+
 .lux-time__slot-badge {
   display: block;
   margin-top: 3px;
@@ -895,6 +868,126 @@ body.package-details-page .booking-card .luxury-date-trigger {
 
 .lux-time__slot--selected .lux-time__slot-label {
   color: #1a2836;
+}
+
+/* Hero guests picker — vertical list (1–2, 3–4, 5–6, 6+ People) */
+.lux-guests--range.lux-guests--floating .lux-time__panel {
+  padding: 20px 18px 16px;
+  border-radius: 24px;
+  border: 1px solid #e8edf2;
+  box-shadow: 0 18px 52px rgba(15, 23, 42, 0.12);
+}
+
+.lux-guests--range .lux-time__header {
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.lux-guests--range .lux-time__header-icon {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: #f8fafb;
+  border: 1px solid #e2e8f0;
+  color: #1a2836;
+  font-size: 17px;
+  box-shadow: none;
+}
+
+.lux-guests--range .lux-time__title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #141f2d;
+  line-height: 1.25;
+}
+
+.lux-guests--range .lux-time__subtitle {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 400;
+  color: #6b7383;
+  line-height: 1.35;
+}
+
+.lux-guests--range .lux-time__slots,
+.lux-guests--range .lux-guests__slots {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: 10px;
+  max-height: min(280px, 52vh);
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-right: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: #c5cdd6 #eef1f4;
+}
+
+.lux-guests--range .lux-time__slots::-webkit-scrollbar,
+.lux-guests--range .lux-guests__slots::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lux-guests--range .lux-time__slots::-webkit-scrollbar-track,
+.lux-guests--range .lux-guests__slots::-webkit-scrollbar-track {
+  background: #eef1f4;
+  border-radius: 999px;
+}
+
+.lux-guests--range .lux-time__slots::-webkit-scrollbar-thumb,
+.lux-guests--range .lux-guests__slots::-webkit-scrollbar-thumb {
+  background: #c5cdd6;
+  border-radius: 999px;
+}
+
+.lux-guests--range .lux-time__slot {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+
+.lux-guests--range .lux-time__slot-label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #141f2d;
+}
+
+.lux-guests--range .lux-time__slot-icon {
+  flex-shrink: 0;
+  margin-left: 0;
+  width: auto;
+  height: auto;
+  font-size: 15px;
+  color: #1a2836;
+}
+
+.lux-guests--range .lux-time__slot:not(.lux-time__slot--unavailable):hover {
+  transform: none;
+  background: #f8fafb;
+  border-color: #d0d6de;
+  box-shadow: none;
+}
+
+.lux-guests--range .lux-time__slot--selected {
+  background: #f0fdf6;
+  border: 1.5px solid #0b8a56;
+  box-shadow: none;
+  animation: none;
+}
+
+.lux-guests--range .lux-time__slot--selected .lux-time__slot-label,
+.lux-guests--range .lux-time__slot--selected .lux-time__slot-icon {
+  color: #0b8a56;
 }
 
 @keyframes luxTimeSelectPulse {

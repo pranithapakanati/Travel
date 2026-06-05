@@ -323,10 +323,21 @@
     };
 
     return triponInjectSiteAmbient().then(() => triponInjectIncludes()).then(() => {
-      return triponEnsureGsapBundle().then(() => {
-        return loadLuxuryPickers().then(() => {
-          return triponLoadScript(`${prefix}assets/js/packages-catalog.js`).then(() => {
-            return triponLoadScript(`${prefix}assets/js/main.js`);
+      const prepareAos =
+        typeof g.triponEnsureAosBundle === "function"
+          ? g.triponEnsureAosBundle()
+          : Promise.resolve();
+
+      return prepareAos.then(() => {
+        return triponEnsureGsapBundle().then(() => {
+          return loadLuxuryPickers().then(() => {
+            return triponLoadScript(`${prefix}assets/js/packages-catalog.js`).then(() => {
+              return triponLoadScript(`${prefix}assets/js/main.js`).then(() => {
+                if (typeof g.triponInitAos === "function") {
+                  g.triponInitAos();
+                }
+              });
+            });
           });
         });
       });
